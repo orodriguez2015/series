@@ -27,14 +27,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-console.log("=====> app.js antes de routes");
-if(routes!=null)
-    console.log("routes!=null");
-else
-    console.log("routes==null");
-
 app.use('/', routes);
 
 // catch 404 and forward to error handler
