@@ -5,177 +5,92 @@
   <section class="content-header">
     <h1>
       Usuarios
-      <small>Alta</small>
+      <small>Listado</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
-      <li class="active">Alta de usuario</li>
+      <li class="active">Listado de usuario</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content">
 
- 
- <form name="formAltaUsuario" id="formAltaUsuario" role="form" method="POST" action="" novalidate>   
- <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Datos generales del usuario</h3>
-    </div><!-- /.box-header -->
+  <div class="box">
     
-      <div class="box-body">
+      <!--------------------------------->
+          
 
-         <div class="form-group">
-          <label for="Nombre">Nombre</label>
-          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
-        </div>
+      <!---------------------------------->
+  
+                  
+  <div class="box-body">  
+    <table id="example2" class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th width="200px">&nbsp</th>
+          <th>Nombre</th>
+          <th>Primer apellido</th>
+          <th>Segundo apellido</th>
+          <th>Email</th>
+          <th>Login</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% for(var i=0;i<users.length;i++) { %>
+        <tr>
+          <td width="200px">
+            <form name="formDelete" method="POST" action="/users/<%=users[i].id%>?_method=DELETE">
 
-        <div class="form-group">
-          <label for="Nombre">Primer apellido</label>
-          <input type="text" class="form-control" id="apellido1" name="apellido1" placeholder="Introduzca el primer apellido">
-        </div>
-
-         <div class="form-group">
-          <label for="Nombre">Segundo apellido</label>
-          <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido">
-        </div>
-
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail">
-        </div>
-       
-      </div><!-- /.box-body -->
-    
-   </div>
-
-
-
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Cuenta del usuario</h3>
-    </div><!-- /.box-header -->
-    
-      <div class="box-body">
-
-         <div class="form-group">
-          <label for="Nombre">Login</label>
-          <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login">
-        </div>
-
+              <button type="submit" class="btn bg-olive margin">Editar</button>
+              <button type="submit" class="btn bg-olive margin">Eliminar</button>
+            </form>  
+          <td><%=users[i].nombre%></td>
+          <td><%=users[i].apellido1%></td>
+          <td><%=users[i].apellido2%></td>
+          <td><%=users[i].email%></td>
+          <td><%=users[i].login%></td>
+        </tr>
+      <% } %>  
         
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password">
-        </div>
-        
-      </div><!-- /.box-body -->
-
-      <div class="box-footer">
-        <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Enviar</button>
-      </div>
-    
-   </div>
-   </form>
+      <tfoot>
+        <tr>
+          <th>&nbsp</th>
+          <th>Nombre</th>
+          <th>Primer apellido</th>
+          <th>Segundo apellido</th>
+          <th>Email</th>
+          <th>Login</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div><!-- /.box-body -->
+  </div> 
 
 
   
   </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
-
-<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
-<script type="text/javascript" src="/javascripts/additional-methods.js"></script>
-<script type="text/javascript" src="/javascripts/messages_es.js"></script>
+<!-- DATA TABLES SCRIPT -->
+<script src="/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js" type="text/javascript"></script>
+<!-- SlimScroll -->
+<script src="/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<!-- FastClick -->
+<script src="/plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
+<script src="/dist/js/app.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-
-<!-- Se hace uso de la librería jQuery Validate para validar formularios -->
-$("#formAltaUsuario").validate({
-    rules: {
-      nombre: {
-        required: true,
-        minlength: 2,
-        maxlength: 100
-      },
-      apellido1: {
-        required: true,
-        minlength: 2,
-        maxlength: 100
-      },
-      apellido2: {
-        required: true,
-        minlength: 0,
-        maxlength: 100
-      },
-
-      email: {
-        required: true,
-        email: true
-      },
-      
-      login: {
-        required: true,
-        minlength: 4,
-        maxlength: 10
-      },
-      
-      password: {
-        required: true,
-        minlength: 4,
-        maxlength: 10
-      }
-    },
-
-    messages: {
-      nombre: {
-        lettersonly: "Escribe sólo letras"
-      },
-
-      apellidos: {
-        lettersonly: "Escribe sólo letras"
-      },
-      email: {
-        remote: "Email ya está en uso."
-      },
-      iban: {
-        iban: "Introduzca un IBAN correcto (Para España 24 caracteres y empezando por ES)."
-      }
-    },
-
-    // Si la validación es correcta, se añade la clase css 'has-success' de bootstrap,
-    // al campo de formulario validado
-    success: function(element) {
-            $(element).closest('.form-group').addClass('has-success');
-    },
-
-
-    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
-    // al campo de formulario validado
-    highlight: function(element) {
-            $(element).closest('.form-group').addClass('has-error');
-    },
-    
-    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
-    // al campo de formulario validado
-    unhighlight: function(element) {
-            $(element).closest('.form-group').removeClass('has-error');
-    },
-
-    errorElement: 'span',
-        errorClass: 'help-block',
-        errorPlacement: function(error, element) {
-            if(element.parent('.input-group').length) {
-                error.insertAfter(element.parent());
-            } else {
-                error.insertAfter(element);
-            }
-    },
-
-    submitHandler: function(form) {
-      form.action = "/users/create";
-      form.submit();
-    }
-  });
-
-  </script>
+      $(function () {
+        
+        $('#listado').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false
+        });
+      });
+    </script>

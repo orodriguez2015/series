@@ -5,6 +5,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+//var session = require('express-session');
 
 var routes = require('./routes/index');
 
@@ -24,8 +26,14 @@ app.use(partials());
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+// Se instala el middleware y se indica el nombre utilizado para 
+// encapsular el método POST por el que sea, en este caso suele ser por PUT.
+// HTML5 no permite el envio de formularios por PUT, sólo por POST o por GET.
+// De ahí que se haga esto
+app.use(methodOverride('_method'));
+//app.use(session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
@@ -45,7 +53,8 @@ if (app.get('env') === 'development') {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
-            error: err
+            error: err,
+            errors: []
         });
     });
 }
@@ -56,7 +65,8 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        error: {}
+        error: {},
+        errors: []
     });
 });
 
