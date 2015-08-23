@@ -14,14 +14,21 @@ router.get('/users/new',usersController.new);
 router.post('/users/create',usersController.create);
 
 // GET /users. Renderiza el listado con las tablas de usuarios
-router.get('/users',usersController.show);
+router.get('/users',usersController.users);
 
 // DELETE /users/:userId/. Elimina un determinado usuario de la base de datos
 router.delete("/users/:userId(\\d+)",usersController.delete);
 
+// GET /users/:userId/. Edita un determinado usuario de la base de datos
+router.get("/users/:userId(\\d+)",usersController.show);
+
 // POST /users/existsUser. Esta petición comprueba si un login y un email ya está asignado a un 
 // usuario del sistema
 router.post("/users/existsUser",usersController.exists);
+
+// POST /users/existeLoginEmailOtroUsuario. Esta petición comprueba si existe otro usuario
+// distinto a uno determinado, que tenga un determinado login o email
+router.post("/users/existeLoginEmailOtroUsuario",usersController.existeLoginEmailOtroUsuario);
 
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){

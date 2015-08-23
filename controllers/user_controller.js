@@ -23,13 +23,13 @@ exports.new = function(req,res){
   * @param next: Objeto next
   * @param userId: Identificador del usuario
   */
-exports.load = function(req,res,next,userId){
+exports.load = function(req,res,next,userId) {
 
   console.log('user_controller.load() cargando el usuario de id ' + userId)
   model.User.find({
       where: {id: Number(userId)}
 
-    }).then(function(user) { 
+    }).then(function (user) { 
       console.log('user_controller.load() cargando el usuario de nombre ' + user.nombre);
       req.User = user;
       next();
@@ -65,7 +65,7 @@ exports.create = function(req,res,next){
     // Se procede a comprobar si ya existe un usuario con el login, en ese caso, se lanza
     // un error
 
-    model.User.count({where: ["login=?",login]}).then(function(num) { 
+    model.User.count({where: ["login=?", login]}).then(function(num) { 
         console.log("Número de usuarios con login " + login + " son " + num);
 
         if(num>0) { // Ya existe un usuario con dicho login
@@ -111,7 +111,7 @@ exports.create = function(req,res,next){
   * @param res: Objeto response
   * @param next: Objeto next
   */
-exports.show = function(req,res,next){
+exports.users = function(req,res,next){
 
   console.log("Renderizado del listado de usuarios del sistema");
 
@@ -232,4 +232,70 @@ exports.exists = function(req,res,next){
 
     });
   }
+};
+
+
+
+
+
+/**
+  * Función que renderiza la vista que permite editar un usuario del sistema
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.show = function(req,res,next){
+
+  console.log("user_controller.show() ========>");
+
+  var user = req.User;
+  console.log("Se va a editar el usuario con id: " + user.id);
+  console.log("Se va a editar el usuario con nombre: " + user.nombre);
+  console.log("Se va a editar el usuario con apellido1: " + user.apellido1);
+
+  res.render("users/edit",{usuario:req.User,errors:{}});
+};
+
+
+
+
+/**
+  * Función que comprueba si ya existe algún usuario en la base de datos con un login o email, siempre
+  * y cuando no sean de un usuario con un determinado id
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.existeLoginEmailOtroUsuario = function(req,res,next){
+
+  console.log("user_controller.existeLoginEmailOtroUsuario() ========>");
+
+  var email = req.body.email;
+  var login = req.body.login;
+  var idUsuario = req.body.id;
+    
+  var salida = {
+      status: -2
+  };
+
+  console.log("email " + email + ", login: " + login + ", idUsuario: " + idUsuario);
+  if(email!=undefined && email!='' && login!=undefined && login!='' && idUsuario!=undefined && idUsuario!='')   {
+      console.log("Comprobar existencia otro usuario con login e email");
+     aux.existeOtroUsuarioConLoginEmail(login,email,idUsuario,function(user,err){
+         
+         console.log("1");
+        if(user){
+           console.log("Existe otro usuario con id " + user.id + " que tiene el login o email indicado");   
+        }else  
+        if(err) { 
+          console.log("Se ha producido un error al realizar la consulta: " + err.message);   
+        }
+         console.log("2");
+     });
+  
+  }//if
+  else console.log("Parámetros incorrectos");
+  
+     
+    
 };

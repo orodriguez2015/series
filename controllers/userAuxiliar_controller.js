@@ -47,3 +47,50 @@ exports.existeEmail = function(email,callback) {
     	callback(err,null);
     });
 };
+
+
+
+/**
+  * Función que comprueba si existe en la BD un usuario con un login o email y que no sea
+  * el usuario cuyo id se pasa en el parámetro idUsuario
+  * @param login: Login a comprobar
+  * @param email: Email a comprobar
+  * @param idUsuario: Id del usuario
+  * @param callback: Función callback que se invoca para devolver un resultado, que será el usuario
+  * o error que se ha producido al ejecutar la función 
+  */
+exports.existeOtroUsuarioConLoginEmail = function(login,email,idUsuario,callback) {
+    
+  // Se importa sequelize
+  var Sequelize = require('sequelize');
+    
+    /** original */
+  var condition = {
+    where: Sequelize.and(
+    { 
+        id: {ne:idUsuario } 
+    },
+    Sequelize.or(
+      {
+       email: { eq: email},
+       login: { eq: login }
+      }
+    )
+  )
+}; 
+
+    
+
+    model.User.findAll(condition).then(function(user){
+        
+      console.log("Se ha encontrado un usuario con el login o email indicado y no es el usuario actual");  
+      callback(user,null);    
+        
+    }).catch(function(err){
+        
+        console.log("Error al comprobar la existencia de un usuario con login o email que no sea el usuario de id " + idUsuario + ": " + err.message);
+        
+      callback(null,err);   
+    }); 
+    
+};

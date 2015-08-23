@@ -5,11 +5,11 @@
   <section class="content-header">
     <h1>
       Usuarios
-      <small>Alta</small>
+      <small>Edición</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
-      <li class="active">Alta de usuario</li>
+      <li class="active"> Edición de usuario</li>
     </ol>
   </section>
 
@@ -17,7 +17,7 @@
   <section class="content">
 
  
- <form name="formAltaUsuario" id="formAltaUsuario" role="form" method="POST" action="" novalidate>   
+ <form name="formEditUsuario" id="formEditUsuario" role="form" method="POST" action="" novalidate>   
  <div class="box box-primary">
     <div class="box-header with-border">
       <h3 class="box-title">Datos generales del usuario</h3>
@@ -26,23 +26,24 @@
       <div class="box-body">
 
          <div class="form-group">
+          <input type="hidden" id="id" name="id" value="<%=usuario.id%>"/>
           <label for="Nombre">Nombre</label>
-          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre" value="<%=usuario.nombre%>">
         </div>
 
         <div class="form-group">
           <label for="Nombre">Primer apellido</label>
-          <input type="text" class="form-control" id="apellido1" name="apellido1" placeholder="Introduzca el primer apellido">
+          <input type="text" class="form-control" id="apellido1" name="apellido1" placeholder="Introduzca el primer apellido" value="<%=usuario.apellido1%>">
         </div>
 
          <div class="form-group">
           <label for="Nombre">Segundo apellido</label>
-          <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido">
+          <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido" value="<%=usuario.apellido2%>">
         </div>
 
         <div class="form-group">
           <label for="exampleInputEmail1">Email</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail" value="<%=usuario.email%>">
         </div>
        
       </div><!-- /.box-body -->
@@ -60,13 +61,13 @@
 
          <div class="form-group">
           <label for="Nombre">Login</label>
-          <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login" value="perico">
+          <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login" value="<%=usuario.login%>">
         </div>
 
         
         <div class="form-group">
           <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password">
+          <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password" value="<%=usuario.password%>">
         </div>
         
       </div><!-- /.box-body -->
@@ -95,7 +96,7 @@
 <script type="text/javascript">
 
 <!-- Se hace uso de la librería jQuery Validate para validar formularios -->
-$("#formAltaUsuario").validate({
+$("#formEditUsuario").validate({
     rules: {
       nombre: {
         required: true,
@@ -177,13 +178,13 @@ $("#formAltaUsuario").validate({
     },
 
     submitHandler: function(form) {
-
+      alert("enviar");
       comprobarExistenciaUsuario(form);
     }
   });
+    
 
-
-
+    
   function mostrarMensajeError(errores) {
     var mensaje ="";
     var _cabecera = "<h4>Error</h4>";
@@ -208,15 +209,16 @@ $("#formAltaUsuario").validate({
     * usuario con el login o con el email indicado */
   function comprobarExistenciaUsuario(form) {
       var exito = 0;
-
+      alert("comprobarExistenciaUsuario ====>")
       var ajax_params = {
         "login"  : $('#login').val(),
-        "email"  : $('#email').val()
+        "email"  : $('#email').val(),
+        "id" : $('#id').val()  
       }; 
 
      
      $.ajax({
-       url: '/users/existsUser',
+       url: '/users/existeLoginEmailOtroUsuario',
        data: ajax_params,
        type: "POST",
        success: verificarRespuesta,
@@ -226,7 +228,7 @@ $("#formAltaUsuario").validate({
 
          return exito;
       }
-   });
+     });
 
   }
 
@@ -293,8 +295,6 @@ $("#formAltaUsuario").validate({
     } 
 
   }
-
-
-
+    
 
   </script>

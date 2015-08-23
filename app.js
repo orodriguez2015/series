@@ -26,7 +26,8 @@ app.use(partials());
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Se pone extended a 'false', para poder enviar arrays en los formularios
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 // Se instala el middleware y se indica el nombre utilizado para 
 // encapsular el método POST por el que sea, en este caso suele ser por PUT.
