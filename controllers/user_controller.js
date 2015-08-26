@@ -281,16 +281,25 @@ exports.existeLoginEmailOtroUsuario = function(req,res,next){
   console.log("email " + email + ", login: " + login + ", idUsuario: " + idUsuario);
   if(email!=undefined && email!='' && login!=undefined && login!='' && idUsuario!=undefined && idUsuario!='')   {
       console.log("Comprobar existencia otro usuario con login e email");
-     aux.existeOtroUsuarioConLoginEmail(login,email,idUsuario,function(user,err){
-         
-         console.log("1");
-        if(user){
-           console.log("Existe otro usuario con id " + user.id + " que tiene el login o email indicado");   
-        }else  
+      aux.existeOtroUsuarioConLoginEmail(login,email,idUsuario,function(salida,err){
+
+        if(salida){
+            console.log("salida.status: " + salida.status);
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.write(JSON.stringify(salida));
+            res.end();  
+            
+        }
+        else  
         if(err) { 
           console.log("Se ha producido un error al realizar la consulta: " + err.message);   
         }
-         console.log("2");
+        
+          
+          
+          
+        
+          
      });
   
   }//if

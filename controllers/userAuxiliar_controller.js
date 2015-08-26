@@ -63,34 +63,68 @@ exports.existeOtroUsuarioConLoginEmail = function(login,email,idUsuario,callback
     
   // Se importa sequelize
   var Sequelize = require('sequelize');
-    
-    /** original */
+/*
   var condition = {
-    where: Sequelize.and(
-    { 
-        id: {ne:idUsuario } 
-    },
+    where: 
     Sequelize.or(
       {
        email: { eq: email},
        login: { eq: login }
       }
     )
-  )
-}; 
-
+};
+*/    
     
+    /* EQUIVALE A UN AND */
+    var condition1 = {
+        where: {
+                id: { ne: idUsuario},
+                login: { eq: login }
+        }
+    }
+    
+    
+    var condition2 = {
+        where: {
+                id: { ne: idUsuario},
+                email: { eq: email }
+        }
+    }
 
-    model.User.findAll(condition).then(function(user){
+    model.User.findAll(condition1).then(function(users){
         
-      console.log("Se ha encontrado un usuario con el login o email indicado y no es el usuario actual");  
-      callback(user,null);    
+        // -1 --> Error técnico
+        // 0 --> OK
+        // 1 --> Ya existe usuario con el nuevo login
+        // 2 --> Ya existe un usuario con el nuevo email
+        var salida = { status: -1 };
         
+        if(users!=undefined && users!=null && users.length>0){
+            console.log("Existe algún otro usuario con el mismo login, no se permite la edición");
+            // Si hay un usuario con el login, se retorna error
+            salida.status = 1;
+            callback(salida,null);
+            
+        }else {
+            // Se comprueba si ya existe otro usuario con el email   
+            model.User.findAll(condition2).then(function(users){
+                if(users!=undefined && users!=null && users.length>0) { 
+                    console.log("Existe algún otro usuario con el mismo email, no se permite la edición");
+                    // Existe un usuario con el email, se retorna error
+                    salida.status = 2;
+                    callback(salida,null);
+                } else {
+                    salida.status = 0;
+                    callback(salida,null);       
+                }
+            }).catch(function(err){
+                callback(null,err);  
+            });    
+        }
+    
     }).catch(function(err){
-        
-        console.log("Error al comprobar la existencia de un usuario con login o email que no sea el usuario de id " + idUsuario + ": " + err.message);
-        
-      callback(null,err);   
+        var salida = { status: -1 };
+        callback(null,err);   
     }); 
     
 };
