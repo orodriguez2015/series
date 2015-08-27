@@ -52,6 +52,12 @@ var sequelize  = new Sequelize(DB_name, user, pwd,
 
 // Se importa la definición de la tabla usuario del archivo user.js
 var User = sequelize.import(path.join(__dirname, 'user'));
+var Serie = sequelize.import(path.join(__dirname, 'serie'));
+
+// Se define la relación 1:N entre la tabla serie y user. Un usuario
+// puede dar de alta 0:N series
+Serie.belongsTo(User);
+User.hasMany(Serie);
 
 /*
 // Se importa la definición de la tabla comment de la base de datos
@@ -64,7 +70,8 @@ Quiz.hasMany(Comment);
 
 // Se exporta la definición de la tabla quiz, para que se pueda utilizar donde sea preciso,
 // por ejemplo, en los controladores de la aplicación
-exports.User = User;
+exports.User  = User;
+exports.Serie = Serie;
 
 
 /** 
@@ -78,39 +85,6 @@ sequelize.sync().then(function(data) {
     
    console.log("BASE DE DATOS CREADA");    
 
-   /**
-   Quiz.count().then( function(count) {
-       console.log("Número de elementos : " + count);
-        if(count==0) {
-            
-            Quiz.create( {  pregunta: '¿ Cuál es la capital de Italia ?',
-                            respuesta: 'Roma',
-                            categoria: 'geografia'}).
-            then(function(data){
-                console.log("TABLA QUIZ INICIALIZADA");    
-            }).
-            catch(function(err){
-               console.log("ERROR AL CREAR LA TABLA QUIZ"); 
-            });
-
-
-
-            Quiz.create( {  pregunta: '¿ Cuál es la capital de Portugal ?',
-                            respuesta: 'Lisboa',
-                            categoria: 'geografia'}).
-            then(function(data){
-                console.log("TABLA QUIZ INICIALIZADA");    
-            }).
-            catch(function(err){
-               console.log("ERROR AL CREAR LA TABLA QUIZ"); 
-            });
-         
-        }
-    }).
-   catch(function(err){
-       console.log(" ERROR AL CONTAR LOS ELEMENTOS DE LA TABLA QUIZ: " + err);
-   });
-  */
 }).catch(function(err){
    console.log(" ERROR AL CREAR LA BASE DE DATOS: " + err.message); 
 });

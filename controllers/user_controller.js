@@ -303,8 +303,47 @@ exports.existeLoginEmailOtroUsuario = function(req,res,next){
      });
   
   }//if
-  else console.log("Parámetros incorrectos");
-  
-     
+  else console.log("Parámetros incorrectos"); 
+};
+
+
+/**
+  * POST /users/edit . Función que atiende la petición de edición de un determimado usuario del sistema
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.update = function(req,res,next) {
+    // Se recupera el usuario cargado previamente en la función load de autoload
+    var user = req.User;
+    
+    var id = req.body.id;
+    var login = req.body.login;
+    var password = req.body.password;
+    var nombre = req.body.nombre;
+    var apellido1 = req.body.apellido1;
+    var apellido2 = req.body.apellido2;
+    var email = req.body.email;
+    
+    
+    console.log("id: " + id + ",login: " + login + ",pasword: " + password + ",nombre: " + nombre + ",apellido1: " + apellido1 + ",apellido2: " + apellido2 + ",email: " + email);
+    
+    console.log("********* El usuario de la sesión : " + user.id);
+    user.login = login;
+    user.password = password;
+    user.nombre = nombre;
+    user.apellido1 = apellido1;
+    user.apellido2 = apellido2;
+    user.email = email;
+    
+    
+    user.save().then(function(){
+        console.log("Usuario con id "  + id + " actualizado");
+        res.redirect("/users");
+        
+    }).catch(function(err){
+        console.log("========> ERROR AL ACTUALIZAR UN USUARIO: " + err.message); 
+        next(err);
+    });
     
 };

@@ -1,0 +1,300 @@
+
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Series
+      <small>Alta</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Alta de serie</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+ 
+ <form name="formAltaUsuario" id="formAltaUsuario" role="form" method="POST" action="" novalidate>   
+ <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Datos generales de la serie de televisión</h3>
+    </div><!-- /.box-header -->
+    
+      <div class="box-body">
+
+         <div class="form-group">
+          <label for="Nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
+        </div>
+
+        <div class="form-group">
+          <label for="Nombre">Descripción/Sinopsis</label>
+          <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción">
+        </div>
+
+         <div class="form-group">
+          <label for="Nombre">Segundo apellido</label>
+          <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido">
+        </div>
+
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail">
+        </div>
+       
+      </div><!-- /.box-body -->
+    
+   </div>
+
+
+
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Cuenta del usuario</h3>
+    </div><!-- /.box-header -->
+    
+      <div class="box-body">
+
+         <div class="form-group">
+          <label for="Nombre">Login</label>
+          <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login">
+        </div>
+
+        
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password">
+        </div>
+        
+      </div><!-- /.box-body -->
+
+      <div class="box-footer">
+        <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Enviar</button>
+      </div>
+    
+   </div>
+   </form>
+
+
+  <div id="msgError" class="callout callout-danger lead" style="display:none;">
+   
+  </div>
+
+  
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+
+
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="/javascripts/additional-methods.js"></script>
+<script type="text/javascript" src="/javascripts/messages_es.js"></script>
+
+<script type="text/javascript">
+
+<!-- Se hace uso de la librería jQuery Validate para validar formularios -->
+$("#formAltaUsuario").validate({
+    rules: {
+      nombre: {
+        required: true,
+        minlength: 2,
+        maxlength: 100
+      },
+      apellido1: {
+        required: true,
+        minlength: 2,
+        maxlength: 100
+      },
+      apellido2: {
+        required: true,
+        minlength: 0,
+        maxlength: 100
+      },
+
+      email: {
+        required: true,
+        email: true
+      },
+      
+      login: {
+        required: true,
+        minlength: 4,
+        maxlength: 10
+      },
+      
+      password: {
+        required: true,
+        minlength: 4,
+        maxlength: 10
+      }
+    },
+
+    messages: {
+      nombre: {
+        lettersonly: "Escribe sólo letras"
+      },
+
+      apellidos: {
+        lettersonly: "Escribe sólo letras"
+      },
+      email: {
+        remote: "Email ya está en uso."
+      },
+      iban: {
+        iban: "Introduzca un IBAN correcto (Para España 24 caracteres y empezando por ES)."
+      }
+    },
+
+    // Si la validación es correcta, se añade la clase css 'has-success' de bootstrap,
+    // al campo de formulario validado
+    success: function(element) {
+            $(element).closest('.form-group').addClass('has-success');
+    },
+
+
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+    },
+    
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+    },
+
+    errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+    },
+
+    submitHandler: function(form) {
+
+      comprobarExistenciaUsuario(form);
+    }
+  });
+
+
+
+  function mostrarMensajeError(errores) {
+    var mensaje ="";
+    var _cabecera = "<h4>Error</h4>";
+    var _cuerpo = "<p>";
+
+    for(var i=0;errores!=undefined && i<errores.length;i++) {
+      _cuerpo += errores[i];
+      if(errores.length-i>1) _cuerpo += "</br>"
+
+    }
+    _cuerpo += "</p>"
+
+    $('#msgError').css('display', 'block');
+    $('#msgError').html(_cabecera + _cuerpo);
+        
+  }
+
+   
+
+  /**
+    * Función que realiza una llamada AJAX al servidor, para comprobar si ya existe un 
+    * usuario con el login o con el email indicado */
+  function comprobarExistenciaUsuario(form) {
+      var exito = 0;
+
+      var ajax_params = {
+        "login"  : $('#login').val(),
+        "email"  : $('#email').val()
+      }; 
+
+     
+     $.ajax({
+       url: '/users/existsUser',
+       data: ajax_params,
+       type: "POST",
+       success: verificarRespuesta,
+       error:function (xhr, ajaxOptions, thrownError) {
+         exito = true;
+         alert("Se ha producido un error al verificar la existencia del usuario: " + thrownError.message);
+
+         return exito;
+      }
+   });
+
+  }
+
+
+  function verificarRespuesta(json){
+    var exito = 0;
+    try{
+         
+
+       if(json!=null) { 
+
+          switch(Number(json.status)) { 
+
+              case 0: 
+                      if(!json.login && !json.email) { 
+                        exito = 1;
+                      }else {
+
+                         var errores = new Array();
+
+                         if(json.login) { 
+                            $('#login').closest('.form-group').addClass('has-error');
+                            errores.push("Ya existe un usuario con el login indicado");       
+                         }
+
+                         if(json.email) {
+                            $('#email').closest('.form-group').addClass('has-error');
+                            errores.push("Ya existe un usuario con el email indicado");       
+                         }
+                         
+                         mostrarMensajeError(errores);
+
+                      }
+                      break;
+
+              case -1: // Error al validar login en BD
+                       var errores = new Array();
+                       errores.push("Se ha producido un error técnico al validar el login del usuario");       
+                      
+                      mostrarMensajeError(errores);
+                      break;
+
+              case -2: // Error al validar email en BD
+                       var errores = new Array();
+                       errores.push("Se ha producido un error técnico al validar el email del usuario");  
+                       
+                      mostrarMensajeError(errores);
+                      break;
+
+
+          }// switch
+
+          if(exito==1) { 
+              document.formAltaUsuario.method = "POST";
+              document.formAltaUsuario.action ="/users/create";
+              document.formAltaUsuario.submit();
+          }
+
+       }else
+          alert("Respuesta incorrecta");
+
+    }catch(err){
+      alert("Error al recuperar el json: " + err.message);
+    } 
+
+  }
+
+
+
+
+  </script>

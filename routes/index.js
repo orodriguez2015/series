@@ -30,6 +30,9 @@ router.post("/users/existsUser",usersController.exists);
 // distinto a uno determinado, que tenga un determinado login o email
 router.post("/users/existeLoginEmailOtroUsuario",usersController.existeLoginEmailOtroUsuario);
 
+//  POST /users/edit . Esta petición actualiza los datos de un determinado usuario en el sistema
+router.post("/users/edit/:userId(\\d+)",usersController.update);
+
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){
 	res.render('index',{errors:[]});

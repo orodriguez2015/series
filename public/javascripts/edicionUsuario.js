@@ -170,8 +170,6 @@ $("#formEditUsuario").validate({
 
           }// switch
 
-          
-
        }else
           alert("Respuesta incorrecta");
 
@@ -182,8 +180,3 @@ $("#formEditUsuario").validate({
   }
     
     
-  function enviarFormulario() {
-      document.forms[0].method = "POST";
-      document.forms[0].action ="/users/edit";
-      document.forms[0].submit();
-  }

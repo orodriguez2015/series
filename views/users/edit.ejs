@@ -94,7 +94,15 @@
 <script type="text/javascript" src="/javascripts/messages_es.js"></script>
 
 <script type="text/javascript" src="/javascripts/edicionUsuario.js"></script>
-
-
-
+    
+  <script type="text/javascript">
+      function enviarFormulario() {
+          document.formEditUsuario.method = "POST";
+          document.formEditUsuario.action ="/users/edit/" + "<%=usuario.id%>";
+          
+          document.formEditUsuario.submit();
+      }
   </script>
+
+
+
