@@ -50,9 +50,12 @@ var sequelize  = new Sequelize(DB_name, user, pwd,
 
 
 
-// Se importa la definición de la tabla usuario del archivo user.js
+// Se importa la definición de la tabla User del archivo user.js
 var User = sequelize.import(path.join(__dirname, 'user'));
+// Se importa la definición de la tabla Serie del archivo serie.js
 var Serie = sequelize.import(path.join(__dirname, 'serie'));
+// Se importa la definición de la tabla Categoria del archivo categoria.js
+var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
 
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
 // puede dar de alta 0:N series
@@ -68,14 +71,14 @@ Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 */
 
-// Se exporta la definición de la tabla quiz, para que se pueda utilizar donde sea preciso,
-// por ejemplo, en los controladores de la aplicación
+// Se exporta la definición de las tabla de la base de datos
 exports.User  = User;
 exports.Serie = Serie;
+exports.Categoria = Categoria;
 
 
 /** 
-  * Esta llamada crea e inicializa la base de datos quiz.sqllite.
+  * Esta llamada crea e inicializa la base de datos videoclub.sqllite.
   * Además si la tabla QUIZ no tiene valores, entonces, se inserta uno por defecto.
   * Se hace uso de promesas utilizando la función then, que se ejecuta
   * cuando se ejecutado correctamente el método sync(), y la promesa catch en caso 

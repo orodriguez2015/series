@@ -2,10 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 var usersController = require('../controllers/user_controller.js');
+var categoriaController = require('../controllers/categoria_controller.js');
 
 
 // Autoload para la carga de un usuario en la request
 router.param('userId',usersController.load);
+
+// Autoload para la carga de un categoria en la request
+router.param('categoriaId',categoriaController.load);
 
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
 router.get('/users/new',usersController.new);
@@ -33,10 +37,22 @@ router.post("/users/existeLoginEmailOtroUsuario",usersController.existeLoginEmai
 //  POST /users/edit . Esta petición actualiza los datos de un determinado usuario en el sistema
 router.post("/users/edit/:userId(\\d+)",usersController.update);
 
+// GET /categorias/new. Petición del formulario de renderizado de la pantalla de alta de una nueva categoría
+router.get("/categorias/new",categoriaController.new);
+
+// POST /categorias/create. Petición del formulario de alta de una nueva categoría en la base de datos
+router.post("/categorias/create",categoriaController.create);
+
+// GET /categorias. Petición del formulario para renderizar la vista con el listado de categorías
+router.get("/categorias",categoriaController.show);
+
+
+router.get("/categorias/:categoriaId(\\d+)",categoriaController.edit);
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){
 	res.render('index',{errors:[]});
 });
+
 
 
 module.exports = router;
