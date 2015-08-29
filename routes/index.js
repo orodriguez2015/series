@@ -46,8 +46,16 @@ router.post("/categorias/create",categoriaController.create);
 // GET /categorias. Petición del formulario para renderizar la vista con el listado de categorías
 router.get("/categorias",categoriaController.show);
 
-
+// GET /categorias/:categoriaId. Recupera una categoría y se renderiza la vista en la que se permite
+// modificarla
 router.get("/categorias/:categoriaId(\\d+)",categoriaController.edit);
+
+// POST /categorias/:categoriaId. Permite modificar la descripción de una determinada categoría
+router.post("/categorias/:categoriaId(\\d+)",categoriaController.update);
+
+// DELETE /categorias/:categoriaId. Permite eliminar una determinada categoría
+router.delete("/categorias/:categoriaId(\\d+)",categoriaController.destroy);
+
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){
 	res.render('index',{errors:[]});

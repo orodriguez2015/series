@@ -89,15 +89,10 @@
     /**
       * Función llamada para confirmar la eliminación de un usuario del sistema
       * @param nombre: Nombre del usuario
-      * @param apellido1: Primer apellido del usuario
-      * @param apellido2: Segundo apellido del usuario
       */
-    function confirmarEliminar(nombre,apellido1,apellido2) { 
-        var exito = false;
-        var nombreCompleto = nombre + " " + apellido1;
-        if(apellido2!=undefined && apellido2!='') nombreCompleto += " " + apellido2
-        
-        if(confirm("¿Desea eliminar el usuario " + nombreCompleto + "?")==1){
+    function confirmarEliminar(nombre) { 
+        var exito = false;    
+        if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
             exito = true;
         }
         
