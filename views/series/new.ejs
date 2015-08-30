@@ -17,7 +17,7 @@
   <section class="content">
 
  
- <form name="formAltaUsuario" id="formAltaUsuario" role="form" method="POST" action="" novalidate>   
+ <form name="formAltaSerie" id="formAltaSerie" role="form" method="POST" action="" novalidate>   
  <div class="box box-primary">
     <div class="box-header with-border">
       <h3 class="box-title">Datos generales de la serie de televisión</h3>
@@ -32,47 +32,22 @@
 
         <div class="form-group">
           <label for="Nombre">Descripción/Sinopsis</label>
-          <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción">
-        </div>
-
-         <div class="form-group">
-          <label for="Nombre">Segundo apellido</label>
-          <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido">
+            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción" rows="10" cols="15"></textarea>
         </div>
 
         <div class="form-group">
-          <label for="exampleInputEmail1">Email</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail">
+          <label for="Nombre">Categoría</label>
+            <select name="categoria" id="categoria" class="form-control">
+            <% for(var i=0;i<categorias.length;i++) { %>    
+                <option value="<%=categorias[i].id %>"><%=categorias[i].nombre%></option>
+            <% } %>
+            </select>
         </div>
+          
        
       </div><!-- /.box-body -->
-    
-   </div>
-
-
-
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Cuenta del usuario</h3>
-    </div><!-- /.box-header -->
-    
-      <div class="box-body">
-
-         <div class="form-group">
-          <label for="Nombre">Login</label>
-          <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login">
-        </div>
-
-        
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password">
-        </div>
-        
-      </div><!-- /.box-body -->
-
-      <div class="box-footer">
-        <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Enviar</button>
+       <div class="box-footer">
+        <button type="submit" name="btnAltaSerie" id="btnAltaSerie" class="btn btn-primary">Enviar</button>
       </div>
     
    </div>
@@ -95,55 +70,26 @@
 <script type="text/javascript">
 
 <!-- Se hace uso de la librería jQuery Validate para validar formularios -->
-$("#formAltaUsuario").validate({
+$("#formAltaSerie").validate({
     rules: {
       nombre: {
         required: true,
         minlength: 2,
         maxlength: 100
       },
-      apellido1: {
+      descripcion: {
         required: true,
         minlength: 2,
         maxlength: 100
       },
-      apellido2: {
-        required: true,
-        minlength: 0,
-        maxlength: 100
-      },
-
-      email: {
-        required: true,
-        email: true
-      },
-      
-      login: {
-        required: true,
-        minlength: 4,
-        maxlength: 10
-      },
-      
-      password: {
-        required: true,
-        minlength: 4,
-        maxlength: 10
+      categoria: {
+        required: true
       }
     },
 
     messages: {
       nombre: {
         lettersonly: "Escribe sólo letras"
-      },
-
-      apellidos: {
-        lettersonly: "Escribe sólo letras"
-      },
-      email: {
-        remote: "Email ya está en uso."
-      },
-      iban: {
-        iban: "Introduzca un IBAN correcto (Para España 24 caracteres y empezando por ES)."
       }
     },
 
@@ -177,8 +123,9 @@ $("#formAltaUsuario").validate({
     },
 
     submitHandler: function(form) {
-
-      comprobarExistenciaUsuario(form);
+        document.formAltaSerie.method = "POST";
+        document.formAltaSerie.action = "/series";
+        document.formAltaSerie.submit();
     }
   });
 
@@ -200,101 +147,4 @@ $("#formAltaUsuario").validate({
     $('#msgError').html(_cabecera + _cuerpo);
         
   }
-
-   
-
-  /**
-    * Función que realiza una llamada AJAX al servidor, para comprobar si ya existe un 
-    * usuario con el login o con el email indicado */
-  function comprobarExistenciaUsuario(form) {
-      var exito = 0;
-
-      var ajax_params = {
-        "login"  : $('#login').val(),
-        "email"  : $('#email').val()
-      }; 
-
-     
-     $.ajax({
-       url: '/users/existsUser',
-       data: ajax_params,
-       type: "POST",
-       success: verificarRespuesta,
-       error:function (xhr, ajaxOptions, thrownError) {
-         exito = true;
-         alert("Se ha producido un error al verificar la existencia del usuario: " + thrownError.message);
-
-         return exito;
-      }
-   });
-
-  }
-
-
-  function verificarRespuesta(json){
-    var exito = 0;
-    try{
-         
-
-       if(json!=null) { 
-
-          switch(Number(json.status)) { 
-
-              case 0: 
-                      if(!json.login && !json.email) { 
-                        exito = 1;
-                      }else {
-
-                         var errores = new Array();
-
-                         if(json.login) { 
-                            $('#login').closest('.form-group').addClass('has-error');
-                            errores.push("Ya existe un usuario con el login indicado");       
-                         }
-
-                         if(json.email) {
-                            $('#email').closest('.form-group').addClass('has-error');
-                            errores.push("Ya existe un usuario con el email indicado");       
-                         }
-                         
-                         mostrarMensajeError(errores);
-
-                      }
-                      break;
-
-              case -1: // Error al validar login en BD
-                       var errores = new Array();
-                       errores.push("Se ha producido un error técnico al validar el login del usuario");       
-                      
-                      mostrarMensajeError(errores);
-                      break;
-
-              case -2: // Error al validar email en BD
-                       var errores = new Array();
-                       errores.push("Se ha producido un error técnico al validar el email del usuario");  
-                       
-                      mostrarMensajeError(errores);
-                      break;
-
-
-          }// switch
-
-          if(exito==1) { 
-              document.formAltaUsuario.method = "POST";
-              document.formAltaUsuario.action ="/users/create";
-              document.formAltaUsuario.submit();
-          }
-
-       }else
-          alert("Respuesta incorrecta");
-
-    }catch(err){
-      alert("Error al recuperar el json: " + err.message);
-    } 
-
-  }
-
-
-
-
-  </script>
+</script>

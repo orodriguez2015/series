@@ -3,6 +3,7 @@ var router = express.Router();
 
 var usersController = require('../controllers/user_controller.js');
 var categoriaController = require('../controllers/categoria_controller.js');
+var serieController = require('../controllers/serie_controller.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -55,6 +56,16 @@ router.post("/categorias/:categoriaId(\\d+)",categoriaController.update);
 
 // DELETE /categorias/:categoriaId. Permite eliminar una determinada categoría
 router.delete("/categorias/:categoriaId(\\d+)",categoriaController.destroy);
+
+
+// GET /series/new. Petición de carga del formulario de alta de una nueva serie
+router.get("/series/new",serieController.new);
+
+// POST /series. Petición de alta de una nueva serie en la base de datos
+router.post("/series",serieController.create);
+
+// GET /series. Petición para mostrar un listado de las series existentes en la BBDD
+router.get("/series",serieController.show);
 
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){

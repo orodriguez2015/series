@@ -57,10 +57,23 @@ var Serie = sequelize.import(path.join(__dirname, 'serie'));
 // Se importa la definición de la tabla Categoria del archivo categoria.js
 var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
 
+
+
+
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
 // puede dar de alta 0:N series
 Serie.belongsTo(User);
 User.hasMany(Serie);
+
+
+
+// Una categoría puede estar asociada a muchas series.
+// Una serie tiene una categoría asociada
+Serie.belongsTo(Categoria);
+Categoria.hasMany(Serie);
+
+
+
 
 /*
 // Se importa la definición de la tabla comment de la base de datos
