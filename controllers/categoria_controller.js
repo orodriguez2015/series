@@ -78,6 +78,7 @@ exports.show = function(req,res,next){
   console.log("Se procede a renderizar el listado de categorias");
     
   // Se procede a almacenar en base de datos la categoría    
+  
   model.Categoria.findAll({order:[['nombre','ASC']]}).then(function(categorias){
       if(categorias){
         res.render("categorias/show",{categorias:categorias,errors:{}});        
@@ -153,3 +154,6 @@ exports.destroy = function(req,res,next){
         next(err);
     });
 };
+
+
+

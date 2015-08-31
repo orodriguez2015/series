@@ -63,14 +63,16 @@ var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
 // puede dar de alta 0:N series
 Serie.belongsTo(User);
-User.hasMany(Serie);
+// Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería UserId
+User.hasMany(Serie,{foreignKey:'UserId'});
 
 
 
 // Una categoría puede estar asociada a muchas series.
 // Una serie tiene una categoría asociada
-Serie.belongsTo(Categoria);
-Categoria.hasMany(Serie);
+Serie.belongsTo(Categoria,{as: 'Categoria', foreignKey: 'CategoriaId'});
+// Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería CategoriaId
+Categoria.hasMany(Serie,{foreignKey: 'CategoriaId'} );
 
 
 

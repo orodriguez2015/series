@@ -1,0 +1,109 @@
+
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Series
+      <small>Listado</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Listado de series</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+  <div class="box">
+  
+                  
+  <div class="box-body">  
+    <table id="example2" class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th colspan="2">&nbsp</th>
+          <th>Nombre</th>
+          <th>Sinopsis/Descripción</th>
+          <th>Categoría</th>
+          <th>Fecha de alta</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% for(var i=0;i<series.length;i++) { %>
+        <tr>
+          <td width="40px">
+
+            <a href="/series/<%=series[i].id%>">
+                <button id="btnEditar" name="btnEditar" class="btn bg-olive margin">Editar</button>
+              </a> 
+          </td>
+          <td width="40px">    
+
+            <form name="formDelete" method="POST" action="/series/<%=series[i].id%>?_method=DELETE" onsubmit="return confirmarEliminar('<%=series[i].nombre%>');">
+              <button type="submit" id="btnEliminar" name="btnEliminar" class="btn bg-olive margin">Eliminar</button>
+            </form> 
+          </td>
+          <td><%=series[i].nombre%></td>    
+          <td><%=series[i].descripcion%></td>
+          <td><%=series[i].CategoriaId%> - <%=series[i].Categoria%></td>
+          <td><%=series[i].createdAt%></td>    
+        </tr>
+      <% } %>  
+        
+      <tfoot>
+        <tr>
+          <th colspan="2">&nbsp</th>
+          <th>Nombre</th>
+          <th>Sinopsis/Descripción</th>
+          <th>Fecha de alta</th>
+        </tr>
+      </tfoot>
+    </table>
+      <br>
+      <a href="/series/new">Alta de serie</a>
+  </div><!-- /.box-body -->
+  </div> 
+
+
+  
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+
+<!-- DATA TABLES SCRIPT -->
+<script src="/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js" type="text/javascript"></script>
+<!-- SlimScroll -->
+<script src="/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<!-- FastClick -->
+<script src="/plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+      $(function () {
+        
+        $('#listado').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false
+        });
+      });
+
+      
+    /**
+      * Función llamada para confirmar la eliminación de un usuario del sistema
+      * @param nombre: Nombre del usuario
+      */
+    function confirmarEliminar(nombre) { 
+        var exito = false;    
+        if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
+            exito = true;
+        }
+        
+        return exito;
+    }
+</script>

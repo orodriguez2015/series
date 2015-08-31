@@ -12,6 +12,9 @@ router.param('userId',usersController.load);
 // Autoload para la carga de un categoria en la request
 router.param('categoriaId',categoriaController.load);
 
+// Autoload para la carga de una serie en la request
+router.param('serieId',serieController.load);
+
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
 router.get('/users/new',usersController.new);
 
@@ -66,6 +69,9 @@ router.post("/series",serieController.create);
 
 // GET /series. Petición para mostrar un listado de las series existentes en la BBDD
 router.get("/series",serieController.show);
+
+// DELETE /series. Petición para mostrar un listado de las series existentes en la BBDD
+router.delete("/series/:serieId(\\d+)",serieController.destroy);
 
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){
