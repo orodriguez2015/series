@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-//var session = require('express-session');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 
@@ -44,6 +44,31 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+
+
+// Helpers dinamicos para almacenar 
+app.use(function(req, res, next) {
+  
+    console.log('Comprobación de sesiones');
+    // Si no existe lo inicializa
+    if (!req.session.path) {
+        req.session.path = '/';
+    }
+
+    console.log("path desde el que llega la petición: " + req.path);
+    // Se almacena en la sesión del usuario, el path desde el que ha hecho 
+    // la petición, siempre y cuando la petición no sea las indicadas en el match
+    if (!req.path.match(/\/login|\/logout|\/user/)) {
+        req.session.path = req.path;
+    }
+
+    // Hacer visible req.session en las vistas
+    res.locals.session = req.session;
+    next();
+});
+
+
 
 // error handlers
 

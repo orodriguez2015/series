@@ -157,3 +157,25 @@ exports.destroy = function(req,res,next){
 
 
 
+/**
+  * Función que recupera una determinada categoría
+  * @param categoriaId: Id de la categoría
+  * @param callback: Función que se pasa como parámetro para devolver la categoría
+  * o error que se ha producido al recuperarlo
+  */
+exports.get = function(categoriaId,callback){
+  console.log("Función que recupera una determinada categoria: " + categoriaId);
+
+  model.Categoria.find({where: {id:categoriaId}}).then(function(categoria){
+      if(categoria){
+          console.log("Se ha recuperado la categoria de id: " + categoriaId);
+          callback(categoria,null);
+      }
+  }).catch(function(err){
+      console.log("Error al recuperar la categoria de id " + categoriaId + " : " + err.message);
+      callback(null,err);
+  });
+    
+};
+
+

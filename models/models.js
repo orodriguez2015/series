@@ -68,11 +68,12 @@ User.hasMany(Serie,{foreignKey:'UserId'});
 
 
 
-// Una categoría puede estar asociada a muchas series.
-// Una serie tiene una categoría asociada
-Serie.belongsTo(Categoria,{as: 'Categoria', foreignKey: 'CategoriaId'});
+
 // Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería CategoriaId
 Categoria.hasMany(Serie,{foreignKey: 'CategoriaId'} );
+// Una serie tiene una categoría asociada, la relación entre la seri y la categoria se llamará Categoria
+Serie.belongsTo(Categoria,{as: 'Categoria', foreignKey: 'CategoriaId'});
+
 
 
 

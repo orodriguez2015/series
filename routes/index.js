@@ -4,6 +4,7 @@ var router = express.Router();
 var usersController = require('../controllers/user_controller.js');
 var categoriaController = require('../controllers/categoria_controller.js');
 var serieController = require('../controllers/serie_controller.js');
+var loginController = require('../controllers/login_controller.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -72,6 +73,18 @@ router.get("/series",serieController.show);
 
 // DELETE /series. Petición para mostrar un listado de las series existentes en la BBDD
 router.delete("/series/:serieId(\\d+)",serieController.destroy);
+
+// GET /series. Petición para recuperar una determinada serie para renderizar la vista
+router.get("/series/:serieId(\\d+)",serieController.edit);
+
+// POST /series. Petición para actualizar una determinada serie en base de datos
+router.post("/series/update/:serieId(\\d+)",serieController.update);
+
+// GET /login. Petición de login
+router.get("/login",loginController.login);
+
+// POST /login. Petición de autenticación de un usuario
+router.post("/login",loginController.autenticate);
 
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){

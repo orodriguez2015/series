@@ -31,6 +31,7 @@ exports.load = function(req,res,next,serieId){
     
     console.log("Se procede a realizar el autoload de la serie");
     
+    // Al recuperar una serie, se recuperará también
     model.Serie.find({where: {id:serieId}}).then(function(serie){
         req.Serie = serie;
         console.log("Serie recuperada y almacenada en la request"); 
@@ -85,37 +86,14 @@ exports.create = function(req,res,next){
 exports.show = function(req,res,next){
     
     console.log("Se procede a renderizar la vista con el listado de series existentes");
-    /*
-    include
-: [ { 
-model
-: 
-models.User
-, 
-!
-as
-: '
-Author
-' } 
-!
-] */
 
-    
+    // Al recuperar todas las series, por cada una de ellas, se recupera la categoria asociada, cuyo nombre
+    // es Categoria, tal y como se ha definido en el models.js . Para recuperar la categoria para cada serie, 
+    // basta con ejecutar series[i].categorium
     model.Serie.findAll({order:[['nombre', 'ASC']],
-                        include: [{model:model.Categoria,as:'Categoria'}]}).then(function(series){
-        console.log("Serie almacenada en base de datos"); 
-        
-        for(var i=0;i<series.length;i++){
-            
-            for(propiedad in series[i]){
-                console.log("propiedad: " + propiedad);   
-                
-            }
-            
-        }
-        
-        
-        
+                         include: [{model:model.Categoria,as:'Categoria'}]
+                        }).then(function(series){    
+        console.log("Se recupera todas las series ordenadas por nombre"); 
         res.render("series/show",{series:series,errors:[]});    
         
     }).catch(function(err){
@@ -146,3 +124,62 @@ exports.destroy = function(req,res,next){
     });
     
 };
+
+
+
+
+/**
+  * Recupera una determinada serie y renderiza la vista que permite su edición
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param req: Objeto next 
+  */
+exports.edit = function(req,res,next){
+    // La serie junto con su categoría ya se ha recuperado en el autoload
+    var serie = req.Serie;
+    console.log("Se procede a renderizar la vista de edición de la serie de id " + serie.id);
+    
+    // Se recuperan las categorías para generar el contenido de la lista desplegable
+    model.Categoria.findAll({order:[['nombre', 'ASC']]}).then(function(categorias){
+        console.log("Se han recuperado las categorias, se proceder a renderizar la vista");
+        res.render("series/edit",{serie:serie,categorias:categorias,errors:[]});
+        
+    }).catch(function(err){
+        console.log("Error al recuperar las categorías para editar la serie de id " + serie.id + " : " + err.message);
+        next(err);
+    });
+    
+};
+
+
+/**
+  * Función que actualiza el contenido de una determinada serie en base de datos
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param req: Objeto next 
+  */
+exports.update = function(req,res,next){
+    var nombre = req.body.nombre;
+    var descripcion = req.body.descripcion;
+    var categoria = req.body.categoria;
+    
+    console.log("Se procede a actualizar la serie de nombre: " + nombre);
+    console.log("Se procede a actualizar la serie de descripcion: " + descripcion);
+    console.log("Se procede a actualizar la serie de categoria: " + categoria);
+    
+    var serie = req.Serie;
+    serie.nombre = nombre;
+    serie.descripcion = descripcion;
+    serie.CategoriaId = categoria;
+    
+    serie.save().then(function(){
+        console.log("Serie almacenada en base de datos"); 
+        res.redirect("/series");    
+        
+    }).catch(function(err){
+        console.log("Error al almacenar la serie en base de datos: " + err.message);
+        next(err);
+    });
+    
+};
+
