@@ -21,7 +21,7 @@
     
       <div class="login-box-body">
         <p class="login-box-msg">Inicie sesión</p>
-        <form action="/login" method="post">
+        <form name="formLogin" id="formLogin" action="" method="post" novalidate>
           <div class="form-group has-feedback">
             <input type="text" name="login" id="login" class="form-control" placeholder="Login" />
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -45,10 +45,81 @@
     </div><!-- /.login-box -->
 
     <% if(error!=undefined) { %>
-        <%= error.message %>
-
+      
+      <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-ban"></i> Error !</h4>
+             <%= error.message %>
+      </div>
+           
     <% } %>
       <!---------------------------------->
   
   </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
+
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="/javascripts/additional-methods.js"></script>
+<script type="text/javascript" src="/javascripts/messages_es.js"></script>
+
+<script type="text/javascript">
+
+<!-- Se hace uso de la librería jQuery Validate para validar formularios -->
+$("#formLogin").validate({
+    rules: {
+      login: {
+        required: true,
+        minlength: 4,
+        maxlength: 100
+      },
+      password: {
+        required: true,
+        minlength: 8
+      }
+    },
+
+    messages: {
+      nombre: {
+        lettersonly: "Escribe sólo letras"
+      }
+    },
+
+    // Si la validación es correcta, se añade la clase css 'has-success' de bootstrap,
+    // al campo de formulario validado
+    success: function(element) {
+            $(element).closest('.form-group').addClass('has-success');
+    },
+
+
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+    },
+    
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+    },
+
+    errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+    },
+
+    submitHandler: function(form) {
+        document.formLogin.method = "POST";
+        document.formLogin.action = "/login";
+        document.formLogin.submit();
+    }
+  });
+    
+</script>
+    
+
