@@ -17,19 +17,19 @@ router.param('categoriaId',categoriaController.load);
 router.param('serieId',serieController.load);
 
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
-router.get('/users/new',usersController.new);
+router.get('/users/new',loginController.loginRequired,usersController.new);
 
 // POST /users/create. Da de alta un usuario en la base de datos, siempre y cuando no exista
-router.post('/users/create',usersController.create);
+router.post('/users/create',loginController.loginRequired,usersController.create);
 
 // GET /users. Renderiza el listado con las tablas de usuarios
-router.get('/users',usersController.users);
+router.get('/users',loginController.loginRequired,usersController.users);
 
 // DELETE /users/:userId/. Elimina un determinado usuario de la base de datos
-router.delete("/users/:userId(\\d+)",usersController.delete);
+router.delete("/users/:userId(\\d+)",loginController.loginRequired,usersController.delete);
 
 // GET /users/:userId/. Edita un determinado usuario de la base de datos
-router.get("/users/:userId(\\d+)",usersController.show);
+router.get("/users/:userId(\\d+)",loginController.loginRequired,usersController.show);
 
 // POST /users/existsUser. Esta petición comprueba si un login y un email ya está asignado a un 
 // usuario del sistema
@@ -40,10 +40,10 @@ router.post("/users/existsUser",usersController.exists);
 router.post("/users/existeLoginEmailOtroUsuario",usersController.existeLoginEmailOtroUsuario);
 
 //  POST /users/edit . Esta petición actualiza los datos de un determinado usuario en el sistema
-router.post("/users/edit/:userId(\\d+)",usersController.update);
+router.post("/users/edit/:userId(\\d+)",loginController.loginRequired,usersController.update);
 
 // GET /categorias/new. Petición del formulario de renderizado de la pantalla de alta de una nueva categoría
-router.get("/categorias/new",categoriaController.new);
+router.get("/categorias/new",loginController.loginRequired,categoriaController.new);
 
 // POST /categorias/create. Petición del formulario de alta de una nueva categoría en la base de datos
 router.post("/categorias/create",categoriaController.create);
@@ -53,38 +53,41 @@ router.get("/categorias",categoriaController.show);
 
 // GET /categorias/:categoriaId. Recupera una categoría y se renderiza la vista en la que se permite
 // modificarla
-router.get("/categorias/:categoriaId(\\d+)",categoriaController.edit);
+router.get("/categorias/:categoriaId(\\d+)",loginController.loginRequired,categoriaController.edit);
 
 // POST /categorias/:categoriaId. Permite modificar la descripción de una determinada categoría
-router.post("/categorias/:categoriaId(\\d+)",categoriaController.update);
+router.post("/categorias/:categoriaId(\\d+)",loginController.loginRequired,categoriaController.update);
 
 // DELETE /categorias/:categoriaId. Permite eliminar una determinada categoría
-router.delete("/categorias/:categoriaId(\\d+)",categoriaController.destroy);
+router.delete("/categorias/:categoriaId(\\d+)",loginController.loginRequired,categoriaController.destroy);
 
 
 // GET /series/new. Petición de carga del formulario de alta de una nueva serie
-router.get("/series/new",serieController.new);
+router.get("/series/new",loginController.loginRequired,serieController.new);
 
 // POST /series. Petición de alta de una nueva serie en la base de datos
-router.post("/series",serieController.create);
+router.post("/series",loginController.loginRequired,serieController.create);
 
 // GET /series. Petición para mostrar un listado de las series existentes en la BBDD
 router.get("/series",serieController.show);
 
 // DELETE /series. Petición para mostrar un listado de las series existentes en la BBDD
-router.delete("/series/:serieId(\\d+)",serieController.destroy);
+router.delete("/series/:serieId(\\d+)",loginController.loginRequired,serieController.destroy);
 
 // GET /series. Petición para recuperar una determinada serie para renderizar la vista
-router.get("/series/:serieId(\\d+)",serieController.edit);
+router.get("/series/:serieId(\\d+)",loginController.loginRequired,serieController.edit);
 
 // POST /series. Petición para actualizar una determinada serie en base de datos
-router.post("/series/update/:serieId(\\d+)",serieController.update);
+router.post("/series/update/:serieId(\\d+)",loginController.loginRequired,serieController.update);
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);
 
 // POST /login. Petición de autenticación de un usuario
 router.post("/login",loginController.autenticate);
+
+// GET /logout. Petición de cierre de sesión de un usuario del sistema
+router.get("/logout",loginController.destroy);
 
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){

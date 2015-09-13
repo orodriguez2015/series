@@ -7,7 +7,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var session = require('express-session');
-
 var routes = require('./routes/index');
 
 var app = express();
@@ -28,26 +27,21 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 // Se pone extended a 'false', para poder enviar arrays en los formularios
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('Series-2015'));
+app.use(session());
+//app.use(cookieParser());
 // Se instala el middleware y se indica el nombre utilizado para 
 // encapsular el método POST por el que sea, en este caso suele ser por PUT.
 // HTML5 no permite el envio de formularios por PUT, sólo por POST o por GET.
 // De ahí que se haga esto
 app.use(methodOverride('_method'));
-//app.use(session());
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', routes);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
 
 
 
-// Helpers dinamicos para almacenar 
+// Helpers dinamicos para almacenar en la sesión del usuario, la ruta de la que 
+// procede, para reenviar la misma una vez que se ha autenticado.
 app.use(function(req, res, next) {
   
     console.log('Comprobación de sesiones');
@@ -66,6 +60,16 @@ app.use(function(req, res, next) {
     // Hacer visible req.session en las vistas
     res.locals.session = req.session;
     next();
+});
+
+
+app.use('/', routes);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 
