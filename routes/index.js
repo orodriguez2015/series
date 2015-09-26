@@ -84,11 +84,11 @@ router.get("/series/:serieId(\\d+)",loginController.loginRequired,serieControlle
 // POST /series. Petición para actualizar una determinada serie en base de datos
 router.post("/series/update/:serieId(\\d+)",loginController.loginRequired,serieController.update);
 
-// GET /series/capitulos/:serieId. Petición para mostrar la serie y poder dar de alta sus capítulos
+// GET /series/capitulos/:serieId. Petición para mostrar la serie y su lista de capítulos
 router.get("/series/capitulos/:serieId(\\d+)",serieController.getCapitulos);
 
 // POST /series/capitulos/:serieId. Petición para dar de alta un capítulo asociado a una serie de TV
-router.post("/series/capitulos/:serieId(\\d+)",serieController.createCapitulo);
+router.post("/series/capitulos/:serieId(\\d+)",loginController.loginRequired,serieController.createCapitulo);
 
 // DELETE /capitulo/:capituloId. Petición de borrado de un determinado capítlo de una serie
 router.delete("/capitulo/:capituloId(\\d+)",loginController.loginRequired,capituloSerieController.delete);
