@@ -17,6 +17,9 @@ router.param('categoriaId',categoriaController.load);
 // Autoload para la carga de una serie en la request
 router.param('serieId',serieController.load);
 
+// Autoload para la carga de un capitulo de una serie en la request
+router.param('capituloId',capituloSerieController.load);
+
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
 router.get('/users/new',loginController.loginRequired,usersController.new);
 
@@ -87,6 +90,9 @@ router.get("/series/capitulos/:serieId(\\d+)",serieController.getCapitulos);
 // POST /series/capitulos/:serieId. Petición para dar de alta un capítulo asociado a una serie de TV
 router.post("/series/capitulos/:serieId(\\d+)",serieController.createCapitulo);
 
+// DELETE /capitulo/:capituloId. Petición de borrado de un determinado capítlo de una serie
+router.delete("/capitulo/:capituloId(\\d+)",loginController.loginRequired,capituloSerieController.delete);
+
 // GET /login. Petición de login
 router.get("/login",loginController.login);
 
@@ -95,6 +101,8 @@ router.post("/login",loginController.autenticate);
 
 // GET /logout. Petición de cierre de sesión de un usuario del sistema
 router.get("/logout",loginController.destroy);
+
+
 
 // GET /. Página de entrada en el sistema
 router.get('/',function(req,res){

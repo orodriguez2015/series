@@ -36,18 +36,17 @@
           <td width="40px">
 
             <a href="/series/<%=series[i].id%>">
-                <button id="btnEditar" name="btnEditar" class="btn bg-olive margin">Editar</button>
+                <img src="/images/pencil2.png" border="0" height="18" width="18" alt="Editar" title="Editar"/>
               </a> 
           </td>
           <td width="40px">    
-
             <form name="formDelete" method="POST" action="/series/<%=series[i].id%>?_method=DELETE" onsubmit="return confirmarEliminar('<%=series[i].nombre%>');">
-              <button type="submit" id="btnEliminar" name="btnEliminar" class="btn bg-olive margin">Eliminar</button>
-            </form> 
+            <input type="image" src="/images/23_full_trash.png" height="18" width="18" alt="Eliminar" title="Eliminar">
+            </form>
           </td>
-          <td><a href="/series/capitulos/<%=series[i].id%>"><%=series[i].nombre%></a></td>    
-          <td><%=series[i].descripcion%></td>
-          <td><%=series[i].categorium.nombre %> </td>
+          <td width="20%"><a href="/series/capitulos/<%=series[i].id%>"><%=series[i].nombre%></a></td>    
+          <td width="40%"><%=series[i].descripcion%></td>
+          <td width="20%"><%=series[i].categorium.nombre %> </td>
           <td><%=series[i].createdAt %></td>    
         </tr>
       <% } %>  

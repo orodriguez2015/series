@@ -33,13 +33,13 @@
           <td width="40px">
 
             <a href="/categorias/<%=categorias[i].id%>">
-                <button id="btnEditar" name="btnEditar" class="btn bg-olive margin">Editar</button>
+                <img src="/images/pencil2.png" width="18" height="18" alt="Editar" title="Editar">
               </a> 
           </td>
           <td width="40px">    
 
             <form name="formDelete" method="POST" action="/categorias/<%=categorias[i].id%>?_method=DELETE" onsubmit="return confirmarEliminar('<%=categorias[i].nombre%>');">
-              <button type="submit" id="btnEliminar" name="btnEliminar" class="btn bg-olive margin">Eliminar</button>
+               <input type="image" src="/images/23_full_trash.png" height="18" width="18" alt="Eliminar" title="Eliminar">
             </form> 
           </td>
           <td><%=categorias[i].nombre%></td>

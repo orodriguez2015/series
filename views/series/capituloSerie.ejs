@@ -17,7 +17,7 @@
   <section class="content">
 
  
- <form name="formAltaCapituloSerie" id="formAltaCapituloSerie" role="form" method="POST" action="" novalidate>   
+ 
  <div class="box box-primary">
     
       <div class="box-body">
@@ -27,27 +27,55 @@
 
          <div class="form-group">
             <%=serie.descripcion%>
-          </div>  
-       
+          </div>    
       </div><!-- /.box-body -->
-     
-
-      <table border="1">
-      <tr>
-          <td></td>
-      </tr>
           
-      </table>
-     
+     <!---------------------->
+       <div class="box-body">  
+           
+    <% if(serie.capituloSerieses!=undefined && serie.capituloSerieses.length>0) { %>       
+    <table id="example2" class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th width="25%">Capítulo</th>
+          <th width="25%">Fecha de alta</th>
+          <th>&nbsp;</th>    
+        </tr>
+      </thead>
+      <tbody>
+      <% for(var i=0;i<serie.capituloSerieses.length;i++){ %>
+        <tr>
+          <td><%=serie.capituloSerieses[i].nombre%></td>   
+          <td><%=serie.capituloSerieses[i].createdAt %></td>  
+        <% if(session.user!=undefined) { %>    
+          <td>
+              
+              <form name="formBorrarCapitulo" method="POST" action="/capitulo/<%=serie.capituloSerieses[i].id %>?_method=DELETE">
+              <input type="image" src="/images/23_full_trash.png" height="18" width="18" onclick="return confirmarEliminar();">
+              </form>    
+              
+              <!--
+            <a border="0" href="/series/capitulos/delete/serie.capituloSerieses[i].id " onclick="return confirmarEliminar();">
+                <i class="fa fa-fw fa-trash-o"></i>
+            </a>  
+-->
+    
+          </td>   
+        <% } %>    
             
-    <br>  
+        </tr>
+      <% } %>  
+    </table>
+    <br>       
+    <% }// for %>       
+           
+     
+    <% if(session.user!=undefined) { %>    
+           <form name="formAltaCapituloSerie" id="formAltaCapituloSerie" role="form" method="POST" action="" novalidate>   
     <div class="box-header with-border">
       <h3 class="box-title">Alta de nuevo capítulo</h3>
     </div><!-- /.box-header -->
-        
-    <div class="box-body">
-
-         <div class="form-group">
+     <div class="form-group">
           <label for="Nombre">Nombre</label>
           <input type="text" class="form-control" id="capitulo" name="capitulo" placeholder="Introduzca el nombre del capítulo">
         </div>
@@ -74,25 +102,25 @@
           </select>
         </div>
         
-    
-       
-      </div><!-- /.box-body -->        
+        <div class="box-footer">
+            <button type="submit" name="btnAltaSerie" id="btnAltaSerie" class="btn btn-primary">Enviar</button>
+            &nbsp;
+            <a href="/series">
+                <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar">
+            </a>      
+        </div>
+        </form>   
+    <% } %>       
+           
+  </div><!-- /.box-body -->
+  </div> 
+     
+     <!---------------------->
             
-            
-            
-            
-            
-       <div class="box-footer">
-        <button type="submit" name="btnAltaSerie" id="btnAltaSerie" class="btn btn-primary">Enviar</button>
-        &nbsp;
-        <a href="/series">
-            <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar">
-        </a>   
-      </div>
       <br>
        
    </div>
-   </form>
+   
 
 
   <div id="msgError" class="callout callout-danger lead" style="display:none;">
@@ -109,6 +137,13 @@
 <script type="text/javascript" src="/javascripts/messages_es.js"></script>
 
 <script type="text/javascript">
+    
+    function confirmarEliminar(){
+        if(confirm('¿Desea eliminar el capítulo seleccionado?'))
+            return true;
+        else return false;
+        
+    }
 
 <!-- Se hace uso de la librería jQuery Validate para validar formularios -->
 $("#formAltaCapituloSerie").validate({
@@ -121,7 +156,7 @@ $("#formAltaCapituloSerie").validate({
       url: {
         required: true,
         minlength: 6,
-        required: true,
+        required: false,
         url:true
       }
     },

@@ -56,10 +56,10 @@ var User = sequelize.import(path.join(__dirname, 'user'));
 var Serie = sequelize.import(path.join(__dirname, 'serie'));
 // Se importa la definición de la tabla Categoria del archivo categoria.js
 var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
-
 // Se importa la definición de la tabla CapituloSerie del archivo capituloSerie.js
 var CapituloSerie = sequelize.import(path.join(__dirname, 'capituloSerie'));
-
+// Se importa la definición de la tabla Temporada del archivo temporada.js
+var Temporada = sequelize.import(path.join(__dirname, 'temporada'));
 
 
 // Se define la relación 1:N entre la tabla serie y user. Un usuario

@@ -32,9 +32,8 @@ exports.load = function(req,res,next,serieId){
     console.log("Se procede a realizar el autoload de la serie");
     
     // Al recuperar una serie, se recuperará también
-    model.Serie.find({where: {id:serieId}, 
-                      include:[{model:model.CapituloSerie,as:'Serie'}]}).then(function(serie){
-        req.Serie = serie;
+    model.Serie.find({where: {id:serieId},include:[{model:model.CapituloSerie}]}).then(function(serie){
+        req.Serie = serie;        
         console.log("Serie recuperada y almacenada en la request"); 
         next();
         
@@ -233,6 +232,9 @@ exports.createCapitulo = function(req,res,next) {
   });
     
 };
+
+
+
 
 
 
