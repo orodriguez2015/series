@@ -19,10 +19,12 @@ module.exports = function(sequelize,DataTypes){
         
             puntuacion: {
                 type: DataTypes.INTEGER
-            }
-
-        }         
+            },
         
-      }
+            idUsuario: { 
+                type: DataTypes.INTEGER,
+                validate: {notEmpty: { msg:'El id del usuario que da alta el capítulo es obligatorio'}}
+            }
+       }         
     );  
 };

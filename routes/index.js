@@ -5,6 +5,7 @@ var usersController = require('../controllers/user_controller.js');
 var categoriaController = require('../controllers/categoria_controller.js');
 var serieController = require('../controllers/serie_controller.js');
 var loginController = require('../controllers/login_controller.js');
+var capituloSerieController = require('../controllers/capituloSerie_controller.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -79,6 +80,12 @@ router.get("/series/:serieId(\\d+)",loginController.loginRequired,serieControlle
 
 // POST /series. Petición para actualizar una determinada serie en base de datos
 router.post("/series/update/:serieId(\\d+)",loginController.loginRequired,serieController.update);
+
+// GET /series/capitulos/:serieId. Petición para mostrar la serie y poder dar de alta sus capítulos
+router.get("/series/capitulos/:serieId(\\d+)",serieController.getCapitulos);
+
+// POST /series/capitulos/:serieId. Petición para dar de alta un capítulo asociado a una serie de TV
+router.post("/series/capitulos/:serieId(\\d+)",serieController.createCapitulo);
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);

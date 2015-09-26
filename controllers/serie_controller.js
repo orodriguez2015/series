@@ -32,7 +32,8 @@ exports.load = function(req,res,next,serieId){
     console.log("Se procede a realizar el autoload de la serie");
     
     // Al recuperar una serie, se recuperará también
-    model.Serie.find({where: {id:serieId}}).then(function(serie){
+    model.Serie.find({where: {id:serieId}, 
+                      include:[{model:model.CapituloSerie,as:'Serie'}]}).then(function(serie){
         req.Serie = serie;
         console.log("Serie recuperada y almacenada en la request"); 
         next();
@@ -179,7 +180,60 @@ exports.update = function(req,res,next){
     }).catch(function(err){
         console.log("Error al almacenar la serie en base de datos: " + err.message);
         next(err);
-    });
+    });    
+};
+
+
+
+/**
+  * Obtiene un listado de la capitulos de una determinada serie, y renderiza la vista
+  * por el nombre
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param req: Objeto next 
+  */
+exports.getCapitulos = function(req,res,next){
+    // Se recupera la serie de la request, cargada por la función load
+    console.log("Se procede a renderizar la vista con el listado de series existentes");
+    
+    res.render('series/capituloSerie',{serie:req.Serie,errors:[]});
+};
+
+
+
+exports.createCapitulo = function(req,res,next) { 
+  var capitulo = req.body.capitulo;
+  var url = req.body.url;
+  var puntuacion = req.body.puntuacion;    
+    
+  console.log("Alta de capítulo de nombre: " + capitulo);
+  console.log("Alta de capítulo de url: " + url);
+  console.log("Alta de capítulo de puntuacion: " + puntuacion);
+  console.log("serie.id : " + req.Serie.id);
+
+    
+  // Se crea el objeto CapituloSerie que se va a grabar en base de datos    
+  var capituloSerie = model.CapituloSerie.build({
+    nombre: capitulo,
+    url: url,
+    puntuacion: puntuacion,
+    SerieId: req.Serie.id,
+    idUsuario: req.session.user.id
+  });
+    
+
+  capituloSerie.save().then(function(){
+      // Se ha grabado el capítulo de la serie
+      console.log("Almacenado capítulo de la serie " + req.Serie.id + " en base de datos");
+      // Se redirige a la vista que muestra los capítulos de una serie
+      res.redirect("/series/capitulos/" + req.Serie.id);    
+  }).catch(function(err){
+      console.log("Error al almacenar capítulo de la serie " + req.Serie.id + " en base de datos: " + err.message);
+      next(err);
+  });
     
 };
+
+
+
 

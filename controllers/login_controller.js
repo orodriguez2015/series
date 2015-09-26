@@ -27,7 +27,11 @@ exports.autenticate = function(req,res,next){
     
     console.log(" Autenticando al usuario de login: " + login);
     
-    model.User.find({where: {login:login,password:password}}).then(function(user){
+    // Se obtiene el hash SHA1 de la password, de modo que se almacenará en base de datos
+    var encriptar = require('../utilidades/encriptacion.js');
+    var passMd5 = encriptar.encriptarPassword(password);
+    
+    model.User.find({where: {login:login,password:passMd5}}).then(function(user){
         
         if(user!=undefined){
             console.log("Usuario autenticado id: " + user.id + ",login " + user.login);

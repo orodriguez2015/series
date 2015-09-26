@@ -45,7 +45,7 @@
               <button type="submit" id="btnEliminar" name="btnEliminar" class="btn bg-olive margin">Eliminar</button>
             </form> 
           </td>
-          <td><%=series[i].nombre%></td>    
+          <td><a href="/series/capitulos/<%=series[i].id%>"><%=series[i].nombre%></a></td>    
           <td><%=series[i].descripcion%></td>
           <td><%=series[i].categorium.nombre %> </td>
           <td><%=series[i].createdAt %></td>    

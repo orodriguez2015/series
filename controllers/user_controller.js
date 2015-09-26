@@ -61,7 +61,10 @@ exports.create = function(req,res,next){
     console.log("login: " + login + ",password: " + password + ",nombre: " + nombre
     + ",apellido1: " + apellido1 +  ",apellido2 " + apellido2 + ", email: " + email);
 
-
+    
+    var encriptar = require('../utilidades/encriptacion.js');
+    var passMd5 = encriptar.encriptarPassword(password);
+    
     // Se procede a comprobar si ya existe un usuario con el login, en ese caso, se lanza
     // un error
 
@@ -77,7 +80,7 @@ exports.create = function(req,res,next){
             // Se crea el objeto User que todavía no se trata de un objeto persistente
             var user = model.User.build({
               login: login,
-              password: password,
+              password: passMd5,
               nombre:nombre,
               apellido1: apellido1,
               apellido2: apellido2,
@@ -93,14 +96,8 @@ exports.create = function(req,res,next){
                 next(error);
             });
 
-
         }
-
     })
-
-
-
-   
 };
 
 
@@ -328,9 +325,13 @@ exports.update = function(req,res,next) {
     
     console.log("id: " + id + ",login: " + login + ",pasword: " + password + ",nombre: " + nombre + ",apellido1: " + apellido1 + ",apellido2: " + apellido2 + ",email: " + email);
     
+    // Se obtiene el hash SHA1 de la password, de modo que se almacenará en base de datos
+    var encriptar = require('../utilidades/encriptacion.js');
+    var passMd5 = encriptar.encriptarPassword(password);
+    
     console.log("********* El usuario de la sesión : " + user.id);
     user.login = login;
-    user.password = password;
+    user.password = passMd5;
     user.nombre = nombre;
     user.apellido1 = apellido1;
     user.apellido2 = apellido2;

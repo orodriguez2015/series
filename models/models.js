@@ -57,6 +57,8 @@ var Serie = sequelize.import(path.join(__dirname, 'serie'));
 // Se importa la definición de la tabla Categoria del archivo categoria.js
 var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
 
+// Se importa la definición de la tabla CapituloSerie del archivo capituloSerie.js
+var CapituloSerie = sequelize.import(path.join(__dirname, 'capituloSerie'));
 
 
 
@@ -68,11 +70,19 @@ User.hasMany(Serie,{foreignKey:'UserId'});
 
 
 
-
 // Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería CategoriaId
 Categoria.hasMany(Serie,{foreignKey: 'CategoriaId'} );
 // Una serie tiene una categoría asociada, la relación entre la seri y la categoria se llamará Categoria
 Serie.belongsTo(Categoria,{as: 'Categoria', foreignKey: 'CategoriaId'});
+
+
+
+// Un capítulo es de una única seria serie tiene una categoría asociada, la relación entre la seri y la categoria se llamará Categoria
+CapituloSerie.belongsTo(Serie,{as: 'Serie', foreignKey: 'SerieId'});
+// Una serie puede tener varios capítulos
+// Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería SerieId
+Serie.hasMany(CapituloSerie,{foreignKey: 'SerieId'} );
+
 
 
 
@@ -91,6 +101,7 @@ Quiz.hasMany(Comment);
 exports.User  = User;
 exports.Serie = Serie;
 exports.Categoria = Categoria;
+exports.CapituloSerie = CapituloSerie;
 
 
 /** 
