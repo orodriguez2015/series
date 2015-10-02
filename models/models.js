@@ -69,23 +69,20 @@ Serie.belongsTo(User);
 User.hasMany(Serie,{foreignKey:'UserId'});
 
 
-
 // Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería CategoriaId
 Categoria.hasMany(Serie,{foreignKey: 'CategoriaId'} );
 // Una serie tiene una categoría asociada, la relación entre la seri y la categoria se llamará Categoria
 Serie.belongsTo(Categoria,{as: 'Categoria', foreignKey: 'CategoriaId'});
 
 
-
-// Un capítulo es de una única seria serie tiene una categoría asociada, la relación entre la seri y la categoria se llamará Categoria
-CapituloSerie.belongsTo(Serie,{as: 'Serie', foreignKey: 'SerieId'});
-// Una serie puede tener varios capítulos
-// Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería SerieId
-Serie.hasMany(CapituloSerie,{foreignKey: 'SerieId'} );
+// Una serie de compone de 1 a N temporadas. Una temporada es de 1 serie
+Temporada.belongsTo(Serie,{as: 'Serie', foreignKey: 'SerieId'});
+Serie.hasMany(Temporada,{foreignKey: 'SerieId'});
 
 
-
-
+// Un temporada de una serie, se compone de 1 a N capítulos
+CapituloSerie.belongsTo(Temporada,{as: 'Temporada', foreignKey: 'TemporadaId'});
+Temporada.hasMany(CapituloSerie,{foreignKey: 'TemporadaId'} );
 
 
 /*
@@ -102,7 +99,7 @@ exports.User  = User;
 exports.Serie = Serie;
 exports.Categoria = Categoria;
 exports.CapituloSerie = CapituloSerie;
-
+exports.Temporada = Temporada;
 
 /** 
   * Esta llamada crea e inicializa la base de datos videoclub.sqllite.

@@ -93,6 +93,12 @@ router.post("/series/capitulos/:serieId(\\d+)",loginController.loginRequired,ser
 // DELETE /capitulo/:capituloId. Petición de borrado de un determinado capítlo de una serie
 router.delete("/capitulo/:capituloId(\\d+)",loginController.loginRequired,capituloSerieController.delete);
 
+// GET /series/temporada . Petición de carga de la pantalla de alta de temporadas de una serie
+router.get("/series/temporada/:serieId(\\d+)",serieController.newTemporada);
+
+// POST /series/temporada. Petición de carga de la pantalla de alta de temporadas de una serie
+router.post("/series/temporada/:serieId(\\d+)",serieController.createTemporada);
+
 // GET /login. Petición de login
 router.get("/login",loginController.login);
 

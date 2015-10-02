@@ -50,7 +50,8 @@ exports.create = function(req,res,next){
   var nombre = req.body.nombre;
 
   var categoria = model.Categoria.build({
-    nombre: nombre
+    nombre: nombre,
+    idUsuario: req.session.user.id
   });
   
   // Se procede a almacenar en base de datos la categoría    

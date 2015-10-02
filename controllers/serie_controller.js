@@ -31,8 +31,10 @@ exports.load = function(req,res,next,serieId){
     
     console.log("Se procede a realizar el autoload de la serie");
     
-    // Al recuperar una serie, se recuperará también
-    model.Serie.find({where: {id:serieId},include:[{model:model.CapituloSerie}]}).then(function(serie){
+    // Al recuperar una serie, se recuperará también sus temporadas     
+    // Se recupera una serie, y para esta serie sus temporadas, y su vez, por cada temporada,
+    // sus capítulos
+    model.Serie.find({where: {id:serieId},include:[{model:model.Temporada,include:[{model:model.CapituloSerie}]}]}).then(function(serie){           
         req.Serie = serie;        
         console.log("Serie recuperada y almacenada en la request"); 
         next();
@@ -60,7 +62,7 @@ exports.create = function(req,res,next){
     console.log("Se procede a dar de alta la serie de descripcion: " + descripcion);
     console.log("Se procede a dar de alta la serie de categoria: " + categoria);
     
-    var serie = model.Serie.build({nombre:nombre,descripcion:descripcion,CategoriaId:categoria});
+    var serie = model.Serie.build({nombre:nombre,descripcion:descripcion,CategoriaId:categoria,idUsuario:req.session.user.id});
     
     serie.save().then(function(){
         console.log("Serie almacenada en base de datos"); 
@@ -194,7 +196,6 @@ exports.update = function(req,res,next){
 exports.getCapitulos = function(req,res,next){
     // Se recupera la serie de la request, cargada por la función load
     console.log("Se procede a renderizar la vista con el listado de series existentes");
-    
     res.render('series/capituloSerie',{serie:req.Serie,errors:[]});
 };
 
@@ -204,19 +205,18 @@ exports.createCapitulo = function(req,res,next) {
   var capitulo = req.body.capitulo;
   var url = req.body.url;
   var puntuacion = req.body.puntuacion;    
+  var idTemporada = req.body.temporada;
     
   console.log("Alta de capítulo de nombre: " + capitulo);
   console.log("Alta de capítulo de url: " + url);
-  console.log("Alta de capítulo de puntuacion: " + puntuacion);
-  console.log("serie.id : " + req.Serie.id);
-
+  console.log("idTemporada: " + idTemporada);
     
-  // Se crea el objeto CapituloSerie que se va a grabar en base de datos    
+  // Se crea el objeto CapituloSerie que tiene una categoría asociada 
   var capituloSerie = model.CapituloSerie.build({
     nombre: capitulo,
     url: url,
     puntuacion: puntuacion,
-    SerieId: req.Serie.id,
+    TemporadaId: idTemporada,
     idUsuario: req.session.user.id
   });
     
@@ -235,7 +235,48 @@ exports.createCapitulo = function(req,res,next) {
 
 
 
+/**
+  * Función que renderiza la vista de alta de una temporada de una serie
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param next: Objeto Next
+  */
+exports.newTemporada = function(req,res,next) { 
+    console.log("Renderizado de la vista de la serie " + req.id + ",nombre: " + req.nombre);
+    
+    
+    model.Temporada.findAll({order:[['nombre', 'ASC']]}).then(function(temporadas){
+        res.render('series/temporada',{serie:req.Serie,temporadas:temporadas,errors:[]});   
+        
+    }).catch(function(err){
+        console.log("Error al recuperar las temporadas actuales " + err.message);
+        next(err); 
+    });
+ 
+};
 
 
 
-
+/**
+  * Función que permite dar de alta una temporada
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param next: Objeto Next
+  */
+exports.createTemporada = function(req,res,next) { 
+    var serie = req.Serie;
+    
+    var nombre = req.body.nombre;
+    
+    console.log("nombre temporada: " + nombre);
+    var temporada = model.Temporada.build({nombre:nombre,SerieId:serie.id   });
+    temporada.save().then(function(){
+        
+        console.log("Temporada dada de alta");
+        res.redirect('/series/temporada/' + serie.id);
+        
+    }).catch(function(err){
+        console.log("Error al dar de alta la temporada " + err.message);
+        next(err);
+    });  
+};

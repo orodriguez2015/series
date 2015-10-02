@@ -27,42 +27,42 @@
 
          <div class="form-group">
             <%=serie.descripcion%>
-          </div>    
+         </div>    
+         <a href="/series/temporada/<%=serie.id%>">Alta de temporadas</a>
       </div><!-- /.box-body -->
-          
+        
+     
      <!---------------------->
        <div class="box-body">  
+              
            
-    <% if(serie.capituloSerieses!=undefined && serie.capituloSerieses.length>0) { %>       
+      
+           
+           
+    <!----------------->       
     <table id="example2" class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th width="25%">Capítulo</th>
-          <th width="25%">Fecha de alta</th>
-          <th>&nbsp;</th>    
+            <th width="25%"><b><h4>Capítulos de la serie <%=serie.nombre%></h4></b></th>
         </tr>
       </thead>
       <tbody>
-      <% for(var i=0;i<serie.capituloSerieses.length;i++){ %>
+      <% for(var i=0;i<serie.temporadas!=null && i<serie.temporadas.length;i++){ %>
         <tr>
-          <td><%=serie.capituloSerieses[i].nombre%></td>   
-          <td><%=serie.capituloSerieses[i].createdAt %></td>  
-        <% if(session.user!=undefined) { %>    
-          <td>
-              
-              <form name="formBorrarCapitulo" method="POST" action="/capitulo/<%=serie.capituloSerieses[i].id %>?_method=DELETE">
-              <input type="image" src="/images/23_full_trash.png" height="18" width="18" onclick="return confirmarEliminar();">
-              </form>    
-              
-          </td>   
-        <% } %>    
-            
+          <td><b><%=serie.temporadas[i].nombre%></b></td>   
+          
         </tr>
-      <% } %>  
-    </table>
+         <% for(propiedad in serie.temporadas[i].capituloSerieses) { %>  
+        <tr>
+            <td><div style="margin-left:15px"><%=serie.temporadas[i].capituloSerieses[propiedad].nombre %></div></td>
+        </tr>  
+        <% }// for %>  
+      <% }// for %>  
+    </table>     
     <br>       
-    <% }// for %>       
            
+           
+    <!----------------->       
      
     <% if(session.user!=undefined) { %>    
            <form name="formAltaCapituloSerie" id="formAltaCapituloSerie" role="form" method="POST" action="" novalidate>   
@@ -73,27 +73,22 @@
           <label for="Nombre">Nombre</label>
           <input type="text" class="form-control" id="capitulo" name="capitulo" placeholder="Introduzca el nombre del capítulo">
         </div>
+               
+        <div class="form-group">
+          <label for="temporadas">Temporada</label>
+          <select name="temporada" class="form-control">
+              
+            <% for(var i=0;serie.temporadas!=null && i<serie.temporadas.length;i++){  %>
+                <option value='<%=serie.temporadas[i].id %>'><%=serie.temporadas[i].nombre%></option>
+            <% } %>
+          </select>
+        </div>       
 
+               
+               
         <div class="form-group">
           <label for="url">Dirección URL</label>
           <input type="text" class="form-control" id="url" name="url" placeholder="URL del capítulo online">  
-        </div>
-        
-        
-        <div class="form-group">
-          <label for="puntuacion">Puntuación</label>
-          <select name="puntuacion" class="form-control">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>  
-            <option value="4">4</option>  
-            <option value="5">5</option>    
-            <option value="6">6</option>    
-            <option value="7">7</option>    
-            <option value="8">8</option>      
-            <option value="9">9</option>    
-            <option value="10">10</option>    
-          </select>
         </div>
         
         <div class="box-footer">
@@ -103,6 +98,9 @@
                 <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar">
             </a>      
         </div>
+                 
+               
+               
         </form>   
     <% } %>       
            
@@ -148,6 +146,10 @@ $("#formAltaCapituloSerie").validate({
         minlength: 6,
         required: false,
         url:true
+      },
+           
+      temporada: {
+        required: true
       }
     },
 

@@ -1,0 +1,181 @@
+
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Series
+      <small>Alta temporada</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Alta de temporada</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+      
+      
+      
+    
+  
+ <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Datos generales de la temporada de la serie <%=serie.nombre%></h3>
+    </div><!-- /.box-header -->
+    
+     
+     
+     
+      <div class="box-body">
+          
+    
+           <% if(temporadas!=undefined && temporadas.length>0) { %>       
+    <table id="example2" class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th width="25%">Temporada</th>
+          <th width="25%">Fecha de alta</th>
+          <th>&nbsp;</th>    
+        </tr>
+      </thead>
+      <tbody>
+      <% for(var i=0;i<temporadas.length;i++){ %>
+        <tr>
+          <td><%=temporadas[i].nombre%></td>   
+          <td><%=temporadas[i].createdAt %></td>  
+        <% if(session.user!=undefined) { %>    
+          <td>
+              
+              <form name="formBorrarCapitulo" method="POST" action="/capitulo/<%=temporadas[i].id%>?_method=DELETE">
+              <input type="image" src="/images/23_full_trash.png" height="18" width="18" onclick="return confirmarEliminar();">
+              </form>    
+              
+          </td>   
+        <% } %>    
+            
+        </tr>
+      <% } %>  
+    </table>
+    <br>       
+    <% }// for %>        
+          
+          
+
+          <form name="formAltaTemporadaSerie" id="formAltaTemporadaSerie" role="form" method="POST" action="" novalidate>  
+          
+         <div class="form-group">
+          <label for="Nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
+        </div>
+          
+       
+      </div><!-- /.box-body -->
+       <div class="box-footer">
+        <button type="submit" name="btnAltaSerie" id="btnAltaSerie" class="btn btn-primary">Enviar</button>
+        &nbsp;
+        <a href="/series">
+            <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar">
+        </a>   
+      </div>
+      <br>
+       
+   </div>
+   </form>
+
+
+  <div id="msgError" class="callout callout-danger lead" style="display:none;">
+   
+  </div>
+
+  
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+
+
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="/javascripts/additional-methods.js"></script>
+<script type="text/javascript" src="/javascripts/messages_es.js"></script>
+
+<script type="text/javascript">
+
+<!-- Se hace uso de la librería jQuery Validate para validar formularios -->
+$("#formAltaTemporadaSerie").validate({
+    rules: {
+      nombre: {
+        required: true,
+        minlength: 2,
+        maxlength: 100
+      },
+      descripcion: {
+        required: true,
+        minlength: 2
+      },
+      categoria: {
+        required: true
+      }
+    },
+
+    messages: {
+      nombre: {
+        lettersonly: "Escribe sólo letras"
+      }
+    },
+
+    // Si la validación es correcta, se añade la clase css 'has-success' de bootstrap,
+    // al campo de formulario validado
+    success: function(element) {
+            $(element).closest('.form-group').addClass('has-success');
+    },
+
+
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+    },
+    
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+    },
+
+    errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+    },
+
+    submitHandler: function(form) {
+        document.formAltaSerie.method = "POST";
+        document.formAltaSerie.action = "/series";
+        document.formAltaSerie.submit();
+    }
+  });
+
+
+
+  function mostrarMensajeError(errores) {
+    var mensaje ="";
+    var _cabecera = "<h4>Error</h4>";
+    var _cuerpo = "<p>";
+
+    for(var i=0;errores!=undefined && i<errores.length;i++) {
+      _cuerpo += errores[i];
+      if(errores.length-i>1) _cuerpo += "</br>"
+
+    }
+    _cuerpo += "</p>"
+
+    $('#msgError').css('display', 'block');
+    $('#msgError').html(_cabecera + _cuerpo);
+        
+  }
+</script>

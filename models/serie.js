@@ -17,7 +17,12 @@ module.exports = function(sequelize,DataTypes){
         descripcion: { type: DataTypes.STRING, 
                     validate: { notEmpty: { msg: 'La descripción de la serie es obligatoria'}}
 
-        }         
+        } ,
+        
+        idUsuario: { 
+                type: DataTypes.INTEGER,
+                validate: {notEmpty: { msg:'El id del usuario que da alta el capítulo es obligatorio'}}
+        }
         
       }
     );  
