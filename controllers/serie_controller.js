@@ -31,19 +31,79 @@ exports.load = function(req,res,next,serieId){
     
     console.log("Se procede a realizar el autoload de la serie");
     
-    // Al recuperar una serie, se recuperará también sus temporadas     
-    // Se recupera una serie, y para esta serie sus temporadas, y su vez, por cada temporada,
-    // sus capítulos
-    model.Serie.find({where: {id:serieId},include:[{model:model.Temporada,include:[{model:model.CapituloSerie}]}]}).then(function(serie){           
-        req.Serie = serie;        
-        console.log("Serie recuperada y almacenada en la request"); 
-        next();
-        
-    }).catch(function(err){
-        console.log("Error al realizar el autoload de una serie: " + err.message);
-        next(err);
-    });
-    
+    if(req.session.user!=undefined) { 
+        // Se obtiene el id del usuario logueado que se encuentra en la sesión
+        var idUsuario = req.session.user.id;
+
+
+        // Al recuperar una serie, se recuperará también sus temporadas     
+        // Se recupera una serie, y para esta serie sus temporadas, y su vez, por cada temporada,
+        // sus capítulos
+        model.Serie.find({where: {id:serieId},include:[{model:model.Temporada,include:[{model:model.CapituloSerie}]}]}).then(function(serie){   
+
+            var usuarioVisualizaController = require('./usuarioVisualizaSerie_controller.js');
+            // Se ha recuperado la serie, con sus temporadas, y por cada temporada, sus capítulos.
+            if(serie!=undefined && serie.temporadas!=undefined) { 
+
+                var temporadas = serie.temporadas;
+
+                for(var i=0;i<temporadas.length;i++) {
+
+                    console.log("Temporada " + temporadas[i].id + " tiene capitulos: " + temporadas[i].capituloSerieses.length);
+
+                    var capitulos = serie.temporadas[i].capituloSerieses;
+                    for(var j=0;j<capitulos.length;j++) { 
+                        var idCapitulo = capitulos[j].id;
+                        console.log("capitulos bucle " + idCapitulo + ",idUsuario: " + idUsuario);       
+
+
+                        /*
+                        usuarioVisualizaController.comprobarUsuarioVisualizadoCapitulo(idUsuario,idCapitulo,
+                        function (err,existe,capitulos[j]) {
+
+                            var oCapitulo = capitulos[j];
+                            console.log("capitulos[j].id: " + capitulos[j].id);
+                            console.log("oCapitulo.id: " + oCapitulo.id);
+
+                            Object.defineProperties(oCapitulo, {
+                                "getVisto": { get: function () { return this.visto; } },
+                                "setVisto": { set: function (x) { this.visto = x; } }
+                            });
+
+
+
+                            if(err) { 
+                                console.log("serie_controller.load(): " + err.message);   
+                            }else {
+
+                                if(existe) { 
+                                    console.log("visto");
+                                } 
+
+                            }
+
+
+
+
+                        }); */
+
+                    }// for
+                }// for
+
+
+            }
+
+
+            req.Serie = serie;        
+            console.log("Serie recuperada y almacenada en la request"); 
+            next();
+
+        }).catch(function(err){
+            console.log("Error al realizar el autoload de una serie: " + err.message);
+            next(err);
+        });
+    } else // Sino existe el objeto user en la sesión, se redirige a la pantalla de login
+        res.redirect("/login");
 };
 
 
@@ -244,8 +304,8 @@ exports.createCapitulo = function(req,res,next) {
 exports.newTemporada = function(req,res,next) { 
     console.log("Renderizado de la vista de la serie " + req.id + ",nombre: " + req.nombre);
     
-    
-    model.Temporada.findAll({order:[['nombre', 'ASC']]}).then(function(temporadas){
+    //where: {id:serieId}
+    model.Temporada.findAll({where:{SerieId:req.Serie.id},order:[['nombre', 'ASC']]}).then(function(temporadas){
         res.render('series/temporada',{serie:req.Serie,temporadas:temporadas,errors:[]});   
         
     }).catch(function(err){

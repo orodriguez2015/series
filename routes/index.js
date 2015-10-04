@@ -6,6 +6,7 @@ var categoriaController = require('../controllers/categoria_controller.js');
 var serieController = require('../controllers/serie_controller.js');
 var loginController = require('../controllers/login_controller.js');
 var capituloSerieController = require('../controllers/capituloSerie_controller.js');
+var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSerie_controller.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -85,7 +86,7 @@ router.get("/series/:serieId(\\d+)",loginController.loginRequired,serieControlle
 router.post("/series/update/:serieId(\\d+)",loginController.loginRequired,serieController.update);
 
 // GET /series/capitulos/:serieId. Petición para mostrar la serie y su lista de capítulos
-router.get("/series/capitulos/:serieId(\\d+)",serieController.getCapitulos);
+router.get("/series/capitulos/:serieId(\\d+)",loginController.loginRequired,serieController.getCapitulos);
 
 // POST /series/capitulos/:serieId. Petición para dar de alta un capítulo asociado a una serie de TV
 router.post("/series/capitulos/:serieId(\\d+)",loginController.loginRequired,serieController.createCapitulo);
@@ -98,6 +99,9 @@ router.get("/series/temporada/:serieId(\\d+)",serieController.newTemporada);
 
 // POST /series/temporada. Petición de carga de la pantalla de alta de temporadas de una serie
 router.post("/series/temporada/:serieId(\\d+)",serieController.createTemporada);
+
+
+router.post("/capitulos/visualizacion/:idSerie(\\d+)/:idCapitulo(\\d+)",usuarioVisualizaSerieController.altaUsuarioVisualizaSerie);
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);

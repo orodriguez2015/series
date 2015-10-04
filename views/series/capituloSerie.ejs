@@ -54,7 +54,14 @@
         </tr>
          <% for(propiedad in serie.temporadas[i].capituloSerieses) { %>  
         <tr>
-            <td><div style="margin-left:15px"><%=serie.temporadas[i].capituloSerieses[propiedad].nombre %></div></td>
+            <td><div style="margin-left:15px"><%=serie.temporadas[i].capituloSerieses[propiedad].nombre %></div>
+                
+             <form name="VisualizacionCapitulo" method="POST" action="/capitulos/visualizacion/<%=serie.id%>/<%=serie.temporadas[i].capituloSerieses[propiedad].id%>">
+            
+                <input type="submit" value="Ver">
+             </form>        
+            
+            </td>
         </tr>  
         <% }// for %>  
       <% }// for %>  

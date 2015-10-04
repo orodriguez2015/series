@@ -60,6 +60,8 @@ var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
 var CapituloSerie = sequelize.import(path.join(__dirname, 'capituloSerie'));
 // Se importa la definición de la tabla Temporada del archivo temporada.js
 var Temporada = sequelize.import(path.join(__dirname, 'temporada'));
+// Se importa la definición de la tabla UsuarioVisualizaSerie
+var UsuarioVisualizaSerie = sequelize.import(path.join(__dirname, 'usuarioVisualizaSerie'));
 
 
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
@@ -85,14 +87,21 @@ CapituloSerie.belongsTo(Temporada,{as: 'Temporada', foreignKey: 'TemporadaId'});
 Temporada.hasMany(CapituloSerie,{foreignKey: 'TemporadaId'} );
 
 
-/*
-// Se importa la definición de la tabla comment de la base de datos
-var Comment = sequelize.import(path.join(__dirname,'comment'));
+// Relación M:N entre la tabla User y CapituloSerie, de modo que un usuario puede 
+// haber visualizado múltiples capítulos de una serie, y un capítulo de una serie
+// puede haber sido visualizado por múltiples usuarios
+User.hasMany(CapituloSerie, {
+    as: 'UsuarioVeCapitulo',
+    through: UsuarioVisualizaSerie, //this can be string or a model,
+    foreignKey: 'UserId'
+});
 
-// Se define la relación 1 a N, entre la tabla "quiz" y "comment"
-Comment.belongsTo(Quiz);
-Quiz.hasMany(Comment);
-*/
+CapituloSerie.hasMany(User, {
+    as: 'CapituloVistoUsuario',
+    through: UsuarioVisualizaSerie,
+    foreignKey: 'CapituloSerieId'
+}); 
+
 
 // Se exporta la definición de las tabla de la base de datos
 exports.User  = User;
@@ -100,6 +109,7 @@ exports.Serie = Serie;
 exports.Categoria = Categoria;
 exports.CapituloSerie = CapituloSerie;
 exports.Temporada = Temporada;
+exports.UsuarioVisualizaSerie = UsuarioVisualizaSerie;
 
 /** 
   * Esta llamada crea e inicializa la base de datos videoclub.sqllite.
