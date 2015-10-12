@@ -1,0 +1,42 @@
+<link href="/stylesheets/youtube.css" rel="stylesheet" type="text/css" />
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Vídeos de Youtube
+      <small>Listado</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Youtube</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+  <div class="box">
+  
+    <form action="#">              
+          <div class="box-body">  
+              <div class="form-group" style="width:30%;">
+                  <input type="text" class="form-control" id="busqueda" name="busqueda" placeholder="Introduzca un criterio de búsqueda de vídeos">
+
+            </div>
+
+              <div class="box-footer">
+                <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Buscar</button>
+                <input type="button" name="btnLimpiar" id="btnLimpiar" class="btn btn-primary" value="Limpiar">
+              </div>
+
+              <div id="results"></div>
+          </div><!-- /.box-body -->
+          </div> 
+</form>
+
+  
+  </section>
+</div>
+<script type="text/javascript" src="/javascripts/youtube.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=init"></script>

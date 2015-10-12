@@ -1,0 +1,14 @@
+.tituloVideoYoutube { 
+    font-family: Verdana,Arial,Verdana,Serif;
+    font-size: 12px;
+    color: blue;
+    font-weight: bold;
+    width:196px;
+}
+
+.canalVideoYoutube { 
+    font-family: Verdana,Arial,Verdana,Serif;
+    font-size: 11px;
+    color: darkmagenta;
+    width:196px;
+}

@@ -7,6 +7,7 @@ var serieController = require('../controllers/serie_controller.js');
 var loginController = require('../controllers/login_controller.js');
 var capituloSerieController = require('../controllers/capituloSerie_controller.js');
 var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSerie_controller.js');
+var videoController = require('../controllers/videoController.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -102,6 +103,10 @@ router.post("/series/temporada/:serieId(\\d+)",serieController.createTemporada);
 
 
 router.post("/capitulos/visualizacion/:idSerie(\\d+)/:idCapitulo(\\d+)",usuarioVisualizaSerieController.altaUsuarioVisualizaSerie);
+
+
+// GET /videos. Carga la lista de vídeos
+router.get("/videos",videoController.show);
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);
