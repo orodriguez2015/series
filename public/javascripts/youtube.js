@@ -5,6 +5,7 @@ $(function() {
     // Se captura el evento onclibk sobre el boton "btnLimpiar"
     $("#btnLimpiar").on("click",function(){
         $("#busqueda").val(""); 
+        $("#results").html("");
     });
     
     
@@ -20,7 +21,7 @@ $(function() {
             chart: "mostPopular",
             type: "video",
             q: encodeURIComponent($("#busqueda").val()).replace(/%20/g, "+"),
-            maxResults: 25,
+            maxResults: 50,
             order: "viewCount",
             regionCode:"es",
             publishedAfter: "2015-01-01T00:00:00Z"
