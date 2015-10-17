@@ -1,3 +1,16 @@
+/**
+  * Función que tiene que existir y que es invocada por el API de google al cargarse,
+  * concretamente carga el API V3 de Youtube
+  */
+function init() { 
+    gapi.client.setApiKey("AIzaSyCY9xryyOVZkhySj6xRygDGzSegW8acbAY");
+    gapi.client.load("youtube", "v3", function() {
+        // yt api is ready
+        console.log("El API de Youtube está lista");
+    });
+}
+
+
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 $(function() {
@@ -6,6 +19,8 @@ $(function() {
     $("#btnLimpiar").on("click",function(){
         $("#busqueda").val(""); 
         $("#results").html("");
+        // Se oculta la capa del vídeo de youtube y se para la reproduccción
+        ocultarReproductorYoutube(); 
     });
     
     
@@ -14,19 +29,25 @@ $(function() {
     // se captura y se invoca al api de youtube para buscar los vídeos 
     $("form").on("submit", function(e) { 
        e.preventDefault();
+        
+       // Se oculta la capa del vídeo de youtube y se para la reproduccción
+       ocultarReproductorYoutube(); 
+        
       $("#results").html("");
-       // prepare the request
+       // Se hace uso del api de youtube para buscar la lista de vídeos
        var request = gapi.client.youtube.search.list({
             part: "snippet",
             chart: "mostPopular",
             type: "video",
             q: encodeURIComponent($("#busqueda").val()).replace(/%20/g, "+"),
-            maxResults: 50,
+            maxResults: $('#numero').val(),
             order: "viewCount",
-            regionCode:"es",
+            regionCode:"ES",
             publishedAfter: "2015-01-01T00:00:00Z"
        }); 
-       // execute the request
+        
+        
+       // Se llama al método execute para procesar la respuesta devuelta por el API de youtube
        request.execute(function(response) {
           var results = response.result;
           
@@ -43,14 +64,11 @@ $(function() {
     $(window).on("resize", resetVideoHeight);
 });
 
+
 function resetVideoHeight() {
     $(".video").css("height", $("#results").width() * 9/16);
 }
 
-function init() { 
-    gapi.client.setApiKey("AIzaSyCY9xryyOVZkhySj6xRygDGzSegW8acbAY");
-    gapi.client.load("youtube", "v3", function() {
-        // yt api is ready
-        console.log("El API de Youtube está lista");
-    });
-}
+
+
+

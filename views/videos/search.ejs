@@ -1,4 +1,38 @@
 <link href="/stylesheets/youtube.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<style type="text/css">
+	
+	/* base semi-transparente */
+    .overlay{
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index:1001;
+		opacity:.75;
+        -moz-opacity: 0.75;
+        filter: alpha(opacity=75);
+    }
+	
+    /* estilo para lo que este dentro de la ventana modal */
+    .modal {
+        display: none;
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        width: 60%;
+        height: 75%;
+        padding: 16px;
+        background: #fff;
+		color: #333;
+        z-index:1002;
+        overflow: auto;
+    }
+
+</style>
 
  <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -21,10 +55,25 @@
   
     <form action="#">              
           <div class="box-body">  
-              <div class="form-group" style="width:30%;">
-                  <input type="text" class="form-control" id="busqueda" name="busqueda" placeholder="Introduzca un criterio de búsqueda de vídeos">
+              <div class="form-group" style="width:45%;">
+                  <label>Buscar:</label>
+                  <input type="text" class="form-control" id="busqueda" name="busqueda" placeholder="Criterio de búsqueda de vídeos">
+                  
 
             </div>
+            <div class="form-group" style="width:15%;">
+                  
+                  <label>Número de vídeos:</label>
+                  <select class="form-control" name="numero" id="numero">
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                      <option value="40">40</option>
+                      <option value="50" selected>50</option>
+                  </select>
+
+            </div>  
+              
 
               <div class="box-footer">
                 <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Buscar</button>
@@ -42,5 +91,22 @@
       
   </section>
 </div>
-<script type="text/javascript" src="/javascripts/youtube.js"></script>
+
+<!-- Div en el que se mostrará el vídeo de youtube -->
+<div id="ytplayer" class="modal">
+    <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
+    Cerrar</a>
+</div>
+
+<div id="fade" class="overlay" onclick="document.getElementById('ytplayer').style.display='none';document.getElementById('fade').style.display='none'">
+</div>
+
+   
+    
+</script>
+<!-- Se incluye el API JS de youtube para mostrar vídeos -->
+<script async type="text/javascript" src="https://www.youtube.com/player_api"></script>
+<script type="text/javascript" src="/javascripts/youtubePlayer.js"></script>
+<script type="text/javascript" src="/javascripts/youtubeApi.js"></script>
+<!-- Se incluye el API JS de youtube para poder buscar vídeos -->
 <script src="https://apis.google.com/js/client.js?onload=init"></script>

@@ -12,3 +12,18 @@
     color: darkgray;
     width:196px;
 }
+
+/**
+#ytplayer { 
+    top:0px;
+    bottom: auto;
+    position: absolute;
+    z-index:1;
+    width:100%;
+    height:100%;
+    margin: 0 auto;
+   
+    opacity:0.9;
+    filter:alpha(opacity=90); // IE < 9.0 
+    background-color: blue;
+} */
