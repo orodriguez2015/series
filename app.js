@@ -40,6 +40,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
+
+
 // Helpers dinamicos para almacenar en la sesión del usuario, la ruta de la que 
 // procede, para reenviar la misma una vez que se ha autenticado.
 app.use(function(req, res, next) {

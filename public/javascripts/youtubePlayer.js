@@ -68,8 +68,7 @@ var player; // Reproductor del Vídeo de Youtube
 
     function ocultarReproductorYoutube() { 
         stopVideo(); // Se para el vídeo
-        
-        $('#ytplayer').hide(); // Se oculta la 
+        $('#ytplayer').hide(); // Se oculta el div en el que se muestra el reproductor
     }
 
     /**
@@ -91,4 +90,12 @@ var player; // Reproductor del Vídeo de Youtube
             
         }
         
+    });
+
+
+
+    $(document).bind('keydown',function(e){
+        if (e.which == 27){
+            console.log("Has pulsado la tecla ESC");
+        };
     });

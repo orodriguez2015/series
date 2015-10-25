@@ -105,8 +105,14 @@ router.post("/series/temporada/:serieId(\\d+)",serieController.createTemporada);
 router.post("/capitulos/visualizacion/:idSerie(\\d+)/:idCapitulo(\\d+)",usuarioVisualizaSerieController.altaUsuarioVisualizaSerie);
 
 
-// GET /videos. Carga la lista de vídeos
-router.get("/videos",videoController.show);
+// GET /videos. Carga la lista de vídeos. Es necesario estar logueado en la aplicación
+router.get("/videos",loginController.loginRequired,videoController.show);
+
+// POST /videos. Permite dar de alta la información de un vídeo determinado en base de datos
+router.post("/videos/create",loginController.loginRequired,videoController.saveVideo);
+
+// GET /videos/usuario. Recupera los vídeos almacenados por el usuario
+router.get("/videos/usuario",loginController.loginRequired,videoController.getVideosAlmacenados);
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);
@@ -125,7 +131,4 @@ router.get('/',function(req,res){
 });
 
 
-
 module.exports = router;
-
-

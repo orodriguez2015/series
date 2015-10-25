@@ -62,6 +62,11 @@ var CapituloSerie = sequelize.import(path.join(__dirname, 'capituloSerie'));
 var Temporada = sequelize.import(path.join(__dirname, 'temporada'));
 // Se importa la definición de la tabla UsuarioVisualizaSerie
 var UsuarioVisualizaSerie = sequelize.import(path.join(__dirname, 'usuarioVisualizaSerie'));
+// Se importa la definición de la tabla de BBDD VideoYoutube
+var VideoYoutube = sequelize.import(path.join(__dirname, 'VideoYoutube'));
+// Se importa la definición de la tabla de BBDD UsuarioVisualizaYoutube
+//var UsuarioVisualizaYoutube = sequelize.import(path.join(__dirname, 'UsuarioVisualizaSerie'));
+
 
 
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
@@ -96,11 +101,20 @@ User.hasMany(CapituloSerie, {
     foreignKey: 'UserId'
 });
 
-CapituloSerie.hasMany(User, {
-    as: 'CapituloVistoUsuario',
-    through: UsuarioVisualizaSerie,
-    foreignKey: 'CapituloSerieId'
-}); 
+
+// Se define la relación 1:N entre la tabla serie y user. Un usuario
+// puede dar de alta 0:N series
+VideoYoutube.belongsTo(User);
+// Un usuario puede haber almacenado de 1 a N vídeos
+User.hasMany(VideoYoutube,{foreignKey:'UserId'});
+
+
+
+// Se define la relación 1:N entre la tabla serie y user. Un usuario
+// puede dar de alta 0:N series
+User.hasMany(VideoYoutube);
+// Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería UserId
+User.hasMany(Serie,{foreignKey:'UserId'});
 
 
 // Se exporta la definición de las tabla de la base de datos
@@ -110,6 +124,7 @@ exports.Categoria = Categoria;
 exports.CapituloSerie = CapituloSerie;
 exports.Temporada = Temporada;
 exports.UsuarioVisualizaSerie = UsuarioVisualizaSerie;
+exports.VideoYoutube = VideoYoutube;
 
 /** 
   * Esta llamada crea e inicializa la base de datos videoclub.sqllite.

@@ -35,6 +35,9 @@ $(function() {
         
       $("#results").html("");
        // Se hace uso del api de youtube para buscar la lista de vídeos
+        
+        
+        /*
        var request = gapi.client.youtube.search.list({
             part: "snippet",
             chart: "mostPopular",
@@ -42,18 +45,39 @@ $(function() {
             q: encodeURIComponent($("#busqueda").val()).replace(/%20/g, "+"),
             maxResults: $('#numero').val(),
             order: "viewCount",
-            regionCode:"ES",
+            regionCode:"es",
             publishedAfter: "2015-01-01T00:00:00Z"
+       }); 
+       */
+        
+         var request = gapi.client.youtube.search.list({
+            part: "snippet",
+            chart: "mostPopular",
+            type: "video",
+            q: encodeURIComponent($("#busqueda").val()).replace(/%20/g, "+"),
+            maxResults: $('#numero').val(),
+            order: "viewCount",
+            regionCode:"es"
        }); 
         
         
+       /* así funciona sin indicar el código de región ni el chart, maxResults, order
+            var request = gapi.client.youtube.search.list({
+            part: "snippet",
+            type: "video",
+            q: "mnpAYcm8090"
+       }); */
+       
+        
        // Se llama al método execute para procesar la respuesta devuelta por el API de youtube
        request.execute(function(response) {
+           
           var results = response.result;
           
           $.each(results.items, function(index, item) {
             $.get("/tpl/videoThumbnail.html", function(data) {  
-                $("#results").append(tplawesome(data, [{"title":item.snippet.title, "videoid":item.id.videoId,"defaultImage":item.snippet.thumbnails.high.url,"channelTitle": item.snippet.channelTitle           
+                $("#results").append(tplawesome(data, [{"title":item.snippet.title, "videoid":item.id.videoId,"defaultImage":item.snippet.thumbnails.high.url,"channelTitle": escape(item.snippet.channelTitle),
+"descripcionVideo": escape(item.snippet.description),"idCanal": item.snippet.channelId
 }]));
             }); 
           });
