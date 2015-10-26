@@ -22,6 +22,9 @@ router.param('serieId',serieController.load);
 // Autoload para la carga de un capitulo de una serie en la request
 router.param('capituloId',capituloSerieController.load);
 
+// Autoload para la carga de un vídeo de youtube en la request
+router.param('videoId',videoController.load);
+
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
 router.get('/users/new',loginController.loginRequired,usersController.new);
 
@@ -113,6 +116,9 @@ router.post("/videos/create",loginController.loginRequired,videoController.saveV
 
 // GET /videos/usuario. Recupera los vídeos almacenados por el usuario
 router.get("/videos/usuario",loginController.loginRequired,videoController.getVideosAlmacenados);
+
+// DELETE /videos/:videoId . Permite eliminar un determinado vídeo
+router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);

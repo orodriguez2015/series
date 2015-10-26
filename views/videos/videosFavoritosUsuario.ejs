@@ -39,12 +39,12 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Mis vídeos de Youtube
+      Vídeos de Youtube
       <small>Listado</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
-      <li class="active">Mis</li>
+      <li class="active">Mis vídeos de Youtube</li>
     </ol>
   </section>
 
@@ -52,10 +52,42 @@
   <section class="content">
 
   <div class="box">
-    Aquí irá el contenido
+  
+    <form action="#">              
+          <div class="box-body">  
+              <div class="form-group" style="width:45%;">
+                  <label>Buscar:</label>
+                
+              </div>
+        
+              <div id="results">
+              <!---------------------->
+              
+            <% for(var i=0;videos!=undefined && i<videos.length;i++) { %>
+                <div style="margin-left:10px;width:30%;height:210px;float:left">
+    
+                <div align="left">
+                    <a href="#" onclick="javascript:mostrarVideo('<%=videos[i].idVideo %>');" border="0">
+                        <img src="<%=videos[i].urlImagen%>" border="0" width="196" height="110"/>
+                    </a>
+
+                <label class="tituloVideoYoutube"><%=videos[i].tituloVideo%></label>
+                <br>
+                <label class="canalVideoYoutube">de <%=videos[i].idCanal%></label>
+                </div>    
+                </div>
+      
+            <% }// for %>  
+              
+                
+              <!------------------------>
+              </div>
+          </div><!-- /.box-body -->
+          </div> 
+</form>
 
       
-  </div>       
+</div>       
       
       
   </section>

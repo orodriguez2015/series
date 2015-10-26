@@ -14,6 +14,32 @@ exports.show = function(req,res,next) {
 
 
 /**
+  * Función de autoload que recupera un determinado vídeo de la tabla VideoYoutube, para 
+  * almacenar en la request
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.load = function(req,res,next,videoId){
+    
+    var busqueda = {
+        idVideo: videoId
+    };
+    
+    model.VideoYoutube.find({where:busqueda}).then(function(video){
+        console.log("autoload video encontrado");
+        req.Video = video;
+        next();
+        
+    }).catch(function(err){
+        console.log("Error en autoload de vídeo " + err.message); 
+        next(err);
+    });
+};
+
+
+
+/**
   * Función que permite dar de alta un determinado vídeo en la tabla VideoYoutube
   * @param req: Objeto request
   * @param res: Objeto response
@@ -122,6 +148,33 @@ exports.getVideosAlmacenados = function(req,res,next) {
         
     }).catch(function(err) { 
         console.log("Error al recuperar videos almacenados del usuario " + req.session.user.id + ": " + err.message);
+        next(err);
+    });
+
+};
+
+
+
+
+/**
+  * Elimina un determinado vídeo de youtube almacenado en la tabla VideoYoutube
+  * @param res: Objeto de tipo response
+  * @param req: Objeto de tipo request
+  * @param next: Objeto de tipo next 
+  */
+exports.destroyVideo = function(req,res,next) {
+    
+    console.log("destroyVideo =====>");
+    
+    var video = req.Video; // Se recupera el vídeo cargado en el autoload
+    
+    video.destroy().then(function() {
+        console.log("Video " + video.idVideo + " eliminado");
+        // Se redirige a la pantalla de los vídeos de usuario para recargarla
+        res.redirect("/videos/usuario");
+        
+    }).catch(function(err) { 
+        console.log("Error al eliminar el vídeo " + video.idVideo + ": " + err.message);
         next(err);
     });
 
