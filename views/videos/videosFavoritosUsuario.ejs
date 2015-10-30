@@ -53,12 +53,10 @@
 
   <div class="box">
   
-    <form action="#">              
+    <!--
+      <form action="#">              
+-->
           <div class="box-body">  
-              <div class="form-group" style="width:45%;">
-                  <label>Buscar:</label>
-                
-              </div>
         
               <div id="results">
               <!---------------------->
@@ -74,6 +72,11 @@
                 <label class="tituloVideoYoutube"><%=videos[i].tituloVideo%></label>
                 <br>
                 <label class="canalVideoYoutube">de <%=videos[i].idCanal%></label>
+                    
+                <form name="formDelete" action="/videos/<%=videos[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
+                    <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
+                    
+                </form>    
                 </div>    
                 </div>
       
@@ -84,8 +87,9 @@
               </div>
           </div><!-- /.box-body -->
           </div> 
+<!--      
 </form>
-
+-->
       
 </div>       
       
@@ -103,13 +107,23 @@
 </div>
 
    
-    
-</script>
 <!-- Se incluye el API JS de youtube para mostrar vídeos -->
 <script async type="text/javascript" src="https://www.youtube.com/player_api"></script>
 <script type="text/javascript" src="/javascripts/youtubePlayer.js"></script>
+<!--
 <script type="text/javascript" src="/javascripts/youtubeApi.js"></script>
+-->
 <!-- Se incluye el API JS de youtube para poder buscar vídeos -->
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
+<script type="text/javascript">
+    
+    function confirmarEliminacion() { 
+        var salida = false;
+        if(confirm('¿Desea eliminar el vídeo?')) {
+            salida = true;
+        }
+        
+        return salida;
+    }
 
-<script type="text/javascript" src="/javascripts/altaVideo.js"></script>
+</script>

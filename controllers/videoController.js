@@ -23,11 +23,12 @@ exports.show = function(req,res,next) {
 exports.load = function(req,res,next,videoId){
     
     var busqueda = {
-        idVideo: videoId
+        id: videoId
     };
     
     model.VideoYoutube.find({where:busqueda}).then(function(video){
         console.log("autoload video encontrado");
+        console.log("id video recuperado: " + video.id + ",nombre: " + video.nombre);
         req.Video = video;
         next();
         

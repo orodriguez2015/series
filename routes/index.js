@@ -117,8 +117,9 @@ router.post("/videos/create",loginController.loginRequired,videoController.saveV
 // GET /videos/usuario. Recupera los vídeos almacenados por el usuario
 router.get("/videos/usuario",loginController.loginRequired,videoController.getVideosAlmacenados);
 
-// DELETE /videos/:videoId . Permite eliminar un determinado vídeo
+// DELETE /videos/:videoId . Permite eliminar un determinado video
 router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
+
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);
