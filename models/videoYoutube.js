@@ -18,7 +18,11 @@ module.exports = function(sequelize,DataTypes){
                     validate: { notEmpty: { msg: 'El id del canal es obligatorio'}}
 
         },
-
+        
+        descCanal: { type: DataTypes.STRING, 
+                    validate: { notEmpty: { msg: 'La descripción del canal es obligatorio'}}
+        },
+    
         tituloVideo: {
           type: DataTypes.STRING,
           validate: { notEmpty: { msg: 'El título del vídeo es obligatorio'}}

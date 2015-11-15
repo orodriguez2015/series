@@ -62,7 +62,7 @@
               <!---------------------->
               
             <% for(var i=0;videos!=undefined && i<videos.length;i++) { %>
-                <div style="margin-left:10px;width:30%;height:210px;float:left">
+                <div style="margin-left:10px;width:30%;height:220px;float:left">
     
                 <div align="left">
                     <a href="#" onclick="javascript:mostrarVideo('<%=videos[i].idVideo %>');" border="0">
@@ -70,13 +70,12 @@
                     </a>
 
                 <label class="tituloVideoYoutube"><%=videos[i].tituloVideo%></label>
-                <br>
-                <label class="canalVideoYoutube">de <%=videos[i].idCanal%></label>
-                    
+                <br> 
+                <label class="canalVideoYoutube">de <%=videos[i].descCanal%></label>
                 <form name="formDelete" action="/videos/<%=videos[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
-                    <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
-                    
-                </form>    
+                <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
+                </form>      
+                 
                 </div>    
                 </div>
       

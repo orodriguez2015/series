@@ -34,9 +34,7 @@ $(function() {
        ocultarReproductorYoutube(); 
         
       $("#results").html("");
-       // Se hace uso del api de youtube para buscar la lista de vídeos
-        
-        
+       // Se hace uso del api de youtube para buscar la lista de vídeos   
         /*
        var request = gapi.client.youtube.search.list({
             part: "snippet",
@@ -50,7 +48,7 @@ $(function() {
        }); 
        */
         
-         var request = gapi.client.youtube.search.list({
+        var request = gapi.client.youtube.search.list({
             part: "snippet",
             chart: "mostPopular",
             type: "video",

@@ -1,0 +1,119 @@
+
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Categorías
+      <small>Alta</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Alta de categoría</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+ 
+ <form name="formAltaCategoria" id="formAltaCategoria" role="form" method="POST" action="" novalidate>   
+ <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Datos generales de la categoría</h3>
+    </div><!-- /.box-header -->
+    
+      <div class="box-body">
+
+        <div class="form-group">
+          <label for="Nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
+        </div>
+          
+        <div class="form-group">
+          <label for="Descripcion">Descripción</label>
+          <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción">
+        </div>
+      </div><!-- /.box-body -->
+    
+      <div class="box-footer">
+        <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Enviar</button>
+        <a href="/videos/categorias">
+            <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar"/>
+        </a>
+      </div>
+     
+   </div>
+
+   </form>
+
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+
+
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="/javascripts/additional-methods.js"></script>
+<script type="text/javascript" src="/javascripts/messages_es.js"></script>
+
+<script type="text/javascript">
+
+<!-- Se hace uso de la librería jQuery Validate para validar formularios -->
+$("#formAltaCategoria").validate({
+    rules: {
+      nombre: {
+        required: true,
+        minlength: 2,
+        maxlength: 100
+      },
+        
+      descripcion: {
+        required: true,
+        minlength: 2,
+        maxlength: 100
+      },    
+        
+    },
+
+    messages: {
+      nombre: {
+        lettersonly: "Escribe sólo letras"
+      }
+    },
+
+    // Si la validación es correcta, se añade la clase css 'has-success' de bootstrap,
+    // al campo de formulario validado
+    success: function(element) {
+            $(element).closest('.form-group').addClass('has-success');
+    },
+
+
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+    },
+    
+    // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+    // al campo de formulario validado
+    unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+    },
+
+    errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+    },
+
+    submitHandler: function(form) {
+      document.formAltaCategoria.method = "POST";
+      document.formAltaCategoria.action = "/videos/categoria";
+      document.formAltaCategoria.submit();
+    }
+  });
+
+</script>

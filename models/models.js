@@ -64,8 +64,8 @@ var Temporada = sequelize.import(path.join(__dirname, 'temporada'));
 var UsuarioVisualizaSerie = sequelize.import(path.join(__dirname, 'usuarioVisualizaSerie'));
 // Se importa la definición de la tabla de BBDD VideoYoutube
 var VideoYoutube = sequelize.import(path.join(__dirname, 'VideoYoutube'));
-// Se importa la definición de la tabla de BBDD UsuarioVisualizaYoutube
-//var UsuarioVisualizaYoutube = sequelize.import(path.join(__dirname, 'UsuarioVisualizaSerie'));
+// Se importa la definición de la tabla de BBDD CategoriaVideoYoutube
+var CategoriaVideoYoutube = sequelize.import(path.join(__dirname, 'CategoriaVideoYoutube'));
 
 
 
@@ -103,19 +103,35 @@ User.hasMany(CapituloSerie, {
 
 
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
-// puede dar de alta 0:N series
+// puede dar de alta 0:N videos de youtube
 VideoYoutube.belongsTo(User);
 // Un usuario puede haber almacenado de 1 a N vídeos
 User.hasMany(VideoYoutube,{foreignKey:'UserId'});
 
 
 
+// Se define la relación 1:N entre la tabla User y CategoriaVideoYoutube
+CategoriaVideoYoutube.belongsTo(User);
+// Un usuario puede haber almacenado de 1 a N vídeos
+User.hasMany(CategoriaVideoYoutube,{foreignKey:'UserId'});
+
+
+
+// Se define la relación 1:N entre la tabla CategoriaVideoYoutube y VideoYoutube
+VideoYoutube.belongsTo(CategoriaVideoYoutube);
+// Un usuario puede haber almacenado de 1 a N vídeos
+CategoriaVideoYoutube.hasMany(VideoYoutube,{foreignKey:'UserId'});
+
+
+
+
+/*
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
 // puede dar de alta 0:N series
 User.hasMany(VideoYoutube);
 // Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería UserId
 User.hasMany(Serie,{foreignKey:'UserId'});
-
+*/
 
 // Se exporta la definición de las tabla de la base de datos
 exports.User  = User;
@@ -125,6 +141,7 @@ exports.CapituloSerie = CapituloSerie;
 exports.Temporada = Temporada;
 exports.UsuarioVisualizaSerie = UsuarioVisualizaSerie;
 exports.VideoYoutube = VideoYoutube;
+exports.CategoriaVideoYoutube = CategoriaVideoYoutube;
 
 /** 
   * Esta llamada crea e inicializa la base de datos videoclub.sqllite.

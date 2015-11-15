@@ -40,6 +40,7 @@ exports.load = function(req,res,next,videoId){
 
 
 
+
 /**
   * Función que permite dar de alta un determinado vídeo en la tabla VideoYoutube
   * @param req: Objeto request
@@ -50,10 +51,12 @@ exports.saveVideo = function(req,res,next) {
     
     var idVideo     = req.body.videoId; // Id vídeo
     var idCanal     = req.body.canalId; // Id canal
+    var descCanal   = req.body.descCanal; // Descripción del canal
     var titulo      = req.body.titulo;   // Título
     var descripcion = req.body.descripcion; // Descripción
     var urlImagen   = req.body.urlImagen;  // Url imagen vídeo
     var idUsuario   = req.session.user.id;  // Id usuario
+    
     
     var respuesta = {
         status: 0,
@@ -87,6 +90,7 @@ exports.saveVideo = function(req,res,next) {
              var objVideo = {
                 idVideo: idVideo,
                 idCanal: idCanal,
+                    descCanal: descCanal,
                 tituloVideo: titulo,
                 descripcionVideo: descripcion,
                 urlImagen: urlImagen,

@@ -8,6 +8,7 @@ var loginController = require('../controllers/login_controller.js');
 var capituloSerieController = require('../controllers/capituloSerie_controller.js');
 var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSerie_controller.js');
 var videoController = require('../controllers/videoController.js');
+var categoriaVideoController = require('../controllers/categoriaVideo_controller.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -24,6 +25,9 @@ router.param('capituloId',capituloSerieController.load);
 
 // Autoload para la carga de un vídeo de youtube en la request
 router.param('videoId',videoController.load);
+
+// Autoload para la carga de un vídeo de youtube en la request
+router.param('categoriaVideoId',categoriaVideoController.load);
 
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
 router.get('/users/new',loginController.loginRequired,usersController.new);
@@ -119,6 +123,28 @@ router.get("/videos/usuario",loginController.loginRequired,videoController.getVi
 
 // DELETE /videos/:videoId . Permite eliminar un determinado video
 router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
+
+
+// GET /videos/categorias . Carga la pantalla que muestra las categorias de vídeos de youtube 
+// de un determinado usuario
+router.get("/videos/categorias",loginController.loginRequired,categoriaVideoController.getCategorias);
+
+// GET /videos/categorias/alta. Carga la pantalla de alta de una nueva categoria para poder asignar
+// a los vídeos de youtube
+router.get("/videos/categorias/alta",loginController.loginRequired,categoriaVideoController.newCategoria);
+
+// POST /videos/categoria. Permite dar de alta una nueva categoría de vídeos de un usuario
+router.post("/videos/categoria",loginController.loginRequired,categoriaVideoController.saveCategoria);
+
+// DELETE /videos/categoria/:categoriaVideoId. Permite eliminar una determinada categoría de vídeos
+router.delete("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.destroyCategoria);
+
+// GET /videos/categorias/:categoriaVideoId. Petición de la vista de edición de una categoría de vídeo
+router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.edit);
+
+// PUT /videos/categorias/:categoriaVideoId. Petición de modificación de una determinada 
+// categoría de vídeo
+router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.update);
 
 
 // GET /login. Petición de login

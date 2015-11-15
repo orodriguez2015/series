@@ -1,17 +1,7 @@
-function saveVideo(idVideo,idCanal,tituloVideo,descripcionVideo,urlImagen) { 
+function saveVideo(idVideo,idCanal,descCanal,tituloVideo,descripcionVideo,urlImagen) { 
     try { 
-
-        var parametros = {
-            videoId : idVideo,
-            canalId : idCanal,
-            titulo:tituloVideo,
-            descripcion:descripcionVideo,
-            urlImagen:urlImagen
-        }
-
         var parametros = "videoId=" + idVideo + "&canalId=" + idCanal + "&titulo=" + tituloVideo + 
-            "&descripcion=" + descripcionVideo + "&urlImagen=" + urlImagen;
-
+            "&descripcion=" + descripcionVideo + "&urlImagen=" + urlImagen + "&descCanal=" + escape(descCanal);
 
         $.ajax({
             url: "/videos/create",
@@ -20,8 +10,8 @@ function saveVideo(idVideo,idCanal,tituloVideo,descripcionVideo,urlImagen) {
             data: parametros,    
             success: procesarRespuesta,
             error: procesarError
-
         });
+        
     }catch(err) { 
         alert("Error: " + err.message);
     }   
@@ -30,9 +20,11 @@ function saveVideo(idVideo,idCanal,tituloVideo,descripcionVideo,urlImagen) {
     
     
 function procesarRespuesta(data) { 
+    // Se muestra el mensaje de exito devuelve por el servidor
     alert(data.descStatus);
 }
 
-function procesarError() { 
-    alert("error")
+function procesarError(data) { 
+    // Se muestra el mensaje de error devuelto por el servidor
+    alert(data.descStatus);   
 }
