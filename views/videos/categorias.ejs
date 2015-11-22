@@ -39,7 +39,7 @@
           </td>
           <td width="40px">    
 
-            <form name="formDelete" method="POST" action="/videos/categorias/<%=categorias[i].id%>?_method=DELETE" onsubmit="return confirmarEliminar('<%=categorias[i].nombre%>');">
+            <form name="formDelete" method="POST" action="/videos/categorias/<%=categorias[i].id%>?_method=DELETE" onsubmit="return confirmarEliminar('<%=categorias[i].nombre%>','<%=categorias[i].id %>');">
                <input type="image" src="/images/23_full_trash.png" height="18" width="18" alt="Eliminar" title="Eliminar">
             </form> 
           </td>
@@ -87,7 +87,7 @@
     /**
       * Función llamada para confirmar la eliminación de un usuario del sistema
       * @param nombre: Nombre del usuario
-      */
+      *
     function confirmarEliminar(nombre) { 
         var exito = false;    
         if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
@@ -95,5 +95,40 @@
         }
         
         return exito;
+    }*/
+    
+    
+    function confirmarEliminar(nombre,idCategoria) { 
+        var exito = false;    
+        if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
+            var ajax_params ='';
+        
+            $.ajax({
+                url: sUrl,
+                data: ajax_params,
+                type: "POST",
+                success: function(data,status){
+                    
+                    if(status=="success") {
+                        var resultado = JSON.parse(data);
+                        if(resultado.status==0) { 
+                            // No hay vídeos con la categoria. Se puede eliminar
+                            return true;
+                        } else
+                        if(resultado.status==1) { alert("no ok")
+                            // No se puede eliminar la categoria, ya que tiene vídeos asignados
+                            alert(resultado.descStatus);
+                            return false;
+                        }
+                    }// if   
+                    else return false;
+                },
+                error:function (xhr, ajaxOptions, thrownError) {
+                    alert("Se ha producido un error al verificar si se puede eliminar la categoría: " + thrownError.message);
+                    return false;
+          }
+            });
+        } else return false;  
     }
+    
 </script>

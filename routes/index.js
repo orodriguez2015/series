@@ -146,6 +146,15 @@ router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginReq
 // categoría de vídeo
 router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.update);
 
+// POST /videos/categorias/comprobarExistenciaVideos/:categoriaVideoId. Petición para comprobar si
+// existen vídeos asignados a una determinada categoría.
+// @return: Se devuelve un JSON respuesta.status = 0 => La categoría no tiene vídeos
+//                              respuesta.status = 1 => La categoría tiene vídeos asignados
+ router.post("/videos/categorias/comprobarExistenciaVideos/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.videosConCategoria);
+
+// POST /videos/categorias/asignacionesVideos. Asignación de una misma categoría a varios vídeos
+router.post("/videos/categorias/asignacionesVideos",loginController.loginRequired,videoController.asignarVideosCategoria);
+
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);

@@ -166,3 +166,95 @@ exports.destroyCategoria = function(req,res,next){
         next(err);
     });
 };
+
+
+/**
+  * Comprueba si una determinada categoria tiene asignada algún vídeo 
+  * @param res: Objeto de tipo response
+  * @param req: Objeto de tipo request
+  * @param next: Objeto de tipo next 
+  */
+exports.videosConCategoria = function(req,res,next) {
+    console.log("videosConCategoria =====>");
+    
+    var idCategoria = req.CategoriaVideo.id;
+    var busqueda = {
+        where: [{CategoriaVideoYoutubeId:idCategoria}]
+    };
+    
+    model.VideoYoutube.count(busqueda).then(function(num){
+        console.log("Hay " + num + " vídeos de la categoria de id " + idCategoria);
+        
+        var respuesta = {
+            status:0,
+            descStatus: ''
+        }
+        
+        if(num>0) { 
+            // La categoría tiene vídeos asignados
+            respuesta.status = 1;
+            respuesta.descStatus = 'No se puede eliminar la categoría puesto que tiene vídeos asignados';
+            
+        } else
+        if(num==0) { 
+            respuesta.status=0;
+            respuesta.descStatus = 'La categoría no tiene vídeos asignados';
+        }    
+        
+        devolverSalida(res,respuesta);
+        
+    }).catch(function(err){
+        console.log("Error al contar videos de la categoria de id " + idCategoria + " : " + err.message);
+        next(err);
+    });
+};
+
+
+/**
+  * Devuelve la salida en formato JSON. Es utilizada por la función saveVideo
+  * @param res: Objeto de tipo Response
+  * @param respuesta: Objeto que contiene la respuesta y que se 
+  *        convierte a JSON
+  */
+function devolverSalida(res,respuesta) { 
+    res.write(JSON.stringify(respuesta));
+    res.end(); 
+};
+
+
+
+
+exports.getCategoriasUsuario = function(idUsuario,success){
+
+    var busqueda = {
+        UserId: idUsuario 
+    };
+    
+    model.CategoriaVideoYoutube.findAll({where:busqueda}).then(function(categ){
+        
+       success(categ,null);
+        
+    }).catch(function(err){
+        console.log("getCategoriasUsuario(): Error al recuperar las categorias de vídeos: " + err.message); 
+        success(null,err);
+    });
+};
+
+
+exports.getCategoriasUsuarioConVideos = function(idUsuario,success){
+
+    var busqueda = {
+        UserId: idUsuario
+    };
+    
+    model.CategoriaVideoYoutube.findAll({where:busqueda,include:[{model:model.VideoYoutube}]}).then(function(categ){
+        
+       success(categ,null);
+        
+    }).catch(function(err){
+        console.log("getCategoriasUsuario(): Error al recuperar las categorias de vídeos: " + err.message); 
+        success(null,err);
+    });
+};
+
+

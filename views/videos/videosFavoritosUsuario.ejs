@@ -53,37 +53,116 @@
 
   <div class="box">
   
-    <!--
-      <form action="#">              
--->
-          <div class="box-body">  
+    <div class="box-body">  
         
-              <div id="results">
-              <!---------------------->
+        <div id="results">
+                                
               
-            <% for(var i=0;videos!=undefined && i<videos.length;i++) { %>
-                <div style="margin-left:10px;width:30%;height:220px;float:left">
+            <!------ VIDEOS CON CATEGORIA ---------------->
+              
+            <% for(var i=0;categoriasConVideos!=undefined && i<categoriasConVideos.length;i++) { %>
+                
+                <%  // Sólo se muestran las categorías con vídeos
+                    var videos = categoriasConVideos[i].videoYoutubes; 
+                    if(videos!=undefined && videos.length>0) {
+                %>        
+                <div class="form-group">
+                    <h3><%=categoriasConVideos[i].descripcion%></h3>
+                </div>
+                  
+                <% 
+                    for(var j=0;videos!=undefined && j<videos.length;j++) {
+                %>        
+                <!---------------------------------------->    
+                
+                  <div style="margin-left:10px;width:30%;height:220px;float:left">
     
                 <div align="left">
-                    <a href="#" onclick="javascript:mostrarVideo('<%=videos[i].idVideo %>');" border="0">
-                        <img src="<%=videos[i].urlImagen%>" border="0" width="196" height="110"/>
+                    <a href="#" onclick="javascript:mostrarVideo('<%=videos[j].idVideo %>');" border="0">
+                        <img src="<%=videos[j].urlImagen%>" border="0" width="196" height="110"/>
                     </a>
 
-                <label class="tituloVideoYoutube"><%=videos[i].tituloVideo%></label>
-                <br> 
-                <label class="canalVideoYoutube">de <%=videos[i].descCanal%></label>
-                <form name="formDelete" action="/videos/<%=videos[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
-                <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
-                </form>      
+                    <label class="tituloVideoYoutube"><%=videos[j].tituloVideo%></label>
+                    <br> 
+                    <label class="canalVideoYoutube">de <%=videos[j].descCanal%></label>
+                    <form name="formDelete" action="/videos/<%=videos[j].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
+                    <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
+                    </form>      
                  
                 </div>    
                 </div>
-      
+            
+                <%
+                    }// for
+                   } // if
+                %>
+
+            <% }// for %>  
+                
+            
+            <div style="clear:both">
+                <!-- Separador entre los videos con categoría y sin categoría -->
+            </div>
+                      
+                  
+            <div class="form-group">
+                <h3>Vídeos sin categoria</h3> <div class="form-group"><a href="#" id="asignarCategorias">
+                Asignar vídeos a categorías</a>
+                    <div style="clear:both">
+                        
+                    </div>
+                
+                <div id="divCategoria" style="display:none;margin-top:5px;">
+                    <select name="categoria" id="categoria">
+                    <% for(var i=0;categorias!=undefined && i<categorias.length;i++) { %>
+                        <option value="<%=categorias[i].id%>"><%=categorias[i].descripcion%></option>
+                        
+                    <% } %>
+                    </select>&nbsp;&nbsp;
+                    <button type="button" id="btnAsignarCategoria"  class="btn btn-success btn-xs">Asignar</button>
+                    
+                </div>    
+                
+            </div>
+                
+            </div>
+                  
+            <!--- BEGIN: VIDEOS SIN CATEGORIA -->    
+            <% for(var i=0;videosSinCategoria!=undefined && i<videosSinCategoria.length;i++) { %>
+                <div style="margin-left:10px;width:30%;height:220px;float:left">
+    
+                <div align="left">
+                    <a href="#" onclick="javascript:mostrarVideo('<%=videosSinCategoria[i].idVideo %>');" border="0">
+                        <img src="<%=videosSinCategoria[i].urlImagen%>" border="0" width="196" height="110"/>
+                    </a>
+
+                    <label class="tituloVideoYoutube"><%=videosSinCategoria[i].tituloVideo%></label>
+                    <br> 
+                    <label class="canalVideoYoutube">de <%=videosSinCategoria[i].descCanal%></label>
+                    <br> 
+                    <form name="formDelete" action="/videos/<%=videosSinCategoria[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
+                        
+                     <input type="checkbox" name="videoSinCategoria[]" value="<%=videosSinCategoria[i].id %>" style="display:none">        
+                    <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
+                   
+                    </form>      
+                    
+                     
+                 
+                </div>    
+                </div>
             <% }// for %>  
               
-                
-              <!------------------------>
-              </div>
+            <!--- END: VIDEOS SIN CATEGORIA --> 
+            
+            </div>
+            
+            <div style="clear:both">
+                <!-- Separador -->
+            </div>
+            
+
+            
           </div><!-- /.box-body -->
           </div> 
 <!--      
@@ -109,9 +188,7 @@
 <!-- Se incluye el API JS de youtube para mostrar vídeos -->
 <script async type="text/javascript" src="https://www.youtube.com/player_api"></script>
 <script type="text/javascript" src="/javascripts/youtubePlayer.js"></script>
-<!--
-<script type="text/javascript" src="/javascripts/youtubeApi.js"></script>
--->
+
 <!-- Se incluye el API JS de youtube para poder buscar vídeos -->
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
 <script type="text/javascript">
@@ -125,4 +202,74 @@
         return salida;
     }
 
+    
+    // Manejador evento click sobre el elemento 'asignarCategorias'
+    $("#asignarCategorias").on('click',function() {
+        if(!$('#divCategoria').is(":visible")) {    
+            $("#divCategoria").show();
+            showCheckbox(true);
+        } else {
+            $("#divCategoria").hide();
+            showCheckbox(false);
+        }
+    });
+    
+    
+    // Muestra y oculta los checkblx 'videosSinCategoria'
+    function showCheckbox(flag) {
+    
+        $('input[name="videoSinCategoria[]"]').each(function() {
+            
+            if(flag){
+                $(this).show();
+            }else{
+                // La propiedad checked del checkbox se pone a vacío para que no aparezca seleccionado,
+                // la próxima vez que se intente mostrar
+                $(this).prop("checked","");
+                $(this).hide();
+            } 
+        });
+    }
+    
+    
+    // Manejador evento click sobre el elemento 'btnAsignarCategoria'
+    $("#btnAsignarCategoria").on('click',function() {
+        
+        var checkboxValues = new Array();
+        //recorremos todos los checkbox seleccionados con .each
+        $('input[name="videoSinCategoria[]"]:checked').each(function() {
+
+            checkboxValues.push($(this).val());
+        });
+        
+        if(checkboxValues.length==0) {
+            alert("Es necesario seleccionar algún vídeo para poder asignarle la categoría");
+        } else {
+              
+           
+              $.ajax({
+                url: '/videos/categorias/asignacionesVideos',
+                data: "&videos=" + JSON.stringify(checkboxValues) + "&categoria=" + $('#categoria').val(),
+                type: "POST",
+                success: respuestaAsignacionVideosCategorias,
+                error:errorAsignacionVideosCategorias,
+            });
+           
+        }
+    });
+    
+    
+    function respuestaAsignacionVideosCategorias(data) {
+        console.log("respuesta: " + data)
+        if(data!=null && data.status==200) {
+            window.location.href="/videos/usuario";
+        }
+    }
+    
+    function errorAsignacionVideosCategorias(data) {
+        console.log("error: " + data);
+        
+    }
+    
+    
 </script>

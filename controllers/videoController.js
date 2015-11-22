@@ -90,11 +90,12 @@ exports.saveVideo = function(req,res,next) {
              var objVideo = {
                 idVideo: idVideo,
                 idCanal: idCanal,
-                    descCanal: descCanal,
+                descCanal: descCanal,
                 tituloVideo: titulo,
                 descripcionVideo: descripcion,
                 urlImagen: urlImagen,
-                UserId: idUsuario
+                UserId: idUsuario,
+                CategoriaVideoYoutubeId:0 
             };
     
             var video = model.VideoYoutube.build(objVideo);
@@ -131,6 +132,9 @@ exports.saveVideo = function(req,res,next) {
 
 
 
+
+
+
 /**
   * Recupera los vídeos almacenados por un determinado usuario y renderiza la vista
   * @param res: Objeto de tipo response
@@ -141,21 +145,72 @@ exports.getVideosAlmacenados = function(req,res,next) {
     console.log("getVideosAlmacenados =====>");
     var idUsuario   = req.session.user.id; 
     
-    console.log("idUsuario: " + idUsuario);
-    
-    // Se recupera los vídeos almacenados por el usuario que está logueado
-    var busqueda = {
-       UserId:  idUsuario
+    // Condición de búsqueda de vídeos sin categoría
+    var busquedaVideosSinCategoria = {
+        where: {
+            UserId: { eq: idUsuario},
+            CategoriaVideoYoutubeId: { eq: 0 }
+        }
     };
     
-    model.VideoYoutube.findAll({where: busqueda}).then(function(videos) {
-        res.render("videos/videosFavoritosUsuario",{errors:[],videos:videos});
+    
+    // Se recuperan todas las categorías de vídeos creadas por el usuario actual
+    var categoriaVideoController = require('./categoriaVideo_controller.js');
+    var categorias;
+    var categoriasConVideos;
+ 
+    categoriaVideoController.getCategoriasUsuario(idUsuario,function(resultado,error){
         
-    }).catch(function(err) { 
-        console.log("Error al recuperar videos almacenados del usuario " + req.session.user.id + ": " + err.message);
-        next(err);
-    });
+        if(resultado) {
+            categorias = resultado;
+            console.log("VideoController categorias recuperadas: " + categorias.length);        
 
+            // Se recuperan las categorías de vídeos, junto con los vídeos asociados
+            categoriaVideoController.getCategoriasUsuarioConVideos(idUsuario,function(resultado,error){
+        
+            if(resultado) {
+                categoriasConVideos = resultado;
+                console.log("VideoController categorias con vídeos recuperadas: " + categorias.length);        
+     
+                
+                
+                for(var i=0;i<categoriasConVideos.length;i++){
+                    var aux = categoriasConVideos[i];
+                    
+                    var videos = aux.videoYoutubes;
+                    if(aux.videoYoutubes!=undefined) {
+                        
+                      for(var j=0;j<videos.length;j++) {
+                          console.log("titulo video: " + videos[j].tituloVideo);
+                          console.log("desc video: " + videos[j].descripcionVideo);
+                          
+                      }  
+                        
+                    }    
+                }
+                    
+                
+                // Se recuperan los vídeos del usuario que no tiene categoría asignada
+                model.VideoYoutube.findAll(busquedaVideosSinCategoria).then(function(videosSinCategoria) {
+                    console.log("render")
+                    res.render("videos/videosFavoritosUsuario",{errors:[],categorias:categorias, categoriasConVideos:categoriasConVideos,                                                videosSinCategoria:videosSinCategoria});
+
+                }).catch(function(err) { 
+                    console.log("Error al recuperar videos almacenados del usuario " + req.session.user.id + ": " + err.message);
+                    next(err);
+                });
+                
+                
+                
+            }else
+                next(error);
+        
+            });
+                
+        }else
+            next(error);
+        
+    });
 };
 
 
@@ -184,6 +239,76 @@ exports.destroyVideo = function(req,res,next) {
     });
 
 };
+
+
+
+
+/**
+  * Función que se invoca cuando se pretende asignar una categoría a uno
+  * o varios vídeos
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.asignarVideosCategoria = function(req,res,next) { 
+    var videos = JSON.parse(req.body.videos);
+    var categoria = req.body.categoria;
+    
+    console.log("videos: " + videos);
+    console.log("categoria: " + categoria);
+    
+    var salida = false;
+    
+     var busquedaVideosSinCategoria = {
+        where: {
+            UserId: { eq: idUsuario},
+            CategoriaVideoYoutubeId: { eq: 0 }
+        }
+    };
+    
+    for(var i=0;videos!=undefined && i<videos.length;i++) {
+        var idVideo = videos[i];
+
+        // hay que recuperar cada vídeo de la BBDD, para asignarle la categoria,
+        // y proceder a su grabación en BD
+        var busqueda = {
+            where: {
+                id:idVideo
+            }
+        };
+         
+        console.log("busqueda: " + JSON.stringify(busqueda));
+        
+        model.VideoYoutube.findAll(busqueda).then(function(video){
+            console.log("Video de id " + idVideo + " recuperado de la BBDD");
+            
+            video.CategoriaVideoYoutubeId = categoria;
+            video.save().then(function(video){
+                console.log("Al video de id " + idVideo + " se le ha asignado la categoria de id " + categoria);
+                
+                if(videos.length-i==1){
+                    res.redirect("/videos/usuario");                
+                }
+            }).catch(function(err){
+                console.log("Error al asignar la categoria de id " + categoria + " al video de id " + idVideo + ": " + err.message);
+                next(err);
+            });
+            
+        }).catch(function(err){
+            
+            console.log("Error al recuperar el vídeo de id " + idVideo + " de la BBDD: "  + err.message);
+            next(err);
+        });
+        
+        
+    }// for
+    
+    
+    
+
+    
+};
+
 
 
 /**

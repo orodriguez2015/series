@@ -120,18 +120,9 @@ User.hasMany(CategoriaVideoYoutube,{foreignKey:'UserId'});
 // Se define la relación 1:N entre la tabla CategoriaVideoYoutube y VideoYoutube
 VideoYoutube.belongsTo(CategoriaVideoYoutube);
 // Un usuario puede haber almacenado de 1 a N vídeos
-CategoriaVideoYoutube.hasMany(VideoYoutube,{foreignKey:'UserId'});
+CategoriaVideoYoutube.hasMany(VideoYoutube,{foreignKey:'CategoriaVideoYoutubeId'});
 
 
-
-
-/*
-// Se define la relación 1:N entre la tabla serie y user. Un usuario
-// puede dar de alta 0:N series
-User.hasMany(VideoYoutube);
-// Se indica el nombre de la foreign key. Sino se indica nada, por defecto sería UserId
-User.hasMany(Serie,{foreignKey:'UserId'});
-*/
 
 // Se exporta la definición de las tabla de la base de datos
 exports.User  = User;
