@@ -92,11 +92,12 @@
                 </div>    
                 </div>
             
-                <%
-                    }// for
-                   } // if
-                %>
-
+                <% } %>    
+                <div style="clear:both">
+                    <!-- Separador  -->
+                </div>      
+                <% } %>
+            
             <% }// for %>  
                 
             
@@ -260,10 +261,13 @@
     
     
     function respuestaAsignacionVideosCategorias(data) {
-        console.log("respuesta: " + data)
-        if(data!=null && data.status==200) {
+        console.log("respuesta: " + data);
+        
+        var respuesta = JSON.parse(data);
+        if(respuesta!=null && respuesta.status==0) {
+            
             window.location.href="/videos/usuario";
-        }
+        } else console.log("Error al tratar la respuesta del servidor")
     }
     
     function errorAsignacionVideosCategorias(data) {

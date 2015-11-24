@@ -257,49 +257,66 @@ exports.asignarVideosCategoria = function(req,res,next) {
     console.log("videos: " + videos);
     console.log("categoria: " + categoria);
     
+    var numero = 0;
     var salida = false;
     
-     var busquedaVideosSinCategoria = {
-        where: {
-            UserId: { eq: idUsuario},
-            CategoriaVideoYoutubeId: { eq: 0 }
-        }
-    };
+    if(videos!=undefined) numero = videos.length;
     
     for(var i=0;videos!=undefined && i<videos.length;i++) {
         var idVideo = videos[i];
 
         // hay que recuperar cada vídeo de la BBDD, para asignarle la categoria,
-        // y proceder a su grabación en BD
+        // y proceder a su grabación en BD 
         var busqueda = {
-            where: {
-                id:idVideo
-            }
+            id: idVideo
         };
-         
-        console.log("busqueda: " + JSON.stringify(busqueda));
         
-        model.VideoYoutube.findAll(busqueda).then(function(video){
+        
+        var aux = 0;
+        model.VideoYoutube.find({where:busqueda}).then(function(video){
             console.log("Video de id " + idVideo + " recuperado de la BBDD");
-            
+            console.log("Video idCanal: " + video.idCanal);
+            console.log("Video descCanal: " + video.descCanal);
+            console.log("Video tituloVideo: " + video.tituloVideo);
+        
             video.CategoriaVideoYoutubeId = categoria;
-            video.save().then(function(video){
+        
+            video.save().then(function(){    
+                aux++;
                 console.log("Al video de id " + idVideo + " se le ha asignado la categoria de id " + categoria);
-                
-                if(videos.length-i==1){
-                    res.redirect("/videos/usuario");                
+            
+                if(aux==numero){
+                    
+                    var respuesta = {
+                        status: 0,
+                        descStatus: "OK"
+                    };
+                    
+                    devolverSalida(res,respuesta);
                 }
             }).catch(function(err){
                 console.log("Error al asignar la categoria de id " + categoria + " al video de id " + idVideo + ": " + err.message);
-                next(err);
+                
+                var respuesta = {
+                    status: 2,
+                    descStatus: "Error al asignar la categoria de id " + categoria + " al video de id " + idVideo + ": " + err.message
+                };
+
+                devolverSalida(res,respuesta);
+                
             });
             
         }).catch(function(err){
             
             console.log("Error al recuperar el vídeo de id " + idVideo + " de la BBDD: "  + err.message);
-            next(err);
+            
+             var respuesta = {
+                status: 1,
+                descStatus: "Error al recuperar el vídeo de id " + idVideo + " de la BBDD: "  + err.message
+             };
+
+             devolverSalida(res,respuesta);
         });
-        
         
     }// for
     
