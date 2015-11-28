@@ -40,6 +40,37 @@ exports.load = function(req,res,next,videoId){
 
 
 
+/**
+  * Función que a un vídeo determinado le retira la categoria dejándola a null en BBDD
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.eliminarCategoriaVideo = function(req,res,next){
+    // Se recupera el vídeo cargado en la función de autoload
+    var video = req.Video;
+    
+    video.CategoriaVideoYoutubeId = 0;
+    
+    video.save().then(function(){
+        var respuesta = {
+            status:0,
+            descStatus: 'OK'
+        };
+        
+        devolverSalida(res,respuesta);
+        
+    }).catch(function(err){
+        console.log("Error al poner a null la categoría del vídeo: " + video.id + ": " + err.message); 
+        var respuesta = {
+            status:1,
+            descStatus: 'Error'
+        };
+        
+        devolverSalida(res,respuesta);
+    });
+};
+
 
 /**
   * Función que permite dar de alta un determinado vídeo en la tabla VideoYoutube
@@ -171,24 +202,7 @@ exports.getVideosAlmacenados = function(req,res,next) {
             if(resultado) {
                 categoriasConVideos = resultado;
                 console.log("VideoController categorias con vídeos recuperadas: " + categorias.length);        
-     
-                
-                
-                for(var i=0;i<categoriasConVideos.length;i++){
-                    var aux = categoriasConVideos[i];
-                    
-                    var videos = aux.videoYoutubes;
-                    if(aux.videoYoutubes!=undefined) {
-                        
-                      for(var j=0;j<videos.length;j++) {
-                          console.log("titulo video: " + videos[j].tituloVideo);
-                          console.log("desc video: " + videos[j].descripcionVideo);
-                          
-                      }  
-                        
-                    }    
-                }
-                    
+      
                 
                 // Se recuperan los vídeos del usuario que no tiene categoría asignada
                 model.VideoYoutube.findAll(busquedaVideosSinCategoria).then(function(videosSinCategoria) {
@@ -230,12 +244,22 @@ exports.destroyVideo = function(req,res,next) {
     
     video.destroy().then(function() {
         console.log("Video " + video.idVideo + " eliminado");
-        // Se redirige a la pantalla de los vídeos de usuario para recargarla
-        res.redirect("/videos/usuario");
+        
+        var respuesta = {
+            status:0,
+            descStatus: 'OK'
+        };
+        
+        devolverSalida(res,respuesta);
         
     }).catch(function(err) { 
         console.log("Error al eliminar el vídeo " + video.idVideo + ": " + err.message);
-        next(err);
+        var respuesta = {
+            status:1,
+            descStatus:'ERROR'
+        }
+        
+        devolverSalida(res,respuesta);
     });
 
 };

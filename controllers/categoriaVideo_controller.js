@@ -95,7 +95,7 @@ exports.getCategorias = function(req,res,next){
     };
     
     console.log("Llamada a getCategorias() para recuperar categorías del usuario: " + idUsuario);
-    model.CategoriaVideoYoutube.findAll({where:busqueda}).then(function(categ){
+    model.CategoriaVideoYoutube.findAll({where:busqueda,include:[{model:model.VideoYoutube}]}).then(function(categ){
         
        console.log("Num categorias recuperadas: " + categ.length);
        res.render("videos/categorias",{errors:[],categorias:categ});
@@ -217,6 +217,7 @@ exports.videosConCategoria = function(req,res,next) {
   *        convierte a JSON
   */
 function devolverSalida(res,respuesta) { 
+    console.log("===========> Devolviendo: " + JSON.stringify(respuesta));
     res.write(JSON.stringify(respuesta));
     res.end(); 
 };

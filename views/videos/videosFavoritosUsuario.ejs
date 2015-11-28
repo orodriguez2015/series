@@ -71,12 +71,11 @@
                 </div>
                   
                 <% 
-                    for(var j=0;videos!=undefined && j<videos.length;j++) {
-                %>        
-                <!---------------------------------------->    
-                
+                  for(var j=0;videos!=undefined && j<videos.length;j++) {
+                %>                
                   <div style="margin-left:10px;width:30%;height:220px;float:left">
     
+                      
                 <div align="left">
                     <a href="#" onclick="javascript:mostrarVideo('<%=videos[j].idVideo %>');" border="0">
                         <img src="<%=videos[j].urlImagen%>" border="0" width="196" height="110"/>
@@ -85,10 +84,13 @@
                     <label class="tituloVideoYoutube"><%=videos[j].tituloVideo%></label>
                     <br> 
                     <label class="canalVideoYoutube">de <%=videos[j].descCanal%></label>
-                    <form name="formDelete" action="/videos/<%=videos[j].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
-                    <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
-                    </form>      
-                 
+                    <br>
+                        
+                    <img src="/images/23_full_trash.png" height=15 width=15 name="btnEliminar" id="btnEliminar"  title="Eliminar vídeo" alt="Eliminar vídeo" onclick="confirmarEliminacion(<%=videos[j].id%>);"/>     
+                        
+                    <img src="/images/23_full_trash.png" height=15 width=15 name="btnAnular" id="btnAnular"  title="Anular categoría" alt="Anular categoría" onclick="confirmarAnulacionCategoria(<%=videos[j].id%>);"/> 
+                            
+                    
                 </div>    
                 </div>
             
@@ -105,9 +107,17 @@
                 <!-- Separador entre los videos con categoría y sin categoría -->
             </div>
                       
-                  
+              
+            
+            <!--------------------- VIDEOS SIN CATEGORIA ---------------------->
+
+            <% if(videosSinCategoria!=undefined && videosSinCategoria.length>0) { %>
             <div class="form-group">
-                <h3>Vídeos sin categoria</h3> <div class="form-group"><a href="#" id="asignarCategorias">
+                <h3>Vídeos sin categoria</h3> 
+                
+                <% if(categorias!=undefined && categorias.length>0) { %>
+                
+                <div class="form-group"><a href="#" id="asignarCategorias">
                 Asignar vídeos a categorías</a>
                     <div style="clear:both">
                         
@@ -124,11 +134,12 @@
                     
                 </div>    
                 
-            </div>
+                </div>
+              <% } %>    
                 
             </div>
                   
-            <!--- BEGIN: VIDEOS SIN CATEGORIA -->    
+            <!--- BEGIN: LISTADO VIDEOS SIN CATEGORIA -->    
             <% for(var i=0;videosSinCategoria!=undefined && i<videosSinCategoria.length;i++) { %>
                 <div style="margin-left:10px;width:30%;height:220px;float:left">
     
@@ -141,7 +152,7 @@
                     <br> 
                     <label class="canalVideoYoutube">de <%=videosSinCategoria[i].descCanal%></label>
                     <br> 
-                    <form name="formDelete" action="/videos/<%=videosSinCategoria[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion();">
+                    <form name="formDelete" action="/videos/<%=videosSinCategoria[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion(<%=videosSinCategoria[i].id%>);">
                         
                      <input type="checkbox" name="videoSinCategoria[]" value="<%=videosSinCategoria[i].id %>" style="display:none">        
                     <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
@@ -152,9 +163,10 @@
                  
                 </div>    
                 </div>
-            <% }// for %>  
+            <% }// for 
+            }// if %>  
               
-            <!--- END: VIDEOS SIN CATEGORIA --> 
+            <!--- END: LISTADOVIDEOS SIN CATEGORIA --> 
             
             </div>
             
@@ -194,16 +206,51 @@
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
 <script type="text/javascript">
     
-    function confirmarEliminacion() { 
-        var salida = false;
-        if(confirm('¿Desea eliminar el vídeo?')) {
-            salida = true;
-        }
+    
+
+    function confirmarAnulacionCategoria(videoId) {
+        var url = "/videos/categorias/anular/" + videoId;
+    
+        if(confirm('¿Desea que el vídeo quede sin categoría?')) {
+            
+            // Se envía la petición por post
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    if(data.status==0) {
+                        // Se recarga la página
+                        window.location.href="/videos/usuario";                        
+                        
+                    }
+                }
+            });
+        }// if
+    };
+    
+    function confirmarEliminacion(videoId) { 
+        var url = "/videos/" + videoId + "?_method=delete";
+        console.log("confirmaEliminacion videoId: " + videoId + ", url: " + url)
         
-        return salida;
+        if(confirm('¿Desea eliminar el vídeo?')) {
+             // Se envía la petición por post
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    if(data.status==0) {
+                        // Se recarga la página
+                        window.location.href="/videos/usuario";                        
+                    }
+                }
+            });
+        }// if
     }
 
-    
+        
     // Manejador evento click sobre el elemento 'asignarCategorias'
     $("#asignarCategorias").on('click',function() {
         if(!$('#divCategoria').is(":visible")) {    

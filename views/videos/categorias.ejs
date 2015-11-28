@@ -26,25 +26,32 @@
           <th colspan="2">&nbsp</th>
           <th>Nombre</th>
           <th>Descripción</th>
+          <th>Número de vídeos asignados</th>
         </tr>
       </thead>
       <tbody>
       <% for(var i=0;categorias!=undefined && i<categorias.length;i++) { %>
+          
+          <% var videos = categorias[i].videoYoutubes; %>
         <tr>
           <td width="40px">
-
+           
             <a href="/videos/categorias/<%=categorias[i].id%>">
                 <img src="/images/pencil2.png" width="18" height="18" alt="Editar" title="Editar">
             </a> 
+            
           </td>
           <td width="40px">    
 
-            <form name="formDelete" method="POST" action="/videos/categorias/<%=categorias[i].id%>?_method=DELETE" onsubmit="return confirmarEliminar('<%=categorias[i].nombre%>','<%=categorias[i].id %>');">
+            <% if(videos!=undefined && videos.length==0) { %>
+            <form name="formDelete" method="POST" action="/videos/categorias/<%=categorias[i].id%>?_method=DELETE">
                <input type="image" src="/images/23_full_trash.png" height="18" width="18" alt="Eliminar" title="Eliminar">
             </form> 
+            <% } %>  
           </td>
           <td><%=categorias[i].nombre%></td>
           <td><%=categorias[i].descripcion%></td>
+          <td><% if(videos!=undefined) { %> <%=videos.length%>  <% } %></td>    
         </tr>
       <% } %>  
        
@@ -71,6 +78,8 @@
 
 
 <script type="text/javascript">
+    
+  
       $(function () {
         
         $('#listado').DataTable({
@@ -83,51 +92,38 @@
         });
       });
 
-      
-    /**
-      * Función llamada para confirmar la eliminación de un usuario del sistema
-      * @param nombre: Nombre del usuario
-      *
-    function confirmarEliminar(nombre) { 
-        var exito = false;    
-        if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
-            exito = true;
-        }
-        
-        return exito;
-    }*/
     
     
-    function confirmarEliminar(nombre,idCategoria) { 
-        var exito = false;    
-        if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
-            var ajax_params ='';
+    function confirmarEliminar(nombre,idCategoria) { alert("confirmarEliminar nombre: " + nombre + ",idCategoria " + idCategoria);
         
+        var exito = false;    
+                                                    
+        if(confirm("¿Desea eliminar la categoría " + nombre + "?")==1){
+            var url = "/videos/categorias/comprobarExistenciaVideos/" + idCategoria;
+            console.log("url: " + url);
+            
             $.ajax({
-                url: sUrl,
-                data: ajax_params,
-                type: "POST",
-                success: function(data,status){
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    alert(data);
+                    var exito = false;
+                    if(data.status==0) {
+                        alert("retornando true");
+                        exito = true;
+                    }
                     
-                    if(status=="success") {
-                        var resultado = JSON.parse(data);
-                        if(resultado.status==0) { 
-                            // No hay vídeos con la categoria. Se puede eliminar
-                            return true;
-                        } else
-                        if(resultado.status==1) { alert("no ok")
-                            // No se puede eliminar la categoria, ya que tiene vídeos asignados
-                            alert(resultado.descStatus);
-                            return false;
-                        }
-                    }// if   
-                    else return false;
+                    return exito;
                 },
-                error:function (xhr, ajaxOptions, thrownError) {
-                    alert("Se ha producido un error al verificar si se puede eliminar la categoría: " + thrownError.message);
+                error: function(data) {
+                    
+                    alert("Error al eliminar la categoría. Intentelo de nuevo: " + data);
                     return false;
-          }
+                }
             });
+        
+        
         } else return false;  
     }
     

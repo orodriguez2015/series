@@ -155,6 +155,9 @@ router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginReq
 // POST /videos/categorias/asignacionesVideos. Asignación de una misma categoría a varios vídeos
 router.post("/videos/categorias/asignacionesVideos",loginController.loginRequired,videoController.asignarVideosCategoria);
 
+// POST /videos/categorias/anular/:categoriaVideoId. Retira la categoría de un determinado vídeo
+router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequired,videoController.eliminarCategoriaVideo);
+
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);
