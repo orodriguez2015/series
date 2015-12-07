@@ -88,8 +88,9 @@
                         
                     <img src="/images/23_full_trash.png" height=15 width=15 name="btnEliminar" id="btnEliminar"  title="Eliminar vídeo" alt="Eliminar vídeo" onclick="confirmarEliminacion(<%=videos[j].id%>);"/>     
                         
-                    <img src="/images/23_full_trash.png" height=15 width=15 name="btnAnular" id="btnAnular"  title="Anular categoría" alt="Anular categoría" onclick="confirmarAnulacionCategoria(<%=videos[j].id%>);"/> 
-                            
+                    
+                    <img src="/images/house.png" height=15 width=15 name="btnAnular" id="btnAnular"  title="Anular categoría" alt="Anular categoría" onclick="confirmarAnulacionCategoria(<%=videos[j].id%>);"/> 
+                    
                     
                 </div>    
                 </div>
@@ -117,11 +118,11 @@
                 
                 <% if(categorias!=undefined && categorias.length>0) { %>
                 
-                <div class="form-group"><a href="#" id="asignarCategorias">
-                Asignar vídeos a categorías</a>
-                    <div style="clear:both">
-                        
-                    </div>
+                <div class="form-group"><a name="asignarCategorias" id="asignarCategorias">
+                Asignar vídeos a categorías
+                </a>
+                    
+                <div style="clear:both"></div>
                 
                 <div id="divCategoria" style="display:none;margin-top:5px;">
                     <select name="categoria" id="categoria">
@@ -133,6 +134,10 @@
                     <button type="button" id="btnAsignarCategoria"  class="btn btn-success btn-xs">Asignar</button>
                     
                 </div>    
+                <br>
+                <a href="javascript:marcarVideosSinCategoria();">Marcar/Desmarcar todos</a>
+                    
+                
                 
                 </div>
               <% } %>    
@@ -154,7 +159,7 @@
                     <br> 
                     <form name="formDelete" action="/videos/<%=videosSinCategoria[i].id%>?_method=DELETE" method="POST" onsubmit="return confirmarEliminacion(<%=videosSinCategoria[i].id%>);">
                         
-                     <input type="checkbox" name="videoSinCategoria[]" value="<%=videosSinCategoria[i].id %>" style="display:none">        
+                     <input type="checkbox" name="videoSinCategoria[]" id="videoSinCategoria[]" value="<%=videosSinCategoria[i].id %>" style="display:none" class="ck">        
                     <input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/> 
                    
                     </form>      
@@ -228,6 +233,33 @@
             });
         }// if
     };
+    
+    
+    function marcarVideosSinCategoria() {
+        console.log("marcarVideos ===>");
+        try{
+            
+            $(".ck:checkbox:not(:checked)").attr("checked", "checked");
+           
+            /*
+            //$("input[name=checktodos]:checked")
+            $("input[name=videoSinCategoria]:checked").prop('checked', true); 
+            console.log("prueba: " + $("input[name=checktodos]:checked"));
+            
+            var datos = $("input[name=checktodos]:checked");
+            console.log("length: " + datos.length);
+            for(p in datos) {
+                console.log("p: " + p);
+                
+            }
+            
+            
+            $("#videoSinCategoria:checkbox").prop('checked', true); 
+            */
+        }catch(Err) {
+            console.log("Error: " + Err.message);
+        }
+    }
     
     function confirmarEliminacion(videoId) { 
         var url = "/videos/" + videoId + "?_method=delete";

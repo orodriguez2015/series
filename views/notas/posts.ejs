@@ -1,0 +1,42 @@
+
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Notas
+      <small>Listado</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Listado de notas</li>
+    </ol>
+  </section>
+
+
+  <section class="content">
+      
+      
+      <div class="form-group">
+          
+          <% for(var i=0;posts!=undefined && i<posts.length;i++) { %>
+          <!--
+            <div id="titulo" class="tituloPost"><%=posts[i].titulo%></div>  
+            -->
+          
+            <h2><b><%=posts[i].titulo%></b></h2>
+            <p>Creado el <%=posts[i].createdAt %></p>
+            <div class="separador"></div>
+            <p><%=posts[i].descripcion%></p>
+          
+          <% } %>
+          
+          
+          
+        </div>
+ 
+
+
+  </section>
+    
+</div>

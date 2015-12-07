@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-var usersController = require('../controllers/user_controller.js');
-var categoriaController = require('../controllers/categoria_controller.js');
-var serieController = require('../controllers/serie_controller.js');
-var loginController = require('../controllers/login_controller.js');
+var usersController         = require('../controllers/user_controller.js');
+var categoriaController     = require('../controllers/categoria_controller.js');
+var serieController         = require('../controllers/serie_controller.js');
+var loginController         = require('../controllers/login_controller.js');
 var capituloSerieController = require('../controllers/capituloSerie_controller.js');
 var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSerie_controller.js');
-var videoController = require('../controllers/videoController.js');
+var videoController          = require('../controllers/videoController.js');
 var categoriaVideoController = require('../controllers/categoriaVideo_controller.js');
+var postController           = require('../controllers/postController.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -157,6 +158,15 @@ router.post("/videos/categorias/asignacionesVideos",loginController.loginRequire
 
 // POST /videos/categorias/anular/:categoriaVideoId. Retira la categoría de un determinado vídeo
 router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequired,videoController.eliminarCategoriaVideo);
+
+// GET /notas/alta. Renderización de la pantalla de alta de post
+router.get("/post/alta",loginController.loginRequired,postController.altaNota);
+
+// POST /post. Alta de un post en base de datos
+router.post("/post",loginController.loginRequired,postController.create);
+
+// GET /posts. Se recupera los posts creados por un determinado usuario
+router.get("/posts",loginController.loginRequired,postController.getPosts);
 
 
 // GET /login. Petición de login

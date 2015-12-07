@@ -66,7 +66,8 @@ var UsuarioVisualizaSerie = sequelize.import(path.join(__dirname, 'usuarioVisual
 var VideoYoutube = sequelize.import(path.join(__dirname, 'VideoYoutube'));
 // Se importa la definición de la tabla de BBDD CategoriaVideoYoutube
 var CategoriaVideoYoutube = sequelize.import(path.join(__dirname, 'CategoriaVideoYoutube'));
-
+// Se importa la definición de la tabla de BBDD Post
+var Post = sequelize.import(path.join(__dirname, 'post'));
 
 
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
@@ -123,6 +124,11 @@ VideoYoutube.belongsTo(CategoriaVideoYoutube);
 CategoriaVideoYoutube.hasMany(VideoYoutube,{foreignKey:'CategoriaVideoYoutubeId'});
 
 
+// Un usuario puede dar de alta varios post
+Post.belongsTo(User);
+User.hasMany(Post,{foreignKey:'UserId'})
+
+
 
 // Se exporta la definición de las tabla de la base de datos
 exports.User  = User;
@@ -133,6 +139,7 @@ exports.Temporada = Temporada;
 exports.UsuarioVisualizaSerie = UsuarioVisualizaSerie;
 exports.VideoYoutube = VideoYoutube;
 exports.CategoriaVideoYoutube = CategoriaVideoYoutube;
+exports.Post = Post;
 
 /** 
   * Esta llamada crea e inicializa la base de datos videoclub.sqllite.

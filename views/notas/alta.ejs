@@ -1,0 +1,125 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Notas
+      <small>Alta</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Alta de notas</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+ 
+ <form name="formAltaNota" id="formAltaNota" role="form" method="POST" action="" novalidate>   
+ <div class="box box-primary">
+        <div class="box-header with-border">
+          <div class="alert alert-success" role="alert" id="alert"></div>
+          <h3 class="box-title">Datos generales de la nota</h3>
+        </div><!-- /.box-header -->
+    
+      <div class="box-body">
+
+        <div class="form-group">
+          <label for="Nombre">Titulo</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
+        </div>
+          
+        <div class="form-group">
+          <label for="Descripcion">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción" rows="10" cols="20"></textarea>
+        </div>
+      </div><!-- /.box-body -->
+    
+      <div class="box-footer">
+        <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Enviar</button>
+        <a href="/posts">
+            <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar"/>
+        </a>
+      </div>
+     
+   </div>
+
+   </form>
+
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+
+
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="/javascripts/additional-methods.js"></script>
+<script type="text/javascript" src="/javascripts/messages_es.js"></script>
+
+<script type="text/javascript">
+
+    $(function(){
+        
+        // Se oculta el área de mensajes
+        $("#alert").hide();    
+        
+        $("#formAltaNota").validate({
+            rules: {
+              nombre: {
+                required: true,
+                minlength: 2,
+                maxlength: 100
+              },
+
+              descripcion: {
+                required: true,
+                minlength: 2,
+                maxlength: 100
+              },    
+
+            },
+
+            messages: {
+              nombre: {
+                lettersonly: "Escribe sólo letras"
+              }
+            },
+
+            // Si la validación es correcta, se añade la clase css 'has-success' de bootstrap,
+            // al campo de formulario validado
+            success: function(element) {
+                    $(element).closest('.form-group').addClass('has-success');
+            },
+
+
+            // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+            // al campo de formulario validado
+            highlight: function(element) {
+                    $(element).closest('.form-group').addClass('has-error');
+            },
+
+            // Si la validación no es correcta, se añade la clase css 'has-error' de bootstrap,
+            // al campo de formulario validado
+            unhighlight: function(element) {
+                    $(element).closest('.form-group').removeClass('has-error');
+            },
+
+            errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function(error, element) {
+                    if(element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+            },
+
+            submitHandler: function(form) {
+              document.formAltaNota.method = "POST";
+              document.formAltaNota.action = "/post";
+              document.formAltaNota.submit();
+            }
+          });
+    });
+
+
+</script>
