@@ -20,23 +20,61 @@
       <div class="form-group">
           
           <% for(var i=0;posts!=undefined && i<posts.length;i++) { %>
-          <!--
-            <div id="titulo" class="tituloPost"><%=posts[i].titulo%></div>  
-            -->
           
             <h2><b><%=posts[i].titulo%></b></h2>
-            <p>Creado el <%=posts[i].createdAt %></p>
+            <p>Creado el <%=posts[i].createdAt%>
+            <p>
+                               
+                <img height=15 width=15 src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar" onclick="confirmarEliminacion(<%=posts[i].id%>);"/>
+                
+                </form>    
+            </p>    
             <div class="separador"></div>
             <p><%=posts[i].descripcion%></p>
           
           <% } %>
-          
-          
-          
-        </div>
- 
-
+         
+       </div>
 
   </section>
     
 </div>
+
+<script type="text/javascript" src="/javascripts/postFacade.js"></script>
+
+<script type="text/javascript">
+                    
+    function confirmarEliminacion(idPost) { 
+
+        console.log("confirmaEliminacion videoId: " + idPost);
+
+        if(confirm('¿Desea eliminar la noticia?')) {
+            var postFacade = new PostFacade();
+            postFacade.deletePost("/posts/" + idPost + "?_method=DELETE",       {idPost:idPost},success,error);
+        }// if
+    }
+
+        
+    function success(msg) {
+        var message = new MessagesArea();
+        message.showMessageSuccess(msg);
+        window.location.href = "/posts";
+    };
+    
+    function error(msg) {
+        var message = new MessagesArea();
+        message.showMessageError(msg);
+    };
+    
+    
+    function formatoFecha(fecha) {
+        
+        var dia = fecha.getDay();
+        var mes = fecha.getMonth();
+        var year = fecha.getYear();
+        
+        console.log("dia: " + dia + ", mes: " + mes + ",year: " + year);
+        
+    }
+
+</script>

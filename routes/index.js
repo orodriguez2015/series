@@ -27,6 +27,11 @@ router.param('capituloId',capituloSerieController.load);
 // Autoload para la carga de un vídeo de youtube en la request
 router.param('videoId',videoController.load);
 
+// Autoload para la carga de un post en la request
+router.param('postId',postController.load);
+
+
+
 // Autoload para la carga de un vídeo de youtube en la request
 router.param('categoriaVideoId',categoriaVideoController.load);
 
@@ -167,6 +172,9 @@ router.post("/post",loginController.loginRequired,postController.create);
 
 // GET /posts. Se recupera los posts creados por un determinado usuario
 router.get("/posts",loginController.loginRequired,postController.getPosts);
+
+// DELETE /posts/:postId. Eliminar un determinado post
+router.delete("/posts/:postId(\\d+)",loginController.loginRequired,postController.deletePost);
 
 
 // GET /login. Petición de login
