@@ -60,8 +60,6 @@
 
     $(function(){
         
-        var messages = new MessagesArea();
-        
         function createPost() {    
             var titulo      = $('#titulo').val();
             var descripcion = $('#descripcion').val();
@@ -76,21 +74,19 @@
             
         }
 
-        function success(msg) {
-            messages.showMessageSuccess(msg);
+        function success(msg) {            
+            MessagesArea.showMessageSuccess(msg);
             $('#titulo').val('');
             $('#titulo').removeClass('has-success');
-            //$('#titulo').addClass('form-control');
             $('#descripcion').val('');
             $('#descripcion').removeClass('has-success');
             $('#titulo').closest('.form-group').removeClass('has-error');
-            //$('#descripcion').addClass('form-control');
-            console.log("success");
+            
         };
 
 
-        function error(msg) {   
-            messages.showMessageError(msg);
+        function error(msg) {  
+            MessagesArea.showMessageError(msg);
         };
        
         

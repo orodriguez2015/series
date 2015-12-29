@@ -9,7 +9,7 @@ function MessagesArea() {
   * el mensaje en la parte superior de la página que se está visualizando
   * @param msg: Mensaje a mostrar
   */
-MessagesArea.prototype.showMessageError = function (msg) {
+MessagesArea.showMessageError = function (msg) {
     try {
         $("#alert").html(msg);
         $("#alert").removeClass("alert alert-success");
@@ -32,7 +32,7 @@ MessagesArea.prototype.showMessageError = function (msg) {
   * el mensaje en la parte superior de la página que se está visualizando
   * @param msg: Mensaje a mostrar
   */
-MessagesArea.prototype.showMessageSuccess = function(msg) {
+MessagesArea.showMessageSuccess = function(msg) {
     try {
         $("#alert").html(msg);
         $("#alert").removeClass("alert alert-warning");
@@ -52,7 +52,7 @@ MessagesArea.prototype.showMessageSuccess = function(msg) {
 /**
   * Oculta el área de mensajes
   */
-MessagesArea.prototype.clearMessagesArea = function() {
+MessagesArea.clearMessagesArea = function() {
   try {
       $('#alert').hide();
       

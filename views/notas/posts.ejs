@@ -56,8 +56,7 @@
 
         
     function success(msg) {
-        var message = new MessagesArea();
-        message.showMessageSuccess(msg);
+        MessagesArea.showMessageSuccess(msg);
         window.location.href = "/posts";
     };
     
