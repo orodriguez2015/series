@@ -164,17 +164,27 @@ router.post("/videos/categorias/asignacionesVideos",loginController.loginRequire
 // POST /videos/categorias/anular/:categoriaVideoId. Retira la categoría de un determinado vídeo
 router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequired,videoController.eliminarCategoriaVideo);
 
-// GET /notas/alta. Renderización de la pantalla de alta de post
-router.get("/post/alta",loginController.loginRequired,postController.altaNota);
+
+
+
+/******** API RESTFULL PARA EL MANEJO DE POSTS *************/
+
+// GET /posts2. Se recuperan los posts de un determinado usuario entre un rango determinado
+router.get("/posts/:inicio(\\d+)/:fin(\\d+)",loginController.loginRequired,postController.getPosts);
+
+// GET /posts2/num. Recupera el número total de posts creados por el usuario
+router.get("/posts/num",loginController.loginRequired,postController.getNumTotalPosts);
+
+// DELETE /posts2/:postId. Eliminar un determinado post. Se devuelve el mensaje de éxito
+// o fracaso en JSON. 0 --> Si todo bien y 1 en caso contrario
+router.delete("/posts/:postId(\\d+)",loginController.loginRequired,postController.deletePost);
 
 // POST /post. Alta de un post en base de datos
-router.post("/post",loginController.loginRequired,postController.create);
+router.post("/posts",loginController.loginRequired,postController.create);
 
-// GET /posts. Se recupera los posts creados por un determinado usuario
-router.get("/posts",loginController.loginRequired,postController.getPosts);
+/**********************************/
 
-// DELETE /posts/:postId. Eliminar un determinado post
-router.delete("/posts/:postId(\\d+)",loginController.loginRequired,postController.deletePost);
+
 
 
 // GET /login. Petición de login

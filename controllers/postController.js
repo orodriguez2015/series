@@ -2,16 +2,6 @@ var model = require('../models/models.js');
 
 
 /**
-  * Renderiza la vista que muestra el formulario de alta de una nota
-  * @param req: Objeto Request
-  * @param res: Objeto Response
-  * @param req: Objeto next */
-exports.altaNota = function(req,res,next){
-    res.render("notas/alta",{errors:[]});
-};
-
-
-/**
   * Alta de un post en la base de datos
   * @param req: Objeto Request
   * @param res: Objeto Response
@@ -21,10 +11,6 @@ exports.create = function(req,res,next){
     var titulo      = req.body.titulo;
     var descripcion = req.body.descripcion;
     var userId      = req.session.user.id;
-
-    
-    console.log("postController.create titulo: "  + titulo + ",descripcion: " + descripcion);
-    console.log("postController.create userId: "  + userId);
     
     var post = {
         titulo: titulo,
@@ -34,8 +20,7 @@ exports.create = function(req,res,next){
     
     var modelo = model.Post.build(post);
     modelo.save().then(function() {
-        console.log("post dado de alta");
-        
+     
         var salida = {
             status:0
         };
@@ -61,7 +46,7 @@ exports.create = function(req,res,next){
   * Recupera los post dado de alta por un determinado usuario
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next */
+  * @param req: Objeto next 
 exports.getPosts = function(req,res,next){
     var userId = req.session.user.id;
     
@@ -78,6 +63,82 @@ exports.getPosts = function(req,res,next){
         next(err);
     });
   
+}; */
+
+
+/**
+  * Recupera los post dado de alta por un determinado usuario. Devuelve los datos
+  * en un JSON
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param req: Objeto next */
+exports.getPosts = function(req,res,next){
+    var userId = req.session.user.id;
+    var inicio = req.params.inicio;
+    var fin    = req.params.fin;
+    
+    console.log("getPost2 userId: " + userId + ", inicio: " + inicio + ", fin: " + fin);
+        
+    var consulta = {
+        where: {UserId:userId},
+        offset: inicio,
+        limit: fin,
+        order: [['createdAt','DESC']]
+    }
+
+    model.Post.findAll(consulta).then(function(posts) {
+        
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(posts));
+        res.end();
+        
+    }).catch(function(err) {
+        var msg = "Error al recuperar los posts del usuario " + userId + ": " + err.message;
+        
+        var salida = {
+            status: 1,
+             descStatus: msg,
+            datos: posts
+        }
+        
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(salida));
+        res.end();
+    });
+  
+};
+
+
+
+/**
+  * Recupera el número total de posts existentes en la base de datos, y 
+  * que hayan sido dados de alta por un determinado usuario
+  * @param req: Objeto Request
+  * @param res: Objeto Response
+  * @param req: Objeto next 
+  */
+exports.getNumTotalPosts = function(req,res,next){
+    var userId = req.session.user.id;
+    console.log("getNumTotalPosts userId: " + userId);
+    
+    var parteWhere = {
+        UserId: userId
+    };
+    
+    var consulta = {
+        where: parteWhere
+    }
+    
+    model.Post.count(consulta).then(function(num) {    
+        
+        res.writeHead(200, {"Content-Type": "text/plain"});
+        res.write(JSON.stringify(num));
+        res.end();
+        
+    }).catch(function(err) {
+       console.err("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
+    });
+  
 };
 
 
@@ -88,7 +149,6 @@ exports.getPosts = function(req,res,next){
   * @param req: Objeto next */
 exports.deletePost = function(req,res,next){
     var userId = req.session.user.id;
-    
     var post = req.Post;
     
     post.destroy().then(function() {

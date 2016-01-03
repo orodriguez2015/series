@@ -1,0 +1,58 @@
+    
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Entradas del blog
+      <small>Listado</small>
+    </h1>
+    <ol class="breadcrumb">
+         
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Listado de entradas</li>
+    </ol>
+  </section>
+
+
+  <section class="content" ng-controller="PostController">
+      
+      <div class="alert alert-warning" role="alert" id="alert" style="display:none"></div>
+      <div class="form-group">
+          
+        <div ng-repeat="post in posts">
+            <h2><b>{{post.titulo}}</b></h2>
+            <p>Creado el {{post.createdAt}}
+            <p>
+                <img height=15 width=15 src="/images/pencil2.png" title="Editar" alt="Editar" ng-click="editPost(post.id)"/>
+                
+                <img height=15 width=15 src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar" ng-click="deletePost(post.id)"/>
+                     
+            </p>    
+            <div class="separador"></div>
+            <p>{{post.descripcion}}</p>
+        </div>    
+          
+          
+        <div align="middle">
+            <button name="btnAnterior" id="btnAnterior" class="btn btn-primary" ng-click="goToPage(1)" ng-show="mostrarBotonAnterior">Anterior</button>
+            <button name="btnSiguiente" id="btnSiguiente" class="btn btn-primary" ng-click="goToPage(2)" ng-show="mostrarBotonSiguiente">Siguiente</button>
+        </div>        
+      
+    </div>
+
+
+  </section>
+    
+</div>
+
+      
+<!-- END: CUERPO DE LA PAGINA -->      
+          
+          
+          
+
+          
+          
+          
+          
