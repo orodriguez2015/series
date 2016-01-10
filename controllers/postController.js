@@ -5,7 +5,8 @@ var model = require('../models/models.js');
   * Alta de un post en la base de datos
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next */
+  * @param req: Objeto next 
+  */
 exports.create = function(req,res,next){
 
     var titulo      = req.body.titulo;
@@ -30,40 +31,43 @@ exports.create = function(req,res,next){
         res.end();
 
     }).catch(function(err) {
-        console.log("Error al dar de alta un post en BBDD: " + err.message);
-        var salida = {
-            status:1
-        };
-        
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.write(JSON.stringify(salida));
-        res.end();
+        res.status(500).send("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
     });
 };
 
 
 /**
-  * Recupera los post dado de alta por un determinado usuario
+  * Actualiza un determinado post/entrada en la base de datos
   * @param req: Objeto Request
   * @param res: Objeto Response
   * @param req: Objeto next 
-exports.getPosts = function(req,res,next){
-    var userId = req.session.user.id;
+  */
+exports.update = function(req,res,next){
+    // Se recupera el post que viene de la base y que se ha cargado
+    // en la función load
+    var post        = req.Post;
+    var titulo      = req.body.titulo;
+    var descripcion = req.body.descripcion;
+    var userId      = req.session.user.id;
     
-    var busqueda = {
-        UserId: userId
-    };
+    post.titulo = titulo;
+    post.descripcion = descripcion;
     
-    model.Post.findAll({where:busqueda,order:[['createdAt','DESC']]}).then(function(posts) {
-        console.log("Post del usuario " + userId + " recuperados");
-        res.render("notas/posts",{posts:posts,errors:[]});
+    post.save().then(function() {
+     
+        var salida = {
+            status:0
+        };
         
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(salida));
+        res.end();
+
     }).catch(function(err) {
-        console.log("Error al recuperar los posts del usuario " + userId + ": " + err.message);
-        next(err);
+        res.status(500).send("Error al actualizar el post de id " + post.id + ": " + err.message);
     });
-  
-}; */
+};
+
 
 
 /**
@@ -71,14 +75,13 @@ exports.getPosts = function(req,res,next){
   * en un JSON
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next */
+  * @param req: Objeto next 
+  */
 exports.getPosts = function(req,res,next){
     var userId = req.session.user.id;
     var inicio = req.params.inicio;
     var fin    = req.params.fin;
     
-    console.log("getPost2 userId: " + userId + ", inicio: " + inicio + ", fin: " + fin);
-        
     var consulta = {
         where: {UserId:userId},
         offset: inicio,
@@ -93,19 +96,8 @@ exports.getPosts = function(req,res,next){
         res.end();
         
     }).catch(function(err) {
-        var msg = "Error al recuperar los posts del usuario " + userId + ": " + err.message;
-        
-        var salida = {
-            status: 1,
-             descStatus: msg,
-            datos: posts
-        }
-        
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.write(JSON.stringify(salida));
-        res.end();
+         res.status(500).send("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
     });
-  
 };
 
 
@@ -137,6 +129,7 @@ exports.getNumTotalPosts = function(req,res,next){
         
     }).catch(function(err) {
        console.err("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
+        res.status(500).send("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
     });
   
 };
@@ -161,18 +154,25 @@ exports.deletePost = function(req,res,next){
         res.end();
         
     }).catch(function(err) {
-        console.log("Error al eliminar un post de la BD: " + userId + ": " + err.message);
-        var salida = {
-            status: 1
-        }
-        
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.write(JSON.stringify(salida));
-        res.end();
+        console.log("Error al eliminar el post de la BD: " + err.message); 
+        res.status(500).send("Error al eliminar el post de la BD: " + err.message);
     });
   
 };
 
+
+/**
+  * Recupera un determinado post que ha sido cargado en la función load
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.getPost = function(req,res,next) {
+    
+    res.writeHead(200, {"Content-Type": "application/json"});
+    res.write(JSON.stringify(req.Post));
+    res.end();
+};
 
 /**
   * Función de autoload que recupera un determinado post de la base de datos
@@ -194,6 +194,7 @@ exports.load = function(req,res,next,postId){
         
     }).catch(function(err){
         console.log("Error en autoload de post " + err.message); 
-        next(err);
+        res.status(500).send(err.message);
+        //next(err);
     });
 };

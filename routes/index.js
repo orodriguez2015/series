@@ -182,8 +182,12 @@ router.delete("/posts/:postId(\\d+)",loginController.loginRequired,postControlle
 // POST /post. Alta de un post en base de datos
 router.post("/posts",loginController.loginRequired,postController.create);
 
-/**********************************/
+// GET /posts/:postId
+router.get("/posts/:postId(\\d+)",loginController.loginRequired,postController.getPost);
 
+// PUT /posts/:postId
+router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.update);
+/**********************************/
 
 
 

@@ -9,7 +9,7 @@ angular.module('gestor')
         @param postService: Inyección del servicio PostService a través del cual
                 se recuperan los posts del servidor 
       */
-    .controller('PostController', ['$scope','postService', function($scope,postService) {
+    .controller('PostController', ['$scope','postService','$state',   function($scope,postService,$state) {
         // Posts recuperados
         $scope.posts        = [];
         // Registro de inicio
@@ -99,7 +99,7 @@ angular.module('gestor')
                 function(response) {
                     // Se muestra un mensaje de éxito
                     MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Post eliminado");
-                    // Se recarga la página actual para actu
+                    // Se recarga la página actual para recargar la vista
                     $scope.goToPage($scope.currentPage);
                 },
                 // error function
@@ -107,6 +107,17 @@ angular.module('gestor')
                     MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido eliminar el post");
                 }
             ); 
+        };
+        
+        
+        /**
+          * Función invocada para editar un determinado post.
+          * Redirige a la pantalla de edición de post
+          * @param id: Id del post
+          */
+        $scope.editarPost = function(id) {
+            console.log("editarPost");
+            $state.go("app.editpost",{id:id});
         };
         
         // Por defecto se carga la página número 1
@@ -122,7 +133,7 @@ angular.module('gestor')
         @param postService: Inyección del servicio PostService a través del cual
                 se recuperan los posts del servidor 
       */
-    .controller('NewPostController', ['$scope','postService', function($scope,postService) {
+    .controller('NewPostController', ['$scope','postService','$state', function($scope,postService,$state) {
         // Objeto que contendra los datos del post a dar de alta
         $scope.post = {
             titulo: '',
@@ -155,8 +166,75 @@ angular.module('gestor')
         };
         
         $scope.back = function() {
-            window.location.assign('#/blog') 
+            //window.location.assign('#/blog') 
+             $state.go("app.posts");
         };
         
         
-    }]);
+    }])
+
+
+
+ .controller('EditPostController', ['$scope','postService','$state','$stateParams', function($scope,postService,$state,$stateParams) {
+        
+    var id = $stateParams.id;
+    console.log("id: " + id);
+    // Objeto que contendra los datos del post a dar de alta
+    $scope.post = {
+        id: '',
+        titulo: '',
+        descripcion: ''
+    };
+
+    if(id==undefined || id=='') {
+        MessagesArea.showMessageError("Entrada desconocida");
+
+    } else {
+        
+         postService.getPost().get({id:id}).$promise.then(
+                                     
+            // success action
+            function(response) {
+                $scope.post.id = response.id;
+                $scope.post.titulo = response.titulo;
+                $scope.post.descripcion = response.descripcion;
+            },
+
+            // error action
+            function(response) {
+                MessagesArea.showMessageError("Error al recuperar la entrada de la base de datos: " + response.statusText);
+            }
+        );
+     }// else 
+     
+     
+     /**
+       * Función que permite volver hacia atrás en el historial 
+       */
+     $scope.back = function() {
+       $state.go("app.posts");  
+
+     };
+     
+     
+     /**
+       * Función que es llamada para editar la entrada
+       */
+     $scope.editPost = function() {
+         console.log("A editar a id: " + $scope.post.id + ", titulo: " + $scope.post.titulo + ",desc: " + $scope.post.descripcion);
+         
+         
+            
+         postService.getPost().update({id:id},$scope.post).$promise.then(
+            function(response) {
+                MessagesArea.showMessageSuccess("La entrada ha sido actualizado");
+            },
+            
+            function(response) {
+                MessagesArea.showMessageError("Se ha producido un error al actualizar la entrada e n la base de datos");
+            } 
+         );
+         
+     };
+        
+}]);

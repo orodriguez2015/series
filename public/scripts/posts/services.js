@@ -10,7 +10,7 @@ angular.module('gestor')
 
         // Se recuperan los posts del servidor
         this.getPosts = function(inicio,fin){
-            return $resource(baseUrl+"posts/:id/:begin/:end",null,  {'update':{method:'PUT' },'delete':{method:'DELETE'},'save':{method:'POST'}});
+            return $resource(baseUrl+"posts/:id/:begin/:end",null,  {'update':{method:'PUT' },'delete':{method:'DELETE'},'save':{method:'POST'},'get': {method:'GET'}});
         };
         
         
@@ -21,4 +21,12 @@ angular.module('gestor')
         };
         
         
-    }])
+        /**
+          * Recuperar un determinado post
+          * @param id: Id del post
+          */
+        this.getPost = function(id,post) {
+             return $resource(baseUrl+"posts/:id",post,  {'update':{method:'PUT' },'delete':{method:'DELETE'},'save':{method:'POST'},'get': {method:'GET'}});
+        };
+        
+    }]);

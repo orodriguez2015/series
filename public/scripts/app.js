@@ -33,7 +33,6 @@ angular.module('gestor', ['ui.router','ngResource'])
                         controller  : 'PostController'
                     }
                 }
-
             })
         
             .state('app.newpost', { 
@@ -44,29 +43,19 @@ angular.module('gestor', ['ui.router','ngResource'])
                         controller  : 'NewPostController'
                     }
                 }
-
             })
         
         
             .state('app.editpost', { 
-                url:'blog.edit',
+                url:'blog.edit/:id',
                 views: {
                     'content@': {
                         templateUrl : 'views/posts/edit.html',
-                        //controller  : 'PostController'
+                        controller  : 'EditPostController'
                     }
                 }
-
             });
-        
-    
+         
             $urlRouterProvider.otherwise('/');
-    /*
-            $locationProvider.html5Mode(
-            {
-                enabled: true,
-                requireBase: false
-            }); */
-    })
-
-;
+   
+    });

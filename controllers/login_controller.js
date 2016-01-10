@@ -80,8 +80,11 @@ exports.loginRequired = function(req,res,next) {
         // Se redirige la petición al siguiente middleware
         next();   
     } else {
-        // Si el usuario no está autenticado, se redirige hacia la pantalla de login
-        res.redirect("/login");
+        // Si el usuario no está autenticado, se devuelve un error HTTP 500
+        // Antes de redirigía a la pantalla de login, pero para un API RESTFUL 
+        // no tiene sentido
+        //res.redirect("/login");
+        res.status(500).send("Usuario no autenticado");
     }
     
 };
