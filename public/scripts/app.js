@@ -54,6 +54,16 @@ angular.module('gestor', ['ui.router','ngResource'])
                         controller  : 'EditPostController'
                     }
                 }
+            })
+        
+            .state('app.login', { 
+                url:'login',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/login/login.html',
+                        controller  : 'LoginController'
+                    }
+                }
             });
          
             $urlRouterProvider.otherwise('/');

@@ -29,4 +29,59 @@ angular.module('gestor')
              return $resource(baseUrl+"posts/:id",post,  {'update':{method:'PUT' },'delete':{method:'DELETE'},'save':{method:'POST'},'get': {method:'GET'}});
         };
         
+    }])
+
+
+
+    /**************************************************************/
+    /*********************** LoginService *************************/
+    /**************************************************************/
+    .service('loginService',['$resource','baseUrl', function($resource,baseUrl) {
+
+        return $resource(baseUrl+"login",null,  {'validate':{method:'POST'},'get': {method:'GET'}});
+    
+    }])
+
+    
+    /***********************************************************************/
+    /*********************** AuthenticationService *************************/
+    /***********************************************************************/
+    .factory('authenticationFactory',['$resource','baseUrl','$state', function($resource,baseUrl,$state){
+        
+        var salida = {};
+        
+        salida.autenticar = function (usuario) {
+            console.log("autenticar id: " + usuario.id + ", login: " + usuario.login + ",nombre: " + usuario.nombre);  
+              
+              sessionStorage.removeItem("user");
+              // Se almacenan los datos del usuario en el sessionStorage
+              sessionStorage.setItem("user",JSON.stringify(usuario));
+              $state.go('app.posts');
+              
+        }; // autenticar
+            
+            
+        salida.usuarioAutenticado = function() {
+            
+            if(!(sessionStorage && sessionStorage.getItem("user")!=undefined)){
+                // Si el usuario no está autenticado, se hace 
+                // una redirección a la pantalla de login
+                $state.go('app.login');
+                
+            } else return true;
+            
+        };
+                                      
+             /*                         
+          logout: function() {
+                                      
+          };   */                           
+            
+        
+        
+    
     }]);
+
+
+    
+

@@ -4,7 +4,7 @@ var router = express.Router();
 var usersController         = require('../controllers/user_controller.js');
 var categoriaController     = require('../controllers/categoria_controller.js');
 var serieController         = require('../controllers/serie_controller.js');
-var loginController         = require('../controllers/login_controller.js');
+var loginController         = require('../controllers/loginController.js');
 var capituloSerieController = require('../controllers/capituloSerie_controller.js');
 var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSerie_controller.js');
 var videoController          = require('../controllers/videoController.js');
@@ -190,12 +190,19 @@ router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.u
 /**********************************/
 
 
+/********** BEGIN: API RESTFUL PARA LA AUTENTICACIÓN DE USUARIOS ****************/
+
+// POST /login. Petición de autenticación de un usuario
+router.post("/login",loginController.autenticate);
+
+
+/********** END: API RESTFUL PARA LA AUTENTICACIÓN DE USUARIOS ******************/
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);
 
 // POST /login. Petición de autenticación de un usuario
-router.post("/login",loginController.autenticate);
+//router.post("/login",loginController.autenticate);
 
 // GET /logout. Petición de cierre de sesión de un usuario del sistema
 router.get("/logout",loginController.destroy);
