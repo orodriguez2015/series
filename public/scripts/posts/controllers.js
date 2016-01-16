@@ -159,7 +159,8 @@ angular.module('gestor')
                     },
                     // error action
                     function(response) {
-                        MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido eliminar el post: " + response.status + " " + response.statusText);
+                        console.log("respuesta: " + JSON.stringify(response));
+                        MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido dar del alta el post: " + response.data);
                     }
                 );
             }// if
@@ -252,8 +253,7 @@ angular.module('gestor')
     
     
     $scope.login = function () {
-        console.log("login");
-        
+    
         console.log("href: " + $state.href());
         loginService.validate($scope.authenticate).$promise.then(
             
@@ -264,8 +264,8 @@ angular.module('gestor')
                 switch(response.status) {
                     
                     case 0: 
-                        authenticationFactory.autenticar(response);
-                        
+                        authenticationFactory.authenticate(response);
+                        $state.go('app');
                         MessagesArea.showMessageSuccess("Autenticación correcta"); 
                        break;
                         
@@ -287,6 +287,57 @@ angular.module('gestor')
         );
         
     };
-    
+         
+}])
+
+
+
+/******************************************************************/
+/********************** UsersController ***************************/
+/******************************************************************/
+.controller('UsersController', ['$scope','loginService','authenticationFactory','$state', function($scope,loginService,authenticationFactory,$state) {
         
+    $scope.authenticate = {
+        login:'',
+        password: ''
+    };
+    
+    /*
+    $scope.login = function () {
+    
+        console.log("href: " + $state.href());
+        loginService.validate($scope.authenticate).$promise.then(
+            
+            // success function               
+            function(response) {
+                console.log("Exito: " + JSON.stringify(response));
+                
+                switch(response.status) {
+                    
+                    case 0: 
+                        authenticationFactory.authenticate(response);
+                        $state.go('app');
+                        MessagesArea.showMessageSuccess("Autenticación correcta"); 
+                       break;
+                        
+                    case 1: MessagesArea.showMessageError("Datos del usuario incorrecto");    
+                       break;    
+                        
+                    default: MessagesArea.showMessageError("Datos del usuario incorrecto");    
+                              break;         
+                };
+                
+
+            },                
+              
+            // error function               
+            function(response) {
+                MessagesArea.showMessageError("Se ha producido un error al comprobar la existencia del usuario: " + response.statusText);
+            }                   
+                          
+        );
+        
+    };
+    */
+         
 }]);

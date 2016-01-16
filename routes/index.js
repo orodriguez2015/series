@@ -166,8 +166,9 @@ router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequ
 
 
 
-
-/******** API RESTFULL PARA EL MANEJO DE POSTS *************/
+/********************************************************************************/
+/*************** BEGIN: API RESTFULL PARA EL MANEJO DE POSTS ********************/
+/********************************************************************************/
 
 // GET /posts2. Se recuperan los posts de un determinado usuario entre un rango determinado
 router.get("/posts/:inicio(\\d+)/:fin(\\d+)",loginController.loginRequired,postController.getPosts);
@@ -187,16 +188,22 @@ router.get("/posts/:postId(\\d+)",loginController.loginRequired,postController.g
 
 // PUT /posts/:postId
 router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.update);
-/**********************************/
+
+/********************************************************************************/
+/***************** END: API RESTFULL PARA EL MANEJO DE POSTS ********************/
+/********************************************************************************/
 
 
+/********************************************************************************/
 /********** BEGIN: API RESTFUL PARA LA AUTENTICACIÓN DE USUARIOS ****************/
+/********************************************************************************/
 
 // POST /login. Petición de autenticación de un usuario
 router.post("/login",loginController.autenticate);
 
-
+/********************************************************************************/
 /********** END: API RESTFUL PARA LA AUTENTICACIÓN DE USUARIOS ******************/
+/********************************************************************************/
 
 // GET /login. Petición de login
 router.get("/login",loginController.login);

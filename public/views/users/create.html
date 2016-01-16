@@ -1,0 +1,91 @@
+
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Usuarios
+      <small>Alta</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Alta de usuario</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+ 
+ <form name="formAltaUsuario" id="formAltaUsuario" role="form" method="POST" action="" novalidate>   
+ <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Datos generales del usuario</h3>
+    </div><!-- /.box-header -->
+    
+      <div class="box-body">
+
+         <div class="form-group">
+          <label for="Nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre">
+        </div>
+
+        <div class="form-group">
+          <label for="Nombre">Primer apellido</label>
+          <input type="text" class="form-control" id="apellido1" name="apellido1" placeholder="Introduzca el primer apellido">
+        </div>
+
+         <div class="form-group">
+          <label for="Nombre">Segundo apellido</label>
+          <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido">
+        </div>
+
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail">
+        </div>
+       
+      </div><!-- /.box-body -->
+    
+   </div>
+
+
+
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Cuenta del usuario</h3>
+    </div><!-- /.box-header -->
+    
+      <div class="box-body">
+
+         <div class="form-group">
+          <label for="Nombre">Login</label>
+          <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login">
+        </div>
+
+        
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password">
+        </div>
+        
+      </div><!-- /.box-body -->
+
+      <div class="box-footer">
+        <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Enviar</button>
+         <a href="/users">
+            <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar"/>
+         </a>
+      </div>
+    
+   </div>
+   </form>
+
+
+  <div id="msgError" class="callout callout-danger lead" style="display:none;">
+   
+  </div>
+
+  
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->

@@ -46,18 +46,18 @@ angular.module('gestor')
     /***********************************************************************/
     /*********************** AuthenticationService *************************/
     /***********************************************************************/
-    .factory('authenticationFactory',['$resource','baseUrl','$state', function($resource,baseUrl,$state){
+    .factory('authenticationFactory',['$resource','baseUrl','$state','$cookieStore', function($resource,baseUrl,$state,$cookieStore){
         
         var salida = {};
         
-        salida.autenticar = function (usuario) {
-            console.log("autenticar id: " + usuario.id + ", login: " + usuario.login + ",nombre: " + usuario.nombre);  
+        /**
+          * Almacena las cookies que indican que el usuario se ha autenticado
+          */
+        salida.authenticate = function (usuario) {
               
-              sessionStorage.removeItem("user");
-              // Se almacenan los datos del usuario en el sessionStorage
-              sessionStorage.setItem("user",JSON.stringify(usuario));
-              $state.go('app.posts');
-              
+           $cookieStore.put('conectado',true);
+           $cookieStore.put('usuario',usuario);
+                 
         }; // autenticar
             
             
@@ -72,13 +72,11 @@ angular.module('gestor')
             
         };
                                       
-             /*                         
-          logout: function() {
-                                      
-          };   */                           
+        salida.logout = function() {
             
-        
-        
+        }
+                 
+        return salida;        
     
     }]);
 
