@@ -42,6 +42,33 @@ angular.module('gestor')
     
     }])
 
+
+
+    /**************************************************************/
+    /*********************** UserService  *************************/
+    /**************************************************************/
+   .service('userServiceCheck',['$resource','baseUrl', function($resource,baseUrl) {
+
+       /**
+         * Retorna la conexión al servicio RESTFUL que permite comprobar la existencia
+         * de un usuario con el login e email indicados que habrá que pasar como
+         * parámetros al método comprobar
+         */
+        this.existencia = function() {
+           return $resource(baseUrl+"users/exists",null,{'comprobar': {method:'POST'}});
+        };
+            
+        /**
+          * Retorna la conexión al servicio RESTFUL para dar de alta (método save())
+          */
+        this.usuario = function () {
+           return $resource(baseUrl+"users",null,{'save': {method:'POST'}});
+        };
+      
+        
+    
+    }])
+
     
     /***********************************************************************/
     /*********************** AuthenticationService *************************/

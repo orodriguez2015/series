@@ -1,3 +1,4 @@
+
 var model = require('../models/models.js');
 var aux = require('./userAuxiliar_controller.js');
 
@@ -40,16 +41,15 @@ exports.load = function(req,res,next,userId) {
 };
 
 
+
+
 /**
-  * Función que carga el formulario de alta de un nuevo 
-  * usuario
+  * Da de alta un usuario en la base de datos
   * @param req: Objeto request
   * @param res: Objeto response
   * @param next: Objeto next
   */
-exports.create = function(req,res,next){
-
-    console.log("/POST /users/create ====>");
+exports.create = function(req,res,next) {
 
     var login = req.body.login;
     var password = req.body.password;
@@ -60,46 +60,41 @@ exports.create = function(req,res,next){
 
     console.log("login: " + login + ",password: " + password + ",nombre: " + nombre
     + ",apellido1: " + apellido1 +  ",apellido2 " + apellido2 + ", email: " + email);
-
     
     var encriptar = require('../utilidades/encriptacion.js');
     var passMd5 = encriptar.encriptarPassword(password);
     
-    // Se procede a comprobar si ya existe un usuario con el login, en ese caso, se lanza
-    // un error
+    // Se crea el objeto User que todavía no se trata de un objeto persistente
+    var user = model.User.build({
+      login: login,
+      password: passMd5,
+      nombre:nombre,
+      apellido1: apellido1,
+      apellido2: apellido2,
+      email: email
+    });
+    
+    
+    // Se procede a dar de alta
+    user.save().then(function(){
+        var respuesta = {
+            status: 0
+        };
+        console.log("Usuario dado de alta");
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(respuesta));
+        res.end();
 
-    model.User.count({where: ["login=?", login]}).then(function(num) { 
-        console.log("Número de usuarios con login " + login + " son " + num);
-
-        if(num>0) { // Ya existe un usuario con dicho login
-
-          var errores= [{'message': 'Ya existe un usuario con dicho login'}];
-          res.render("users/new",{errors:errores});
-
-        } else {
-            // Se crea el objeto User que todavía no se trata de un objeto persistente
-            var user = model.User.build({
-              login: login,
-              password: passMd5,
-              nombre:nombre,
-              apellido1: apellido1,
-              apellido2: apellido2,
-              email: email
-            });
-
-            user.save().then(function(){
-                console.log("Usuario dado de alta");
-                res.redirect("/users");
-
-            }).catch(function(error) { 
-                console.log("Se ha producido un error durante el alta del usuario: " + error.message);
-                next(error);
-            });
-
-        }
-    })
+    }).catch(function(error) { 
+        var respuesta = {
+            status: 1
+        };
+        console.log("Se ha producido un error durante el alta del usuario: " + error.message);
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(respuesta));
+        res.end();
+    });    
 };
-
 
 
 /**
@@ -162,6 +157,8 @@ exports.exists = function(req,res,next){
 
   var email = req.body.email;
   var login = req.body.login;
+    
+    console.log("email: " + email + ", login: " + login);
 
   var salida = {
       status: -1,

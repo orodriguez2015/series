@@ -113,8 +113,6 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies'])
         // Usuario no logueado, se hace una redirección hacia la pantalla de login
         e.preventDefault();
         $state.go('app.login');
-        
-        
     }
 });
 

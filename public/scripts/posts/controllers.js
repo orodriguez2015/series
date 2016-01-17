@@ -222,9 +222,6 @@ angular.module('gestor')
        * Función que es llamada para editar la entrada
        */
      $scope.editPost = function() {
-         console.log("A editar a id: " + $scope.post.id + ", titulo: " + $scope.post.titulo + ",desc: " + $scope.post.descripcion);
-         
-         
             
          postService.getPost().update({id:id},$scope.post).$promise.then(
             function(response) {
@@ -254,12 +251,9 @@ angular.module('gestor')
     
     $scope.login = function () {
     
-        console.log("href: " + $state.href());
         loginService.validate($scope.authenticate).$promise.then(
-            
             // success function               
             function(response) {
-                console.log("Exito: " + JSON.stringify(response));
                 
                 switch(response.status) {
                     
@@ -295,49 +289,85 @@ angular.module('gestor')
 /******************************************************************/
 /********************** UsersController ***************************/
 /******************************************************************/
-.controller('UsersController', ['$scope','loginService','authenticationFactory','$state', function($scope,loginService,authenticationFactory,$state) {
+.controller('UsersController', ['$scope','userServiceCheck','$state', function($scope,userServiceCheck,$state) {
         
-    $scope.authenticate = {
+    $scope.usuario = {
+        nombre:'',
+        apellido1: '',
+        apellido2: '',
+        email: '',
         login:'',
-        password: ''
+        password:''
     };
     
-    /*
-    $scope.login = function () {
-    
-        console.log("href: " + $state.href());
-        loginService.validate($scope.authenticate).$promise.then(
+    /**
+      * Función invocada cuando se pretender dar de alta un nuevo usuario
+      */
+    $scope.altaUsuario = function() {
+        
+        // 1.- Se comprueba si ya existe otra cuenta del usuario con el 
+        //     login e email indicado
+        var datos = {
+            login: $scope.usuario.login,
+            email: $scope.usuario.email
+        };
+                
+        
+        // Se comprueba si el login y el email ya están asociados a otro usuario
+        userServiceCheck.existencia().comprobar(datos).$promise.then(
+            // success action
+            function(response) {
+                
+                var errorMessage = "";   
             
-            // success function               
-            function(response) {
-                console.log("Exito: " + JSON.stringify(response));
+                MessagesArea.clearMessagesArea();
                 
-                switch(response.status) {
+                if(response.status==-1) {
+                    errorMessage = "Se ha producido un error técnico al validar el login del usuario";  
+                } else
+                if(response.status==-2) {
+                    errorMessage = "Se ha producido un error técnico al validar el email del usuario";  
+                } else   
+                if(response.status==0) {
                     
-                    case 0: 
-                        authenticationFactory.authenticate(response);
-                        $state.go('app');
-                        MessagesArea.showMessageSuccess("Autenticación correcta"); 
-                       break;
-                        
-                    case 1: MessagesArea.showMessageError("Datos del usuario incorrecto");    
-                       break;    
-                        
-                    default: MessagesArea.showMessageError("Datos del usuario incorrecto");    
-                              break;         
-                };
+                    if(response.login && response.email) {
+                        errorMessage = "El login y la dirección de correo electrónico ya están asociados a otro/s usuario/s";     
+                    } else
+                    if(response.login && !response.email) {
+                        errorMessage = "El login ya se encuentra asignado a otro usuario";     
+                    } else
+                    if(!response.login && response.email) {
+                        errorMessage = "La dirección de correo electrónico ya se encuentra asociado a otro usuario";              
+                    }
+                }
                 
-
-            },                
-              
-            // error function               
+                if(errorMessage!="" && errorMessage.length>0)
+                    MessagesArea.showMessageError(errorMessage);
+                else {
+        
+                    // 2.- Se procede a dar de alta el usuario             
+                    userServiceCheck.usuario().save($scope.usuario).$promise.then(
+                        // success
+                        function(response) {
+                            MessagesArea.showMessageSuccess("Operación correcta: Usuario dado de alta con éxito")
+                        },
+                        
+                        // error
+                        function(response) {
+                            MessagesArea.showMessageError("Se ha producido un error al dar de alta el usuario");
+                        }
+                    );
+                }
+                
+            },
+            
+            // error action
             function(response) {
-                MessagesArea.showMessageError("Se ha producido un error al comprobar la existencia del usuario: " + response.statusText);
-            }                   
-                          
+                MessagesArea.showMessageError("Error al verificar la existencia de algún usuario con los datos introducidos");
+            }
         );
         
     };
-    */
-         
+    
+  
 }]);

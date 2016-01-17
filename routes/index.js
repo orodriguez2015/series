@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var usersController         = require('../controllers/user_controller.js');
+var usersController         = require('../controllers/userController.js');
 var categoriaController     = require('../controllers/categoria_controller.js');
 var serieController         = require('../controllers/serie_controller.js');
 var loginController         = require('../controllers/loginController.js');
@@ -163,6 +163,25 @@ router.post("/videos/categorias/asignacionesVideos",loginController.loginRequire
 
 // POST /videos/categorias/anular/:categoriaVideoId. Retira la categoría de un determinado vídeo
 router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequired,videoController.eliminarCategoriaVideo);
+
+
+/********************************************************************************/
+/*************** BEGIN: API RESTFULL PARA LA GESTIÓN DE USUARIOS ****************/
+/********************************************************************************/
+
+// POST /users/exists Comprueba si existe un usuario en la BD que tenga un 
+// determinado login y/o email
+router.post("/users/exists",loginController.loginRequired,usersController.exists);
+
+// POST /users. Da de alta un usuario en la base de datos
+router.post('/users',loginController.loginRequired,usersController.create);
+
+
+/********************************************************************************/
+/*************** BEGIN: END RESTFULL PARA LA GESTIÓN DE USUARIOS ****************/
+/********************************************************************************/
+
+
 
 
 
