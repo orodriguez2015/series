@@ -68,7 +68,7 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies'])
                 views: {
                     'content@': {
                         templateUrl : 'views/users/create.html',
-                        controller  : 'UsersController'
+                        controller  : 'NewUserController'
                     }
                 }
             })

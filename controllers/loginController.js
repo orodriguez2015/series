@@ -13,49 +13,6 @@ exports.login = function(req,res,next){
 
 
 
-/**
-  * Función que se invoca autenticar a un usuario. Recibe la contraseña
-  * y el login, y comprueba si se trata de un usuario que está en la base de datos.
-  * Si el usuario existe, se almacena un objeto en la sesión, en el parámetro user
-  * @req: Objeto request
-  * @res: Objeto response
-  * @next: Objeto next 
-  *
-exports.autenticate = function(req,res,next){
-    var login    = req.body.login;
-    var password = req.body.password;
-    
-    console.log(" Autenticando al usuario de login: " + login);
-    
-    // Se obtiene el hash SHA1 de la password, de modo que se almacenará en base de datos
-    var encriptar = require('../utilidades/encriptacion.js');
-    var passMd5 = encriptar.encriptarPassword(password);
-    
-    model.User.find({where: {login:login,password:passMd5}}).then(function(user){
-        
-        if(user!=undefined){
-            console.log("Usuario autenticado id: " + user.id + ",login " + user.login);
-            // Se almacena un objeto con el id y login del usuario en la sesión
-            
-            var nombreCompleto = user.nombre + " " + user.apellido1;
-            var usuario = {id:user.id,login:user.login,nombre:nombreCompleto};
-            req.session.user = usuario;
-            // Se redirige al path desde el que se ha realizado la sesión
-            res.redirect(req.session.path);
-            
-        }else {
-            console.log("No existe el usuario");
-            var error = new Error('No existe el usuario en el sistema');
-            
-            res.render("login/login",{errors:[],error:error});
-        }
-        
-    }).catch(function(err){
-        console.log("Error al autenticar al usuario con login " + login + ": " + err.message);  
-    });
-};
-*/
-
 
 /**
   * Función que se invoca autenticar a un usuario. Recibe la contraseña

@@ -1,6 +1,6 @@
 
  <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper" ng-controller="UsersController">
+<div class="content-wrapper" ng-controller="NewUserController">
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
@@ -26,46 +26,67 @@
     
       <div class="box-body">
 
-         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.nombre.$error.required && !altaUsuarioForm.nombre.$pristine}">
+          
+          <!-- Nombre -->
+         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.nombre.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.nombre.$touched)}">
           <label for="Nombre">Nombre</label>
           <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre" required ng-model="usuario.nombre">
             
-         <span class="help-block" ng-show="altaUsuarioForm.nombre.$error.required && !altaUsuarioForm.nombre.$pristine">
+         <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.nombre.$touched">
+             
+             <span ng-show="altaUsuarioForm.nombre.$error.required">
                 El nombre es un campo obligatorio
+             </span>     
          </span>     
              
              
         </div>
-
-        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.apellido1.$error.required && !altaUsuarioForm.apellido1.$pristine}">
+          
+         
+        
+        <!-- 1º apellido -->
+        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.apellido1.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.apellido1.$touched)}">
           <label for="Nombre">Primer apellido</label>
           <input type="text" class="form-control" id="apellido1" name="apellido1" placeholder="Introduzca el primer apellido" required ng-model="usuario.apellido1">
             
-          <span class="help-block" ng-show="altaUsuarioForm.apellido1.$error.required && !altaUsuarioForm.apellido1.$pristine">
+          <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.apellido1.$touched">
+              
+            <span ng-show="altaUsuarioForm.apellido1.$error.required">
                 El primer apellido es un campo obligatorio
+            </span>      
           </span>    
                  
         </div>
+        
           
-
-        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.apellido2.$error.required && !altaUsuarioForm.apellido2.$pristine}">
+          
+        <!-- 2º apellido -->
+        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.apellido2.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.apellido2.$touched)}">
+          
           <label for="Nombre">Segundo apellido</label>
           <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido" required ng-model="usuario.apellido2">
              
-         <span class="help-block" ng-show="altaUsuarioForm.apellido2.$error.required && !altaUsuarioForm.apellido2.$pristine">
-                El segundo apellido es un campo obligatorio
+         <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.apellido2.$touched">
+             <span ng-show="altaUsuarioForm.apellido2.$error.required">El segundo apellido es un campo obligatorio.</span>
+                
           </span>        
              
         </div>
 
-        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.email.$error.required && !altaUsuarioForm.email.$pristine}">
+        
+        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.email.$error.required &&  (altaUsuarioForm.email.$error.email || altaUsuarioForm.$submitted || altaUsuarioForm.email.$touched)}">
           <label for="exampleInputEmail1">Email</label>
           <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail" required ng-model="usuario.email">
             
+            <!--
          <span class="help-block" ng-show="altaUsuarioForm.email.$error.required && !altaUsuarioForm.email.$pristine">
                 La dirección de correo electrónico es un campo obligatorio
-          </span>            
-            
+          </span>
+    -->
+         <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.email.$touched">
+            <span ng-show="altaUsuarioForm.email.$error.required">El campo es obligatorio.</span>
+            <span ng-show="altaUsuarioForm.email.$error.email">Formato de email incorrecto.</span>
+         </span>    
             
         </div>
        
@@ -81,24 +102,31 @@
     </div><!-- /.box-header -->
     
       <div class="box-body">
-
-         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.login.$error.required && !altaUsuarioForm.login.$pristine}">
+          
+          <!-- Login -->
+          <div class="form-group" ng-class="{'has-error':altaUsuarioForm.login.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.login.$touched)}">
+          
           <label for="Nombre">Login</label>
           <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login" required ng-model="usuario.login">
              
-          <span class="help-block" ng-show="altaUsuarioForm.login.$error.required && !altaUsuarioForm.login.$pristine">
-                El login es un campo obligatorio
+          <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.login.$touched">      
+              
+            <span ng-show="altaUsuarioForm.login.$error.required">El login es un campo obligatorio.     </span>
+            
           </span>            
                  
         </div>
 
         
-        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.password.$error.required && !altaUsuarioForm.password.$pristine}">
+        <div class="form-group" ng-class="{'has-error':altaUsuarioForm.password.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.password.$touched)}">
           <label for="exampleInputPassword1">Password</label>
           <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password" required ng-model="usuario.password">
             
-           <span class="help-block" ng-show="altaUsuarioForm.password.$error.required && !altaUsuarioForm.password.$pristine">
-                La password es un campo obligatorio
+           <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.password.$touched">
+               
+               <span ng-show="altaUsuarioForm.password.$error.required">
+                    La password es un campo obligatorio
+                </span>
           </span>       
             
         </div>
@@ -107,7 +135,7 @@
 
       <div class="box-footer">
         <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary" ng-disabled="altaUsuarioForm.$invalid">Enviar</button>
-         <a href="/users">
+         <a ui-sref="app.users">
             <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar"/>
          </a>
       </div>

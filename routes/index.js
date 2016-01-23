@@ -36,23 +36,21 @@ router.param('postId',postController.load);
 router.param('categoriaVideoId',categoriaVideoController.load);
 
 // GET /users/new. Carga el formulario de alta de un nuevo usuario
-router.get('/users/new',loginController.loginRequired,usersController.new);
+//router.get('/users/new',loginController.loginRequired,usersController.new);
 
 // POST /users/create. Da de alta un usuario en la base de datos, siempre y cuando no exista
-router.post('/users/create',loginController.loginRequired,usersController.create);
+//router.post('/users/create',loginController.loginRequired,usersController.create);
 
 // GET /users. Renderiza el listado con las tablas de usuarios
-router.get('/users',loginController.loginRequired,usersController.users);
+//router.get('/users',loginController.loginRequired,usersController.users);
 
-// DELETE /users/:userId/. Elimina un determinado usuario de la base de datos
-router.delete("/users/:userId(\\d+)",loginController.loginRequired,usersController.delete);
 
 // GET /users/:userId/. Edita un determinado usuario de la base de datos
 router.get("/users/:userId(\\d+)",loginController.loginRequired,usersController.show);
 
 // POST /users/existsUser. Esta petición comprueba si un login y un email ya está asignado a un 
 // usuario del sistema
-router.post("/users/existsUser",usersController.exists);
+//router.post("/users/existsUser",usersController.exists);
 
 // POST /users/existeLoginEmailOtroUsuario. Esta petición comprueba si existe otro usuario
 // distinto a uno determinado, que tenga un determinado login o email
@@ -175,6 +173,12 @@ router.post("/users/exists",loginController.loginRequired,usersController.exists
 
 // POST /users. Da de alta un usuario en la base de datos
 router.post('/users',loginController.loginRequired,usersController.create);
+
+// GET /users. Recupera los usuarios del sistema que hayan sido dados de alta
+router.get('/users',loginController.loginRequired,usersController.getUsers);
+
+// DELETE /users/:userId/. Elimina un determinado usuario de la base de datos
+router.delete("/users/:userId(\\d+)",loginController.loginRequired,usersController.delete);
 
 
 /********************************************************************************/

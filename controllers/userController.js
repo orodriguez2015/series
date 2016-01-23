@@ -2,147 +2,9 @@
 var model = require('../models/models.js');
 var aux = require('./userAuxiliar_controller.js');
 
-/**
-  * Función que carga el formulario de alta de un nuevo 
-  * usuario
-  * @param: req: Objeto request
-  * @param: res: Objeto response
-  */
-exports.new = function(req,res){
-
-  console.log("Renderizado del formulario de alta de un nuevo formulario");
-	res.render('users/new',{errors:[]});
-
-};
 
 
-/**
-  * Función de autoload para cargar un usuario en la request.
-  * También sirve para realizar un control de errores
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  * @param userId: Identificador del usuario
-  */
-exports.load = function(req,res,next,userId) {
-
-  console.log('user_controller.load() cargando el usuario de id ' + userId)
-  model.User.find({
-      where: {id: Number(userId)}
-
-    }).then(function (user) { 
-      console.log('user_controller.load() cargando el usuario de nombre ' + user.nombre);
-      req.User = user;
-      next();
-    }).catch(function(err){
-      next(err);
-    });
-
-};
-
-
-
-
-/**
-  * Da de alta un usuario en la base de datos
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.create = function(req,res,next) {
-
-    var login = req.body.login;
-    var password = req.body.password;
-    var nombre = req.body.nombre;
-    var apellido1 = req.body.apellido1;
-    var apellido2 = req.body.apellido2;
-    var email = req.body.email;
-
-    console.log("login: " + login + ",password: " + password + ",nombre: " + nombre
-    + ",apellido1: " + apellido1 +  ",apellido2 " + apellido2 + ", email: " + email);
-    
-    var encriptar = require('../utilidades/encriptacion.js');
-    var passMd5 = encriptar.encriptarPassword(password);
-    
-    // Se crea el objeto User que todavía no se trata de un objeto persistente
-    var user = model.User.build({
-      login: login,
-      password: passMd5,
-      nombre:nombre,
-      apellido1: apellido1,
-      apellido2: apellido2,
-      email: email
-    });
-    
-    
-    // Se procede a dar de alta
-    user.save().then(function(){
-        var respuesta = {
-            status: 0
-        };
-        console.log("Usuario dado de alta");
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.write(JSON.stringify(respuesta));
-        res.end();
-
-    }).catch(function(error) { 
-        var respuesta = {
-            status: 1
-        };
-        console.log("Se ha producido un error durante el alta del usuario: " + error.message);
-        res.writeHead(200, {"Content-Type": "application/json"});
-        res.write(JSON.stringify(respuesta));
-        res.end();
-    });    
-};
-
-
-/**
-  * Función que carga el listado de usuarios
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.users = function(req,res,next){
-
-  console.log("Renderizado del listado de usuarios del sistema");
-
-  model.User.findAll({order:[['nombre', 'ASC'],['apellido1','ASC'],['apellido2', 'ASC']]}).then(function(users) { 
-    console.log("Listado de usuarios recuperados");
-    res.render('users/show',{users:users,errors:[]});  
-
-  }).catch(function(error) { 
-    console.log("Error al recuperar el listado de usuarios: " + error.message);
-    next(err);
-  });
-};
-
-
-
-/**
-  * Función que elimina un determinado usuario de la base de datos
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.delete = function(req,res,next){
-
-  console.log("user_controller.delete() ========>");
-
-  var user = req.User;
-  console.log("Se va a eliminar el usuario con nombre: " + user.nombre);
-
-  req.User.destroy().then(function(users) { 
-    console.log("Usuario eliminado");
-    res.redirect("/users");
-
-  }).catch(function(error) { 
-    console.log("Error al eliminar el usuario de id " + req.User.id + ": " + error.message);
-    next(err);
-  });
-};
-
-
+/********************* NUEVO *************************/
 
 /**
   * Función que comprueba si ya existe algún usuario en la base de datos, con un 
@@ -228,6 +90,156 @@ exports.exists = function(req,res,next){
   }
 };
 
+
+
+/**
+  * Da de alta un usuario en la base de datos
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.create = function(req,res,next) {
+
+    var login = req.body.login;
+    var password = req.body.password;
+    var nombre = req.body.nombre;
+    var apellido1 = req.body.apellido1;
+    var apellido2 = req.body.apellido2;
+    var email = req.body.email;
+
+    console.log("login: " + login + ",password: " + password + ",nombre: " + nombre
+    + ",apellido1: " + apellido1 +  ",apellido2 " + apellido2 + ", email: " + email);
+    
+    var encriptar = require('../utilidades/encriptacion.js');
+    var passMd5 = encriptar.encriptarPassword(password);
+    
+    // Se crea el objeto User que todavía no se trata de un objeto persistente
+    var user = model.User.build({
+      login: login,
+      password: passMd5,
+      nombre:nombre,
+      apellido1: apellido1,
+      apellido2: apellido2,
+      email: email
+    });
+    
+    
+    // Se procede a dar de alta
+    user.save().then(function(){
+        var respuesta = {
+            status: 0
+        };
+        console.log("Usuario dado de alta");
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(respuesta));
+        res.end();
+
+    }).catch(function(error) { 
+        var respuesta = {
+            status: 1
+        };
+        console.log("Se ha producido un error durante el alta del usuario: " + error.message);
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.write(JSON.stringify(respuesta));
+        res.end();
+    });    
+};
+
+
+
+/**
+  * Función que carga el listado de usuarios
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.getUsers = function(req,res,next){
+
+  model.User.findAll({order:[['nombre', 'ASC'],['apellido1','ASC'],['apellido2', 'ASC']]}).then(function(users) { 
+    
+      res.writeHead(200, {"Content-Type": "application/json"});
+      res.write(JSON.stringify(users));
+      res.end();  
+    
+  }).catch(function(error) { 
+      console.log("Error al recuperar el listado de usuarios: " + error.message);  
+      res.status(500).send("Error al recuperar los usuarios de la BBDD: " + error.message);
+  });
+};
+
+
+
+/**
+  * Función que elimina un determinado usuario de la base de datos
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.delete = function(req,res,next){
+
+  console.log("user_controller.delete() ========>");
+
+  var user = req.User;
+  console.log("Se va a eliminar el usuario con nombre: " + user.nombre);
+
+  req.User.destroy().then(function(users) { 
+      console.log("Usuario eliminado");
+      var respuesta = {
+          status: 0
+      };
+      
+      res.writeHead(200, {"Content-Type": "application/json"});
+      res.write(JSON.stringify(respuesta));
+      res.end();  
+
+  }).catch(function(error) { 
+      console.log("Error al eliminar el usuario de id " + req.User.id + ": " + error.message);
+      res.status(500).send("Error al eliminar el usuario de id " + req.User.id + ": " + error.message);
+    
+  });
+};
+
+/*****************************************************/
+
+
+
+/**
+  * Función que carga el formulario de alta de un nuevo 
+  * usuario
+  * @param: req: Objeto request
+  * @param: res: Objeto response
+  */
+exports.new = function(req,res){
+
+  console.log("Renderizado del formulario de alta de un nuevo formulario");
+	res.render('users/new',{errors:[]});
+
+};
+
+
+/**
+  * Función de autoload para cargar un usuario en la request.
+  * También sirve para realizar un control de errores
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  * @param userId: Identificador del usuario
+  */
+exports.load = function(req,res,next,userId) {
+
+  console.log('user_controller.load() cargando el usuario de id ' + userId)
+  model.User.find({
+      where: {id: Number(userId)}
+
+    }).then(function (user) { 
+      console.log('user_controller.load() cargando el usuario de nombre ' + user.nombre);
+      req.User = user;
+      next();
+    }).catch(function(err){
+      next(err);
+    });
+
+};
 
 
 

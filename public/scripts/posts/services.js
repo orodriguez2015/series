@@ -59,13 +59,15 @@ angular.module('gestor')
         };
             
         /**
-          * Retorna la conexión al servicio RESTFUL para dar de alta (método save())
+          * Retorna la conexión al servicio RESTFUL.
+          *   Para el alta de usuario se usa el método $resource.save()
+          *   Para recuperar la lista de usuarios se usa el método $resource.query()
+          *   Para eliminar un usuario se usa el método $resource.delete()
           */
         this.usuario = function () {
-           return $resource(baseUrl+"users",null,{'save': {method:'POST'}});
+           return $resource(baseUrl+"users/:id",null,{'save': {method:'POST'},'delete':{method:'DELETE'}});
         };
-      
-        
+       
     
     }])
 

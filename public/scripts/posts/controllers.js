@@ -116,7 +116,6 @@ angular.module('gestor')
           * @param id: Id del post
           */
         $scope.editarPost = function(id) {
-            console.log("editarPost");
             $state.go("app.editpost",{id:id});
         };
         
@@ -286,10 +285,10 @@ angular.module('gestor')
 
 
 
-/******************************************************************/
-/********************** UsersController ***************************/
-/******************************************************************/
-.controller('UsersController', ['$scope','userServiceCheck','$state', function($scope,userServiceCheck,$state) {
+/********************************************************************/
+/********************** NewUserController ***************************/
+/********************************************************************/
+.controller('NewUserController', ['$scope','userServiceCheck', function($scope,userServiceCheck) {
         
     $scope.usuario = {
         nombre:'',
@@ -349,7 +348,24 @@ angular.module('gestor')
                     userServiceCheck.usuario().save($scope.usuario).$promise.then(
                         // success
                         function(response) {
-                            MessagesArea.showMessageSuccess("Operación correcta: Usuario dado de alta con éxito")
+                            MessagesArea.showMessageSuccess("Operación correcta: Usuario dado de alta con éxito");
+                            
+                            // Se vacía el formulario
+                             $scope.usuario = {
+                                nombre:'',
+                                apellido1: '',
+                                apellido2: '',
+                                email: '',
+                                login:'',
+                                password:''
+                            };
+                            
+                            // Se indica que el formulario no ha sido modificado
+                            $scope.altaUsuarioForm.$setPristine();
+                            // Se indica que ningún campo de formulario ha sido tocado
+                            $scope.altaUsuarioForm.$setUntouched();
+                            
+                            
                         },
                         
                         // error
@@ -370,4 +386,58 @@ angular.module('gestor')
     };
     
   
+}])
+
+
+/******************************************************************/
+/********************** UsersController ***************************/
+/******************************************************************/
+.controller('UsersController', ['$scope','userServiceCheck','$state', function($scope,userServiceCheck,$state) {
+        
+    $scope.users = [];
+    
+    userServiceCheck.usuario().query().$promise.then(
+        
+        // success action
+        function(response) {
+            $scope.users = response;
+        },
+        // error action
+        function(response) {
+            MessagesArea.showMessageError('Operación incorrecta: Error al recuperar los usuarios de la base de datos');       
+        }
+    );
+    
+    
+    /**
+      * Eliminar un determinado usuario de la base de datos
+      * @param id: Id del usuario
+      */
+    $scope.deleteUser = function(id) {
+        
+        userServiceCheck.usuario().delete({id:id}).$promise.then(
+        
+            // success action
+            function(response) {
+                console.log("response: " + response.status);
+                // Se ha eliminado el usuario, entonce se obliga a recargar
+                // el estado actual
+                $state.go($state.current, {}, {reload: true}); 
+                
+            },
+            
+            // error action
+            function(response) {
+                MessagesArea.showMessageError('Operación incorrecta: Error al eliminar el usuario de la base de datos');       
+            }
+        );
+        
+    };
+    
+    
+    $scope.editUser = function(id) {
+        console.log("editar usuario " + id)
+    }
+    
+    
 }]);
