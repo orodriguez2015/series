@@ -6,6 +6,32 @@ var aux = require('./userAuxiliar_controller.js');
 
 /********************* NUEVO *************************/
 
+
+/**
+  * Función de autoload para cargar un usuario en la request.
+  * También sirve para realizar un control de errores
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  * @param userId: Identificador del usuario
+  */
+exports.load = function(req,res,next,userId) {
+
+  console.log('user_controller.load() cargando el usuario de id ' + userId)
+  model.User.find({
+      where: {id: Number(userId)}
+
+    }).then(function (user) { 
+      console.log('user_controller.load() cargando el usuario de nombre ' + user.nombre);
+      req.User = user;
+      next();
+    }).catch(function(err){
+      next(err);
+    });
+
+};
+
+
 /**
   * Función que comprueba si ya existe algún usuario en la base de datos, con un 
   * determinado login o email
@@ -199,6 +225,24 @@ exports.delete = function(req,res,next){
   });
 };
 
+
+
+/**
+  * Devuelve en formato JSON un determinado usuario que ya ha sido recuperado
+  * en el autoload, a través de la función load
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.getUser = function(req,res,next){
+  var user = req.User;
+    
+  res.writeHead(200, {"Content-Type": "application/json"});
+  res.write(JSON.stringify(user));
+  res.end();  
+  
+};
+
 /*****************************************************/
 
 
@@ -214,52 +258,6 @@ exports.new = function(req,res){
   console.log("Renderizado del formulario de alta de un nuevo formulario");
 	res.render('users/new',{errors:[]});
 
-};
-
-
-/**
-  * Función de autoload para cargar un usuario en la request.
-  * También sirve para realizar un control de errores
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  * @param userId: Identificador del usuario
-  */
-exports.load = function(req,res,next,userId) {
-
-  console.log('user_controller.load() cargando el usuario de id ' + userId)
-  model.User.find({
-      where: {id: Number(userId)}
-
-    }).then(function (user) { 
-      console.log('user_controller.load() cargando el usuario de nombre ' + user.nombre);
-      req.User = user;
-      next();
-    }).catch(function(err){
-      next(err);
-    });
-
-};
-
-
-
-
-/**
-  * Función que renderiza la vista que permite editar un usuario del sistema
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.show = function(req,res,next){
-
-  console.log("user_controller.show() ========>");
-
-  var user = req.User;
-  console.log("Se va a editar el usuario con id: " + user.id);
-  console.log("Se va a editar el usuario con nombre: " + user.nombre);
-  console.log("Se va a editar el usuario con apellido1: " + user.apellido1);
-
-  res.render("users/edit",{usuario:req.User,errors:{}});
 };
 
 

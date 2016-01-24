@@ -63,9 +63,10 @@ angular.module('gestor')
           *   Para el alta de usuario se usa el método $resource.save()
           *   Para recuperar la lista de usuarios se usa el método $resource.query()
           *   Para eliminar un usuario se usa el método $resource.delete()
+          *   Para editar un usuario se usa el método $resource.update()
           */
-        this.usuario = function () {
-           return $resource(baseUrl+"users/:id",null,{'save': {method:'POST'},'delete':{method:'DELETE'}});
+        this.usuario = function (user) {
+           return $resource(baseUrl+"users/:id",user,{'save': {method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});
         };
        
     

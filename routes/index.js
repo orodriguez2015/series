@@ -45,9 +45,6 @@ router.param('categoriaVideoId',categoriaVideoController.load);
 //router.get('/users',loginController.loginRequired,usersController.users);
 
 
-// GET /users/:userId/. Edita un determinado usuario de la base de datos
-router.get("/users/:userId(\\d+)",loginController.loginRequired,usersController.show);
-
 // POST /users/existsUser. Esta petición comprueba si un login y un email ya está asignado a un 
 // usuario del sistema
 //router.post("/users/existsUser",usersController.exists);
@@ -179,6 +176,9 @@ router.get('/users',loginController.loginRequired,usersController.getUsers);
 
 // DELETE /users/:userId/. Elimina un determinado usuario de la base de datos
 router.delete("/users/:userId(\\d+)",loginController.loginRequired,usersController.delete);
+
+// GET /users/:userId/. Recupera los datos de un determinado usuario de la BBDD
+router.get("/users/:userId(\\d+)",loginController.loginRequired,usersController.getUser);
 
 
 /********************************************************************************/

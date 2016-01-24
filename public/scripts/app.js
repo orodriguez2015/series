@@ -74,6 +74,18 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies'])
             })
         
         
+            .state('app.edituser', { 
+                module: 'private',
+                url:'users.edit/:id',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/users/edit.html',
+                        controller  : 'EditUserController'
+                    }
+                }
+            })
+        
+        
             .state('app.users', { 
                 module: 'private',
                 url:'users',

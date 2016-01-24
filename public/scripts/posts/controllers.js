@@ -389,6 +389,49 @@ angular.module('gestor')
 }])
 
 
+
+/********************************************************************/
+/********************** EditUserController **************************/
+/********************************************************************/
+.controller('EditUserController', ['$scope','userServiceCheck','$stateParams', function($scope,userServiceCheck,$stateParams) {
+        
+    // Se recupera el id del usuario de la url, ya que se pasa como parámetros
+    var id = $stateParams.id;
+    
+    $scope.usuario = {
+        nombre:'',
+        apellido1: '',
+        apellido2: '',
+        email: '',
+        login:'',
+        password:''
+    };
+    
+    
+    userServiceCheck.usuario().get({id:id}).$promise.then(
+        
+        function(user) {
+            $scope.usuario.id = id;
+            $scope.usuario.nombre = user.nombre;
+            $scope.usuario.apellido1 = user.apellido1;
+            $scope.usuario.apellido2 = user.apellido2;
+            $scope.usuario.email = user.email;
+            $scope.usuario.login = user.login;
+            $scope.usuario.password = user.password;
+            
+            
+        },
+        
+        function(response) {
+            MessagesArea.showMessageError("Operación incorrecta: Error al recuperar el usuario de la base de datos");
+        }
+    );
+    
+    
+  
+}])
+
+
 /******************************************************************/
 /********************** UsersController ***************************/
 /******************************************************************/
@@ -419,7 +462,7 @@ angular.module('gestor')
         
             // success action
             function(response) {
-                console.log("response: " + response.status);
+                
                 // Se ha eliminado el usuario, entonce se obliga a recargar
                 // el estado actual
                 $state.go($state.current, {}, {reload: true}); 
@@ -436,8 +479,11 @@ angular.module('gestor')
     
     
     $scope.editUser = function(id) {
-        console.log("editar usuario " + id)
-    }
     
+        console.log("editar usuario " + id);
+        // Se pasa el control al controlador de edición de usuario
+        $state.go("app.edituser",{id:id});
+        
+    };
     
 }]);
