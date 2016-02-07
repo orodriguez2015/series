@@ -30,31 +30,9 @@ router.param('videoId',videoController.load);
 // Autoload para la carga de un post en la request
 router.param('postId',postController.load);
 
-
-
 // Autoload para la carga de un vídeo de youtube en la request
 router.param('categoriaVideoId',categoriaVideoController.load);
 
-// GET /users/new. Carga el formulario de alta de un nuevo usuario
-//router.get('/users/new',loginController.loginRequired,usersController.new);
-
-// POST /users/create. Da de alta un usuario en la base de datos, siempre y cuando no exista
-//router.post('/users/create',loginController.loginRequired,usersController.create);
-
-// GET /users. Renderiza el listado con las tablas de usuarios
-//router.get('/users',loginController.loginRequired,usersController.users);
-
-
-// POST /users/existsUser. Esta petición comprueba si un login y un email ya está asignado a un 
-// usuario del sistema
-//router.post("/users/existsUser",usersController.exists);
-
-// POST /users/existeLoginEmailOtroUsuario. Esta petición comprueba si existe otro usuario
-// distinto a uno determinado, que tenga un determinado login o email
-router.post("/users/existeLoginEmailOtroUsuario",usersController.existeLoginEmailOtroUsuario);
-
-//  POST /users/edit . Esta petición actualiza los datos de un determinado usuario en el sistema
-router.post("/users/edit/:userId(\\d+)",loginController.loginRequired,usersController.update);
 
 // GET /categorias/new. Petición del formulario de renderizado de la pantalla de alta de una nueva categoría
 router.get("/categorias/new",loginController.loginRequired,categoriaController.new);
@@ -179,6 +157,9 @@ router.delete("/users/:userId(\\d+)",loginController.loginRequired,usersControll
 
 // GET /users/:userId/. Recupera los datos de un determinado usuario de la BBDD
 router.get("/users/:userId(\\d+)",loginController.loginRequired,usersController.getUser);
+
+// PUT /users. Actualiza los datos de un usuario en la BBDD
+router.put("/users/:userId(\\d+)",loginController.loginRequired,usersController.update);
 
 
 /********************************************************************************/

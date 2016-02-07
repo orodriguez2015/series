@@ -47,7 +47,7 @@ angular.module('gestor')
     /**************************************************************/
     /*********************** UserService  *************************/
     /**************************************************************/
-   .service('userServiceCheck',['$resource','baseUrl', function($resource,baseUrl) {
+   .service('userServiceCheck',['$resource','baseUrl','$q','$http', function($resource,baseUrl,$q,$http) {
 
        /**
          * Retorna la conexión al servicio RESTFUL que permite comprobar la existencia
@@ -65,11 +65,33 @@ angular.module('gestor')
           *   Para eliminar un usuario se usa el método $resource.delete()
           *   Para editar un usuario se usa el método $resource.update()
           */
-        this.usuario = function (user) {
-           return $resource(baseUrl+"users/:id",user,{'save': {method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});
+        this.usuario = function (id,user) {
+            
+        return $resource(baseUrl+"users/:id",user,{'save': {method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});   
+               
         };
        
-    
+       
+        this.prueba = function() {
+            
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get(baseUrl+"users")
+            .success(function(data) {
+                defered.resolve(data);
+                })
+            .error(function(err) {
+                defered.reject(err)
+            });
+
+            return promise;
+            
+            
+        };
+       
+        
+       
     }])
 
     

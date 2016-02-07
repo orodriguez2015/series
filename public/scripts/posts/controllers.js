@@ -94,19 +94,28 @@ angular.module('gestor')
         $scope.deletePost = function( id ) {
             MessagesArea.clearMessagesArea();
             
-            postService.getPosts().delete({id:id}).$promise.then(
-                // success action
-                function(response) {
-                    // Se muestra un mensaje de éxito
-                    MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Post eliminado");
-                    // Se recarga la página actual para recargar la vista
-                    $scope.goToPage($scope.currentPage);
-                },
-                // error function
-                function(response) {
-                    MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido eliminar el post");
-                }
-            ); 
+             // Se pregunta al usuario si desea eliminar la entrada. 
+             // Se hace de bootbox.js (require de jquery y bootstrap)
+             bootbox.confirm('¿Desea eliminar la entrada?', function(result) {
+                 
+                 if(result) {
+                    postService.getPosts().delete({id:id}).$promise.then(
+                    // success action
+                    function(response) {
+                        // Se muestra un mensaje de éxito
+                        MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Post eliminado");
+                        // Se recarga la página actual para recargar la vista
+                        $scope.goToPage($scope.currentPage);
+                    },
+                    // error function
+                    function(response) {
+                        MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido eliminar el post");
+                    }
+                    );     
+                 }
+                 
+             }); 
+
         };
         
         
@@ -399,6 +408,7 @@ angular.module('gestor')
     var id = $stateParams.id;
     
     $scope.usuario = {
+        id: id,
         nombre:'',
         apellido1: '',
         apellido2: '',
@@ -408,8 +418,9 @@ angular.module('gestor')
     };
     
     
+    /** Se recuperan los datos del usuario del servidor **/
     userServiceCheck.usuario().get({id:id}).$promise.then(
-        
+        // success action
         function(user) {
             $scope.usuario.id = id;
             $scope.usuario.nombre = user.nombre;
@@ -417,18 +428,36 @@ angular.module('gestor')
             $scope.usuario.apellido2 = user.apellido2;
             $scope.usuario.email = user.email;
             $scope.usuario.login = user.login;
-            $scope.usuario.password = user.password;
-            
-            
+            $scope.usuario.password = user.password;   
         },
-        
+        // error action
         function(response) {
             MessagesArea.showMessageError("Operación incorrecta: Error al recuperar el usuario de la base de datos");
         }
     );
     
     
-  
+    /**
+      * Función que es llamada para editar un usuario y persistir los
+      * cambios en la base de datos 
+      */
+    $scope.editarUsuario = function() {
+       console.log("$scope.usuario: " + JSON.stringify($scope.usuario)); 
+        
+        userServiceCheck.usuario().update({id:$scope.usuario.id},$scope.usuario).$promise.then(
+            // success action
+            function(response) {
+                MessagesArea.showMessageSuccess("<b>Operación correcta</b>: Datos del usuario actualizado en base de datos");     
+            },
+            
+            // error action
+            function(response) {
+                MessagesArea.showMessageError("<b>Operación incorrecta</b>: Error al actualizar el usuario en la  base de datos");     
+            }
+        
+        );
+    };
+    
 }])
 
 
@@ -443,7 +472,11 @@ angular.module('gestor')
         
         // success action
         function(response) {
+            $scope.contador =1
+            console.log("contador: " + $scope.contador);
+            $scope.contador++;
             $scope.users = response;
+            
         },
         // error action
         function(response) {
