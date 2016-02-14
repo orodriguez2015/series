@@ -21,10 +21,13 @@ app.set('view engine', 'ejs');
 // todas las páginas
 app.use(partials());
 
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
+//app.use(express.bodyParser());
+
 // Se pone extended a 'false', para poder enviar arrays en los formularios
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('Series-2015'));

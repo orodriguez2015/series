@@ -1,5 +1,5 @@
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+<div class="content-wrapper" ng-controller="EditPostController">
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
@@ -13,7 +13,7 @@
   </section>
 
   <!-- Main content -->
- <section class="content" ng-controller="EditPostController">
+ <section class="content">
 
  
  <form role="form" name="editPostForm" ng-submit="editPost()" novalidate>   
@@ -33,10 +33,14 @@
                 El título es un campo obligatorio
           </span>
         </div>
+        <script type="text/javascript">
+            var dato = '{{post.descripcion}}';  
+        </script>  
           
+ 
         <div class="form-group" ng-class="{'has-error':editPostForm.descripcion.$error.required && !editPostForm.descripcion.$pristine}">
           <label for="Descripcion">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción" rows="10" cols="20" ng-model="post.descripcion" required></textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción" rows="10" cols="20" required ng-model="post.descripcion"></textarea>
           
            <span class="help-block" ng-show="editPostForm.descripcion.$error.required && !editPostForm.descripcion.$pristine">
                 El título es un campo obligatorio
@@ -55,6 +59,21 @@
       </div>
      
    </div> 
+     
+  <script type="text/javascript">
+      
+      
+      
+    $(function () {
+        // Se convierte el campo 'descripcion' en un de tipo textarea wysihtml5 de bootstrap
+        $("#descripcion").wysihtml5();
+        //$("#descripcion").val('{{post.descripcion}}');  
+        //$("#descripcion").val(dato);
+      
+  });
+</script>  
+
 
   </section>
 </div>
+

@@ -36,7 +36,7 @@
           
         <div class="form-group" ng-class="{'has-error':altaPostForm.descripcion.$error.required && !altaPostForm.descripcion.$pristine}">
           <label for="Descripcion">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción" rows="10" cols="20" ng-model="post.descripcion"></textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Introduzca la descripción" rows="10" cols="20" ng-model="post.descripcion" required></textarea>
           
            <span class="help-block" ng-show="altaPostForm.descripcion.$error.required && !altaPostForm.descripcion.$pristine">
                 El título es un campo obligatorio
@@ -53,13 +53,10 @@
         <input type="button" value="Cancelar" class="btn btn-primary" ng-click="back()"/>
            
       </div>
+     
    </div>
+
+ 
+
   </section>
 </div>
-
-
- <script type="text/javascript">
-  $(function () {
-    $("#descripcion").wysihtml5();
-  });
-</script>

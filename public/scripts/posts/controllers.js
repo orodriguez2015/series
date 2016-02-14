@@ -151,6 +151,9 @@ angular.module('gestor')
         $scope.newPost = function() {
             console.log("titulo: " + $scope.post.titulo + ", desc: " + $scope.post.descripcion);
             
+            
+            $scope.post.descripcion = $('#descripcion').val();
+            
             if($scope.post.titulo.length>=1 && $scope.post.descripcion.length>=1) {
                 MessagesArea.clearMessagesArea();
                 postService.getPosts().save($scope.post).$promise.then(
@@ -491,23 +494,29 @@ angular.module('gestor')
       */
     $scope.deleteUser = function(id) {
         
-        userServiceCheck.usuario().delete({id:id}).$promise.then(
         
-            // success action
-            function(response) {
-                
-                // Se ha eliminado el usuario, entonce se obliga a recargar
-                // el estado actual
-                $state.go($state.current, {}, {reload: true}); 
-                
-            },
-            
-            // error action
-            function(response) {
-                MessagesArea.showMessageError('Operación incorrecta: Error al eliminar el usuario de la base de datos');       
+        bootbox.confirm('¿Desea eliminar el usuario?', function(result) {
+        
+            if(result) {
+                userServiceCheck.usuario().delete({id:id}).$promise.then(
+
+                    // success action
+                    function(response) {
+
+                        // Se ha eliminado el usuario, entonce se obliga a recargar
+                        // el estado actual
+                        $state.go($state.current, {}, {reload: true}); 
+
+                    },
+
+                    // error action
+                    function(response) {
+                        MessagesArea.showMessageError('Operación incorrecta: Error al eliminar el usuario de la base de datos');       
+                    }
+                );
             }
-        );
-        
+
+        });
     };
     
     

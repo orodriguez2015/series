@@ -2,7 +2,7 @@
 
 // Se incluye a nivel de módulo, ui.router y ngResource (para usar en lugar de $http).
 // Se incluye ngCookie para el manejo de las cookies
-angular.module('gestor', ['ui.router','ngResource','ngCookies'])
+angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
 
 
 .config(function($stateProvider, $urlRouterProvider,$locationProvider) {
