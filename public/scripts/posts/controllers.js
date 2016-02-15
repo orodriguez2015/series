@@ -186,6 +186,9 @@ angular.module('gestor')
     }])
 
 
+/******************************************************************/
+/******************** EditPostController **************************/
+/******************************************************************/
 
  .controller('EditPostController', ['$scope','postService','$state','$stateParams', function($scope,postService,$state,$stateParams) {
         
@@ -210,6 +213,7 @@ angular.module('gestor')
                 $scope.post.id = response.id;
                 $scope.post.titulo = response.titulo;
                 $scope.post.descripcion = response.descripcion;
+                $('#descripcion').val(response.descripcion);
             },
 
             // error action
@@ -233,7 +237,8 @@ angular.module('gestor')
        * Función que es llamada para editar la entrada
        */
      $scope.editPost = function() {
-            
+         $scope.post.descripcion = $('#descripcion').val();
+         
          postService.getPost().update({id:id},$scope.post).$promise.then(
             function(response) {
                 MessagesArea.showMessageSuccess("La entrada ha sido actualizado");
