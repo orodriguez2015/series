@@ -15,6 +15,7 @@ function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{
 
 $(function() {
     
+    /**
     // Se captura el evento onclibk sobre el boton "btnLimpiar"
     $("#btnLimpiar").on("click",function(){
         $("#busqueda").val(""); 
@@ -23,8 +24,9 @@ $(function() {
         ocultarReproductorYoutube(); 
     });
     
+    */
     
-    
+    /**
     // Se crea un manejador de eventos para el submit del formulario, de modo que
     // se captura y se invoca al api de youtube para buscar los vídeos 
     $("form").on("submit", function(e) { 
@@ -34,19 +36,7 @@ $(function() {
        ocultarReproductorYoutube(); 
         
       $("#results").html("");
-       // Se hace uso del api de youtube para buscar la lista de vídeos   
-        /*
-       var request = gapi.client.youtube.search.list({
-            part: "snippet",
-            chart: "mostPopular",
-            type: "video",
-            q: encodeURIComponent($("#busqueda").val()).replace(/%20/g, "+"),
-            maxResults: $('#numero').val(),
-            order: "viewCount",
-            regionCode:"es",
-            publishedAfter: "2015-01-01T00:00:00Z"
-       }); 
-       */
+       // Se hace uso del api de youtube para buscar la lista de vídeos
         
         var request = gapi.client.youtube.search.list({
             part: "snippet",
@@ -59,13 +49,6 @@ $(function() {
        }); 
         
         
-       /* así funciona sin indicar el código de región ni el chart, maxResults, order
-            var request = gapi.client.youtube.search.list({
-            part: "snippet",
-            type: "video",
-            q: "mnpAYcm8090"
-       }); */
-       
         
        // Se llama al método execute para procesar la respuesta devuelta por el API de youtube
        request.execute(function(response) {
@@ -82,6 +65,7 @@ $(function() {
           resetVideoHeight();
        });
     });
+    **/
     
     $(window).on("resize", resetVideoHeight);
 });

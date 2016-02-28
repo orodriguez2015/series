@@ -193,7 +193,7 @@ angular.module('gestor')
  .controller('EditPostController', ['$scope','postService','$state','$stateParams', function($scope,postService,$state,$stateParams) {
         
     var id = $stateParams.id;
-    console.log("id: " + id);
+    
     // Objeto que contendra los datos del post a dar de alta
     $scope.post = {
         id: '',
@@ -532,5 +532,92 @@ angular.module('gestor')
         $state.go("app.edituser",{id:id});
         
     };
+    
+}])
+
+
+/******************************************************************/
+/********************** VideoController ***************************/
+/******************************************************************/
+.controller('VideoController', ['$scope','$state','youtubeService','$http','$resource', function($scope,$state,youtubeService,$http,$resource) {
+        
+    console.log("VideoController");
+    
+    // Variable que contendrá los vídeos buscados por el usuario directamente
+    // en Youtube
+    $scope.videos;
+    // Campo de formulario que contiene la descripción de los vídeos a buscar
+    $scope.busqueda = "";
+    // Campo de formulario que contiene el número de vídeos máximo a recuperar
+    $scope.numero   = "50";
+    
+    /**
+      * Función que se encarga de limpiar el formulario de búsqueda, 
+      * y el contenedor de vídeos
+      */
+    $scope.limpiar = function() {
+        
+        $scope.busqueda = "";
+        $scope.videos = [];
+        //$("#results").html("");
+        // Se oculta la capa del vídeo de youtube y se para la reproduccción
+        ocultarReproductorYoutube(); 
+    };
+    
+
+    /**
+      * Función de búsqueda de vídeos en youtube 
+      *
+      */
+    $scope.searchVideos = function() {
+        
+        ocultarReproductorYoutube(); 
+        
+        console.log("A buscar: " + $scope.busqueda + " en numero de : " + $scope.numero);
+    
+        // Parámetros de búsqueda de vídeos en youtube
+        var params =  {
+              key: 'AIzaSyCY9xryyOVZkhySj6xRygDGzSegW8acbAY',
+              type: 'video',
+              maxResults: $scope.numero,
+              pageToken: '',
+              part: 'snippet',
+              fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle,nextPageToken',
+              q: $scope.busqueda,
+              regionCode: "es",
+              order: "viewCount"
+            
+        };
+        
+        // Se buscan los vídeos en el API de Youtube
+        youtubeService.searchVideos().get(params).$promise.then(
+            function(data) {
+                console.log(JSON.stringify(data.items));
+                $scope.videos = data.items;
+                resetVideoHeight();
+            },
+            
+            function(response) {
+                MessagesArea.showMessageError("Error al realizar la búsqueda de vídeos en Youtube");
+            }
+        );
+        
+          
+    } // function
+        
+        
+        
+  
+
+    
+    
+    $scope.showVideo = function(id) {
+        
+        mostrarVideo(id);
+    }
+    
+    
+    
+   
     
 }]);

@@ -1,13 +1,19 @@
 <div style="margin-left:10px;width:30%;height:220px;float:left">
     
     <div align="left">
+        <!--
         <a href="#" onclick="javascript:mostrarVideo('{{videoid}}');" border="0">
+        -->
+        <a href="" ng-click="showVideo('{{videoid}}')">
             <img src="{{defaultImage}}" border="0" width="196" height="110"/>
+        </a>    
+        <!--    
         </a>
+        -->
     
     <label class="tituloVideoYoutube">{{title}}</label>
     <br>
-    <a href="#" onclick="saveVideo('{{videoid}}','{{idCanal}}','{{channelTitle}}','{{title}}','{{descripcionVideo}}','{{defaultImage}}')">
+    <a onclick="saveVideo('{{videoid}}','{{idCanal}}','{{channelTitle}}','{{title}}','{{descripcionVideo}}','{{defaultImage}}')">
         <img src="/images/guardar.png" border="0" width="15" height="15" alt="Guardar" title="Guardar" valign="top">
     </a>    
     <label class="canalVideoYoutube">de {{channelTitle}}</label>

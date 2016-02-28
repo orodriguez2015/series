@@ -70,29 +70,39 @@ angular.module('gestor')
         return $resource(baseUrl+"users/:id",user,{'save': {method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});   
                
         };
-       
-       
-        this.prueba = function() {
-            
-            var defered = $q.defer();
-            var promise = defered.promise;
-
-            $http.get(baseUrl+"users")
-            .success(function(data) {
-                defered.resolve(data);
-                })
-            .error(function(err) {
-                defered.reject(err)
-            });
-
-            return promise;
-            
-            
-        };
-       
-        
+           
        
     }])
+
+
+
+/**************************************************************/
+/*********************** YoutubeService  **********************/
+/**************************************************************/
+.service('youtubeService',['$resource','baseUrl', function($resource,baseUrl) {
+
+    
+    /**
+      * Función encargada de buscar vídeos
+      * @param dato (String): String que indica el contenido que tendrán
+      * que tener los vídeos 
+      * @return: JSON con los datos de los vídeos extraidos directamente
+      * del API de youtube
+      **/
+    this.searchVideos = function() {
+        // Se devuelve el recurso de conexión al API de google que 
+        // permite realizar búsqueda de vídeos en youtube
+        return $resource('https://www.googleapis.com/youtube/v3/search',null,{'get': {method:'GET'}});   
+        
+    };
+    
+        
+}])
+
+
+
+
+
 
     
     /***********************************************************************/

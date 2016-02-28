@@ -97,6 +97,20 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                 }
             })
         
+        
+            .state('app.youtube', { 
+                module: 'public',
+                url:'youtube',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/videos/index.html',
+                        controller  : 'VideoController'
+                    }
+                }
+            })
+        
+        
+        
             .state('app.login', { 
                 module: 'public',
                 url:'login',
@@ -107,6 +121,8 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             });
+    
+    
          
             $urlRouterProvider.otherwise('/');
    
