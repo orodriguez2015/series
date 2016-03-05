@@ -12,15 +12,15 @@ angular.module('gestor')
         this.getPosts = function(inicio,fin){
             return $resource(baseUrl+"posts/:id/:begin/:end",null,  {'update':{method:'PUT' },'delete':{method:'DELETE'},'save':{method:'POST'},'get': {method:'GET'}});
         };
-        
-        
+
+
         // Se recupera el número de post a través de $http ya que $resource es
         // válido para API REST solo
         this.getNumTotalPosts = function() {
             return $http.get(baseUrl + "posts/num");
         };
-        
-        
+
+
         /**
           * Recuperar un determinado post
           * @param id: Id del post
@@ -28,7 +28,7 @@ angular.module('gestor')
         this.getPost = function(id,post) {
              return $resource(baseUrl+"posts/:id",post,  {'update':{method:'PUT' },'delete':{method:'DELETE'},'save':{method:'POST'},'get': {method:'GET'}});
         };
-        
+
     }])
 
 
@@ -39,7 +39,7 @@ angular.module('gestor')
     .service('loginService',['$resource','baseUrl', function($resource,baseUrl) {
 
         return $resource(baseUrl+"login",null,  {'validate':{method:'POST'},'get': {method:'GET'}});
-    
+
     }])
 
 
@@ -57,7 +57,7 @@ angular.module('gestor')
         this.existencia = function() {
            return $resource(baseUrl+"users/exists",null,{'comprobar': {method:'POST'}});
         };
-            
+
         /**
           * Retorna la conexión al servicio RESTFUL.
           *   Para el alta de usuario se usa el método $resource.save()
@@ -66,12 +66,12 @@ angular.module('gestor')
           *   Para editar un usuario se usa el método $resource.update()
           */
         this.usuario = function (id,user) {
-            
-        return $resource(baseUrl+"users/:id",user,{'save': {method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});   
-               
+
+        return $resource(baseUrl+"users/:id",user,{'save': {method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});
+
         };
-           
-       
+
+
     }])
 
 
@@ -81,22 +81,28 @@ angular.module('gestor')
 /**************************************************************/
 .service('youtubeService',['$resource','baseUrl', function($resource,baseUrl) {
 
-    
     /**
-      * Función encargada de buscar vídeos
-      * @param dato (String): String que indica el contenido que tendrán
-      * que tener los vídeos 
-      * @return: JSON con los datos de los vídeos extraidos directamente
-      * del API de youtube
+      * Función que devuelve el $resource con la conexión al API de Youtube para
+      * poder visualizar vídeos
+      * Para obtener los vídeos se hace uso del método get
       **/
     this.searchVideos = function() {
-        // Se devuelve el recurso de conexión al API de google que 
+        // Se devuelve el recurso de conexión al API de google que
         // permite realizar búsqueda de vídeos en youtube
-        return $resource('https://www.googleapis.com/youtube/v3/search',null,{'get': {method:'GET'}});   
-        
+        return $resource('https://www.googleapis.com/youtube/v3/search',null,{'get': {method:'GET'}});
     };
-    
-        
+
+
+    /**
+      * Función que permite guardar un determinado vídeo como favorito de un
+      * determinado usuario
+      * @param id (Integer): Id del vídeo
+      */
+    this.video = function(id) {
+        return $resource(baseUrl + "videos",null,{'save':{method:'POST'}});
+
+    };
+
 }])
 
 
@@ -104,44 +110,40 @@ angular.module('gestor')
 
 
 
-    
-    /***********************************************************************/
-    /*********************** AuthenticationService *************************/
-    /***********************************************************************/
-    .factory('authenticationFactory',['$resource','baseUrl','$state','$cookieStore', function($resource,baseUrl,$state,$cookieStore){
-        
-        var salida = {};
-        
-        /**
-          * Almacena las cookies que indican que el usuario se ha autenticado
-          */
-        salida.authenticate = function (usuario) {
-              
-           $cookieStore.put('conectado',true);
-           $cookieStore.put('usuario',usuario);
-                 
-        }; // autenticar
-            
-            
-        salida.usuarioAutenticado = function() {
-            
-            if(!(sessionStorage && sessionStorage.getItem("user")!=undefined)){
-                // Si el usuario no está autenticado, se hace 
-                // una redirección a la pantalla de login
-                $state.go('app.login');
-                
-            } else return true;
-            
-        };
-                                      
-        salida.logout = function() {
-            
-        }
-                 
-        return salida;        
-    
-    }]);
+
+/***********************************************************************/
+/*********************** AuthenticationService *************************/
+/***********************************************************************/
+.factory('authenticationFactory',['$resource','baseUrl','$state','$cookieStore', function($resource,baseUrl,$state,$cookieStore){
+
+    var salida = {};
+
+    /**
+      * Almacena las cookies que indican que el usuario se ha autenticado
+      */
+    salida.authenticate = function (usuario) {
+
+       $cookieStore.put('conectado',true);
+       $cookieStore.put('usuario',usuario);
+
+    }; // autenticar
 
 
-    
+    salida.usuarioAutenticado = function() {
 
+        if(!(sessionStorage && sessionStorage.getItem("user")!=undefined)){
+            // Si el usuario no está autenticado, se hace
+            // una redirección a la pantalla de login
+            $state.go('app.login');
+
+        } else return true;
+
+    };
+
+    salida.logout = function() {
+
+    }
+
+    return salida;
+
+}]);

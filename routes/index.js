@@ -104,7 +104,7 @@ router.get("/videos/usuario",loginController.loginRequired,videoController.getVi
 router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
 
 
-// GET /videos/categorias . Carga la pantalla que muestra las categorias de vídeos de youtube 
+// GET /videos/categorias . Carga la pantalla que muestra las categorias de vídeos de youtube
 // de un determinado usuario
 router.get("/videos/categorias",loginController.loginRequired,categoriaVideoController.getCategorias);
 
@@ -121,7 +121,7 @@ router.delete("/videos/categorias/:categoriaVideoId(\\d+)",loginController.login
 // GET /videos/categorias/:categoriaVideoId. Petición de la vista de edición de una categoría de vídeo
 router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.edit);
 
-// PUT /videos/categorias/:categoriaVideoId. Petición de modificación de una determinada 
+// PUT /videos/categorias/:categoriaVideoId. Petición de modificación de una determinada
 // categoría de vídeo
 router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.update);
 
@@ -139,10 +139,23 @@ router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequ
 
 
 /********************************************************************************/
+/*************** BEGIN: API RESTFULL PARA LA GESTIÓN DE VIDEOS   ****************/
+/********************************************************************************/
+
+// POST /videos. Graba un vídeo como favorito de un usuario
+router.post("/videos",loginController.loginRequired,videoController.saveVideo);
+
+
+/********************************************************************************/
+/*************** END: API RESTFULL PARA LA GESTIÓN DE VIDEOS     ****************/
+/********************************************************************************/
+
+
+/********************************************************************************/
 /*************** BEGIN: API RESTFULL PARA LA GESTIÓN DE USUARIOS ****************/
 /********************************************************************************/
 
-// POST /users/exists Comprueba si existe un usuario en la BD que tenga un 
+// POST /users/exists Comprueba si existe un usuario en la BD que tenga un
 // determinado login y/o email
 router.post("/users/exists",loginController.loginRequired,usersController.exists);
 

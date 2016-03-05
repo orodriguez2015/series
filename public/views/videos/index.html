@@ -1,7 +1,7 @@
 <link href="/stylesheets/youtube.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 <style type="text/css">
-	
+
 	/* base semi-transparente */
     .overlay{
         display: none;
@@ -16,7 +16,7 @@
         -moz-opacity: 0.75;
         filter: alpha(opacity=75);
     }
-	
+
     /* estilo para lo que este dentro de la ventana modal */
     .modal {
         display: none;
@@ -51,17 +51,17 @@
   <!-- Main content -->
   <section class="content">
 
- 
- 
+
+
  <div class="box box-primary">
-   
+
 <div class="alert alert-warning" role="alert" id="alert" style="display:none"></div>
-      <form ng-submit="searchVideos()">              
-          <div class="box-body">  
+      <form ng-submit="searchVideos()">
+          <div class="box-body">
               <div class="form-group" style="width:45%;">
                   <label>Buscar:</label>
                   <input type="text" class="form-control" id="busqueda" name="busqueda" placeholder="Criterio de búsqueda de vídeos" ng-model="busqueda">
-                  
+
 
             </div>
             <div class="form-group" style="width:15%;">
@@ -73,56 +73,55 @@
                       <option value="40">40</option>
                       <option value="50" selected>50</option>
                   </select>
-            </div>  
-                 
+            </div>
+
             <div class="box-footer">
                 <button type="submit" name="btnAltaUsuario" id="btnAltaUsuario" class="btn btn-primary">Buscar</button>
                 <input type="button" name="btnLimpiar" id="btnLimpiar" class="btn btn-primary" value="Limpiar" ng-click="limpiar()">
             </div>
 
-              
-              
+
+
               <!-- BEGIN: Contenedor de los vídeos -->
               <div id="results">
-              
+
                   <div style="margin-left:10px;width:30%;height:220px;float:left" ng-repeat="video in videos">
-    
+
                     <div align="left">
-    
+
                         <a href="" ng-click="showVideo(video.id.videoId)">
                             <img ng-src="{{video.snippet.thumbnails.default.url}}" border="0" width="196" height="110"/>
-                        </a>    
+                        </a>
 
                     <label class="tituloVideoYoutube">{{video.snippet.title}}</label>
                     <br>
-                    
-                        <img src="/images/guardar.png" border="0" width="15" height="15" alt="Guardar" title="Guardar" valign="top">
-                    
+
+                        <img src="/images/guardar.png" border="0" width="15" height="15" alt="Guardar" title="Guardar" valign="top"
+													ng-click="saveVideo(video.id.videoId,video.snippet.title,video.snippet.thumbnails.default.url,
+																	video.snippet.description,video.snippet.channelId,video.snippet.channelTitle)">
+
                     <label class="canalVideoYoutube">de {{video.snippet.channelTitle}}</label>
                     <br>
 
 
-                    </div>    
+                    </div>
                 </div>
-             
+
               </div>
              <!-- END: Contenedor de los vídeos -->
-              
-              
+
+
           </div><!-- /.box-body -->
-          </div> 
+          </div>
         </form>
-          
+
 </div>
 
-
-
-
   <div id="msgError" class="callout callout-danger lead" style="display:none;">
-   
+
   </div>
 
-  
+
   </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
@@ -135,13 +134,11 @@
 <div id="fade" class="overlay" onclick="document.getElementById('ytplayer').style.display='none';document.getElementById('fade').style.display='none'">
 </div>
 
-   
+
 <!-- Se incluye el API JS de youtube para mostrar vídeos -->
 <script async type="text/javascript" src="https://www.youtube.com/player_api"></script>
-<script type="text/javascript" src="/javascripts/youtubePlayer.js"></script>
-
+<script type="text/javascript" src="/scripts/youtube/youtubePlayer.js"></script>
 <script type="text/javascript" src="/scripts/youtube/youtubeApi.js"></script>
 <!-- Se incluye el API JS de youtube para poder buscar vídeos -->
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
-
 <script type="text/javascript" src="/javascripts/altaVideo.js"></script>

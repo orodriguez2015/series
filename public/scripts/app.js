@@ -8,7 +8,7 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
 .config(function($stateProvider, $urlRouterProvider,$locationProvider) {
         $stateProvider
             // ruta para la página principal
-            .state('app', { 
+            .state('app', {
                 module: 'public',
                 url:'/',
                 views: {
@@ -17,17 +17,17 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     },
                     'content': {
                         templateUrl : 'views/template/index.html'
-                        
+
                     },
                     'footer': {
                         templateUrl : 'views/template/footer.html',
                     }
                 }
             })
-        
-        
+
+
             // Ruta para el listado de posts del usuario
-            .state('app.posts', { 
+            .state('app.posts', {
                 module: 'private',
                 url:'blog',
                 views: {
@@ -37,8 +37,8 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-            .state('app.newpost', { 
+
+            .state('app.newpost', {
                 module: 'private',
                 url:'blog.new',
                 views: {
@@ -48,9 +48,9 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-        
-            .state('app.editpost', { 
+
+
+            .state('app.editpost', {
                 module: 'private',
                 url:'blog.edit/:id',
                 views: {
@@ -60,9 +60,9 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-        
-            .state('app.newuser', { 
+
+
+            .state('app.newuser', {
                 module: 'private',
                 url:'users.new',
                 views: {
@@ -72,9 +72,9 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-        
-            .state('app.edituser', { 
+
+
+            .state('app.edituser', {
                 module: 'private',
                 url:'users.edit/:id',
                 views: {
@@ -84,9 +84,9 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-        
-            .state('app.users', { 
+
+
+            .state('app.users', {
                 module: 'private',
                 url:'users',
                 views: {
@@ -96,10 +96,10 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-        
-            .state('app.youtube', { 
-                module: 'public',
+
+
+            .state('app.youtube', {
+                module: 'private',
                 url:'youtube',
                 views: {
                     'content@': {
@@ -108,10 +108,10 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             })
-        
-        
-        
-            .state('app.login', { 
+
+
+
+            .state('app.login', {
                 module: 'public',
                 url:'login',
                 views: {
@@ -121,20 +121,20 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                     }
                 }
             });
-    
-    
-         
+
+
+
             $urlRouterProvider.otherwise('/');
-   
+
     })
 
 
 // Esta función se ejecutará siempre, y se usará para comprobar si
 // un usuario está autenticado, sino lo está se hace una redirección a la pantalla
-// de login. 
+// de login.
 .run(function($rootScope,$state,$cookieStore){
-    
-    // Cuando se detecte el cambio de estado, entonces se comprueba si el usuario se ha 
+
+    // Cuando se detecte el cambio de estado, entonces se comprueba si el usuario se ha
     // autenticado en la aplicación
     $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
     if (toState.module === 'private' && ($cookieStore.get('conectado')==null || $cookieStore.get('conectado')==false)) {
