@@ -1,29 +1,99 @@
 var model = require('../models/models.js');
 
 /**
-  * Función de autoload que recupera una determinado categoría de vídeos de un de de la tabla VideoYoutube, para 
+  * Función de autoload que recupera una determinado categoría de vídeos de un de de la tabla VideoYoutube, para
   * almacenar en la request
   * @param req: Objeto request
   * @param res: Objeto response
   * @param next: Objeto next
   */
 exports.load = function(req,res,next,categoriaVideoId){
-    
+
     var busqueda = {
         id: categoriaVideoId
     };
-    
+
     model.CategoriaVideoYoutube.find({where:busqueda}).then(function(categoria){
-        console.log("autoload categoria vídeo encontrado");
         console.log("autoload Categoria video id: " + categoria.id + ", nombre de la categoria: " + categoria.nombre);
         req.CategoriaVideo = categoria;
         next();
-        
+
     }).catch(function(err){
-        console.log("Error en autoload de vídeo " + err.message); 
+        console.log("Error en autoload de vídeo " + err.message);
         next(err);
     });
 };
+
+
+/**
+  * Recupera las categorías de vídeos dadas de alta por un determinado usuario, y
+  * renderiza la vista
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.getCategorias = function(req,res,next){
+
+    var idUsuario = req.session.user.id;
+    var busqueda = {
+        UserId: idUsuario
+    };
+
+    console.log("Llamada a getCategorias() para recuperar categorías del usuario: " + idUsuario);
+    model.CategoriaVideoYoutube.findAll({where:busqueda,include:[{model:model.VideoYoutube}]}).then(function(categ){
+
+       console.log("Num categorias recuperadas: " + categ.length);
+       devolverSalida(res,categ);
+
+    }).catch(function(err){
+        console.log("Error al recuperar las categorias de vídeos: " + err.message);
+        next(err);
+    });
+};
+
+
+
+/**
+  * Permite eliminar una determinada categoría de vídeo usuario
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.destroyCategoria = function(req,res,next){
+    var categoria = req.CategoriaVideo;
+
+    categoria.destroy().then(function(){
+        console.log("Categoría de vídeo eliminada");
+
+        var respuesta = {
+            status: 0
+        }
+
+        devolverSalida(res,respuesta);
+
+    }).catch(function(err){
+        console.log("Error al eliminar una determinada categoría de vídeo: " + err.message);
+        res.status(500).send("Error al recuperar los usuarios de la BBDD: " + error.message);
+    });
+};
+
+
+
+/**
+  * Devuelve la salida en formato JSON. Es utilizada por la función saveVideo
+  * @param res: Objeto de tipo Response
+  * @param respuesta: Objeto que contiene la respuesta y que se
+  *        convierte a JSON
+  */
+function devolverSalida(res,respuesta) {
+    res.writeHead(200, {"Content-Type": "application/json"});
+    res.write(JSON.stringify(respuesta));
+    res.end();
+};
+
+
+
+/****************************************************/
 
 
 /**
@@ -37,7 +107,7 @@ exports.load = function(req,res,next,categoriaVideoId){
 exports.edit = function(req,res,next){
     var categoria = req.CategoriaVideo;
     console.log('Edit categoria ' + categoria.id + ", nombre: " + categoria.nombre);
-    
+
     res.render("videos/editCategoria",{errors:[],categoria:categoria});
 };
 
@@ -51,60 +121,33 @@ exports.edit = function(req,res,next){
   * @param next: Objeto next
   */
 exports.update = function(req,res,next){
-    
+
     var nombre      = req.body.nombre;
     var descripcion = req.body.descripcion;
     var idUsuario   = req.session.user.id;
     var categoria   = req.CategoriaVideo;
-    
+
     console.log("request nombre: " + nombre + ", descripcion: " + descripcion);
     console.log('Se procede a editar la categoria de id' + categoria.id + " , nombre " + categoria.nombre + " y descripcion: " + categoria.descripcion);
-    
+
     categoria.nombre      = req.body.nombre;
     categoria.descripcion = req.body.descripcion;
     categoria.UserId      = idUsuario;
-    
+
     categoria.save().then(function(){
-        
+
         console.log("Categoria de vídeo con id " + categoria.id + " editada");
-        res.redirect("/videos/categorias");     
-        
+        res.redirect("/videos/categorias");
+
     }).catch(function(err){
         console.log("Error al actualizar la categoria de id " + categoria.id + " en BD: " + err.message);
         next(err);
     });
-    
-    
-   
+
+
+
 };
 
-
-
-/**
-  * Recupera las categorías de vídeos dadas de alta por un determinado usuario, y 
-  * renderiza la vista
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.getCategorias = function(req,res,next){
-    
-    var idUsuario = req.session.user.id;
-    var busqueda = {
-        UserId: idUsuario 
-    };
-    
-    console.log("Llamada a getCategorias() para recuperar categorías del usuario: " + idUsuario);
-    model.CategoriaVideoYoutube.findAll({where:busqueda,include:[{model:model.VideoYoutube}]}).then(function(categ){
-        
-       console.log("Num categorias recuperadas: " + categ.length);
-       res.render("videos/categorias",{errors:[],categorias:categ});
-        
-    }).catch(function(err){
-        console.log("Error al recuperar las categorias de vídeos: " + err.message); 
-        next(err);
-    });
-};
 
 
 /**
@@ -126,20 +169,20 @@ exports.newCategoria = function(req,res,next){
   * @param next: Objeto next
   */
 exports.saveCategoria = function(req,res,next){
-    
+
     var idUsuario = req.session.user.id;
     var parametros = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
-        UserId: idUsuario 
+        UserId: idUsuario
     };
-    
+
     var categoria = model.CategoriaVideoYoutube.build(parametros);
     categoria.save().then(function(){
-        
+
         console.log("Categoría de vídeo dada de alta");
         res.redirect("/videos/categorias");
-        
+
     }).catch(function(err){
         console.log("Error al dar de alta una categoría de vídeo en BD: " + err.message);
         next(err);
@@ -148,61 +191,44 @@ exports.saveCategoria = function(req,res,next){
 
 
 
-/**
-  * Permite eliminar una determinada categoría de vídeo usuario
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.destroyCategoria = function(req,res,next){
-    var categoria = req.CategoriaVideo;
-    
-    categoria.destroy().then(function(){
-        console.log("Categoría de vídeo eliminada");
-        res.redirect("/videos/categorias");
-        
-    }).catch(function(err){
-        console.log("Error al eliminar una determinada categoría de vídeo: " + err.message);
-        next(err);
-    });
-};
+
 
 
 /**
-  * Comprueba si una determinada categoria tiene asignada algún vídeo 
+  * Comprueba si una determinada categoria tiene asignada algún vídeo
   * @param res: Objeto de tipo response
   * @param req: Objeto de tipo request
-  * @param next: Objeto de tipo next 
+  * @param next: Objeto de tipo next
   */
 exports.videosConCategoria = function(req,res,next) {
     console.log("videosConCategoria =====>");
-    
+
     var idCategoria = req.CategoriaVideo.id;
     var busqueda = {
         where: [{CategoriaVideoYoutubeId:idCategoria}]
     };
-    
+
     model.VideoYoutube.count(busqueda).then(function(num){
         console.log("Hay " + num + " vídeos de la categoria de id " + idCategoria);
-        
+
         var respuesta = {
             status:0,
             descStatus: ''
         }
-        
-        if(num>0) { 
+
+        if(num>0) {
             // La categoría tiene vídeos asignados
             respuesta.status = 1;
             respuesta.descStatus = 'No se puede eliminar la categoría puesto que tiene vídeos asignados';
-            
+
         } else
-        if(num==0) { 
+        if(num==0) {
             respuesta.status=0;
             respuesta.descStatus = 'La categoría no tiene vídeos asignados';
-        }    
-        
+        }
+
         devolverSalida(res,respuesta);
-        
+
     }).catch(function(err){
         console.log("Error al contar videos de la categoria de id " + idCategoria + " : " + err.message);
         next(err);
@@ -210,36 +236,6 @@ exports.videosConCategoria = function(req,res,next) {
 };
 
 
-/**
-  * Devuelve la salida en formato JSON. Es utilizada por la función saveVideo
-  * @param res: Objeto de tipo Response
-  * @param respuesta: Objeto que contiene la respuesta y que se 
-  *        convierte a JSON
-  */
-function devolverSalida(res,respuesta) { 
-    console.log("===========> Devolviendo: " + JSON.stringify(respuesta));
-    res.write(JSON.stringify(respuesta));
-    res.end(); 
-};
-
-
-
-
-exports.getCategoriasUsuario = function(idUsuario,success){
-
-    var busqueda = {
-        UserId: idUsuario 
-    };
-    
-    model.CategoriaVideoYoutube.findAll({where:busqueda}).then(function(categ){
-        
-       success(categ,null);
-        
-    }).catch(function(err){
-        console.log("getCategoriasUsuario(): Error al recuperar las categorias de vídeos: " + err.message); 
-        success(null,err);
-    });
-};
 
 
 exports.getCategoriasUsuarioConVideos = function(idUsuario,success){
@@ -247,15 +243,13 @@ exports.getCategoriasUsuarioConVideos = function(idUsuario,success){
     var busqueda = {
         UserId: idUsuario
     };
-    
+
     model.CategoriaVideoYoutube.findAll({where:busqueda,include:[{model:model.VideoYoutube}]}).then(function(categ){
-        
+
        success(categ,null);
-        
+
     }).catch(function(err){
-        console.log("getCategoriasUsuario(): Error al recuperar las categorias de vídeos: " + err.message); 
+        console.log("getCategoriasUsuario(): Error al recuperar las categorias de vídeos: " + err.message);
         success(null,err);
     });
 };
-
-

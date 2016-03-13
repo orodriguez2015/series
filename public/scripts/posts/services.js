@@ -107,10 +107,6 @@ angular.module('gestor')
 
 
 
-
-
-
-
 /***********************************************************************/
 /*********************** AuthenticationService *************************/
 /***********************************************************************/
@@ -145,5 +141,51 @@ angular.module('gestor')
     }
 
     return salida;
+
+}])
+
+
+/**************************************************************/
+/*********************** YoutubeService  **********************/
+/**************************************************************/
+.service('youtubeService',['$resource','baseUrl', function($resource,baseUrl) {
+
+    /**
+      * Función que devuelve el $resource con la conexión al API de Youtube para
+      * poder visualizar vídeos
+      * Para obtener los vídeos se hace uso del método get
+      **/
+    this.searchVideos = function() {
+        // Se devuelve el recurso de conexión al API de google que
+        // permite realizar búsqueda de vídeos en youtube
+        return $resource('https://www.googleapis.com/youtube/v3/search',null,{'get': {method:'GET'}});
+    };
+
+
+    /**
+      * Función que permite guardar un determinado vídeo como favorito de un
+      * determinado usuario
+      * @param id (Integer): Id del vídeo
+      */
+    this.video = function(id) {
+        return $resource(baseUrl + "videos",null,{'save':{method:'POST'}});
+
+    };
+
+}])
+
+
+/****************************************************************************/
+/*********************** CategoriaVideoYoutubeService  **********************/
+/****************************************************************************/
+.service('categoriaVideoYoutubeService',['$resource','baseUrl', function($resource,baseUrl) {
+
+    /**
+      * Función que devuelve el $resource con la conexion al API REST de
+      * categorías de vídeos
+      */
+    this.categorias = function() {
+        return $resource(baseUrl + "videos/categorias/:id",null,{'get':{method:'GET'},'delete':{method:'DELETE'}});
+    };
 
 }]);

@@ -110,6 +110,18 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
             })
 
 
+            .state('app.categoriasyoutube', {
+                module: 'private',
+                url:'categoriasYoutube',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/videos/categorias.html',
+                        controller  : 'CategoriasVideoYoutubeController'
+                    }
+                }
+            })
+
+
 
             .state('app.login', {
                 module: 'public',

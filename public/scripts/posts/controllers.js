@@ -149,8 +149,6 @@ angular.module('gestor')
         };
 
         $scope.newPost = function() {
-            console.log("titulo: " + $scope.post.titulo + ", desc: " + $scope.post.descripcion);
-
 
             $scope.post.descripcion = $('#descripcion').val();
 
@@ -159,7 +157,6 @@ angular.module('gestor')
                 postService.getPosts().save($scope.post).$promise.then(
                     // success action
                     function(response) {
-                        console.log("alta de post realizada");
                         MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Se ha dado de alta la entrada en blog correctamente");
                         // Se vacía los campos de formulario
                         $scope.post.titulo      = '';
@@ -170,7 +167,6 @@ angular.module('gestor')
                     },
                     // error action
                     function(response) {
-                        console.log("respuesta: " + JSON.stringify(response));
                         MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido dar del alta el post: " + response.data);
                     }
                 );
@@ -450,7 +446,6 @@ angular.module('gestor')
       * cambios en la base de datos
       */
     $scope.editarUsuario = function() {
-       console.log("$scope.usuario: " + JSON.stringify($scope.usuario));
 
         userServiceCheck.usuario().update({id:$scope.usuario.id},$scope.usuario).$promise.then(
             // success action
@@ -481,7 +476,6 @@ angular.module('gestor')
         // success action
         function(response) {
             $scope.contador =1
-            console.log("contador: " + $scope.contador);
             $scope.contador++;
             $scope.users = response;
 
@@ -539,7 +533,7 @@ angular.module('gestor')
 /******************************************************************/
 /********************** VideoController ***************************/
 /******************************************************************/
-.controller('VideoController', ['$scope','$state','youtubeService','$http','$resource', function($scope,$state,youtubeService,$http,$resource) {
+.controller('VideoController', ['$scope','youtubeService', function($scope,youtubeService) {
 
     console.log("VideoController");
 
@@ -581,7 +575,6 @@ angular.module('gestor')
               maxResults: $scope.numero,
               pageToken: '',
               part: 'snippet',
-              //fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle,nextPageToken',
               q: $scope.busqueda,
               regionCode: "es",
               order: "viewCount"
@@ -591,7 +584,6 @@ angular.module('gestor')
         // Se buscan los vídeos en el API de Youtube
         youtubeService.searchVideos().get(params).$promise.then(
             function(data) {
-                console.log(JSON.stringify(data.items));
                 $scope.videos = data.items;
                 //resetVideoHeight();
             },
@@ -612,10 +604,16 @@ angular.module('gestor')
     };
 
 
+    /**
+      * Función que es invocada cuando se pretende guardar un vídeo como favorito
+      * @param id (int): Id del vídeo
+      * @param titulo (String): Título del vídeo
+      * @param urlImagen (String): URL de la imagen
+      * @param descripcionVideo (String): Descripción del vídeo
+      * @param canalId (String): Id del canal
+      * @param tituloCanal (String): Descripción del canal
+      */
     $scope.saveVideo = function(id,titulo,urlImagen,descripcionVideo,canalId,tituloCanal) {
-      console.log("saveVideo id: " + id + ",titulo: " + titulo + ",tituloCanal: " + tituloCanal + ",url: " + urlImagen);
-      console.log("descripcionVideo: " + descripcionVideo);
-
 
       var param = {
         videoId: id,
@@ -644,18 +642,62 @@ angular.module('gestor')
           }
       );
 
-      //var idVideo     = req.body.videoId; // Id vídeo
-      //var idCanal     = req.body.canalId; // Id canal
-      //var descCanal   = req.body.descCanal; // Descripción del canal
-      //var titulo      = req.body.titulo;   // Título
-      //var descripcion = req.body.descripcion; // Descripción
-      //var urlImagen   = req.body.urlImagen;  // Url imagen vídeo
+    }// saveVideo
 
 
-
-    }
-
+}])
 
 
+/**********************************************************************************/
+/********************** CategoriaVideoYoutubeController ***************************/
+/**********************************************************************************/
+.controller('CategoriasVideoYoutubeController', ['$scope','categoriaVideoYoutubeService','$state', function($scope,categoriaVideoYoutubeService,$state) {
+
+  // Variable que contiene las categorías
+  $scope.categorias;
+
+
+  // Se recupera las categorías de vídeo del servidor
+  categoriaVideoYoutubeService.categorias().query().$promise.then(
+      // Success action
+      function(categorias) {
+          $scope.categorias = categorias;
+          console.log("num categorias: " + $scope.categorias.length);
+      },
+
+      // Error action
+      function(error) {
+        console.log("Error al recuperar categorias: " + error.message);
+        MessagesArea.showMessageError("Error al recuperar las diferentes categorías");
+      }
+  );
+
+
+  /**
+    * Función que es invocada cuando se desea eliminar una categoría
+    * @param id (Integer): Identificador de una categoría
+    */
+  $scope.destroyCategoria = function(id) {
+
+    bootbox.confirm('¿Desea eliminar la categoría?', function(result) {
+      if(result) {
+        categoriaVideoYoutubeService.categorias().delete({id:id}).$promise.then(
+            // Success action
+            function(data) {
+                if(data.status==0) {
+                  // Se recarga el state actual
+                  $state.go($state.current, {}, {reload: true});
+
+                }
+            },
+            // Error action
+            function (error) {
+                MessagesArea.showMessageError("Error al eliminar la categoría seleccionada");
+            }
+        );
+      }
+
+    });
+  }
 
 }]);

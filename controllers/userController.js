@@ -21,7 +21,7 @@ exports.load = function(req,res,next,userId) {
   model.User.find({
       where: {id: Number(userId)}
 
-    }).then(function (user) { 
+    }).then(function (user) {
       console.log('user_controller.load() cargando el usuario de nombre ' + user.nombre);
       req.User = user;
       next();
@@ -33,7 +33,7 @@ exports.load = function(req,res,next,userId) {
 
 
 /**
-  * Función que comprueba si ya existe algún usuario en la base de datos, con un 
+  * Función que comprueba si ya existe algún usuario en la base de datos, con un
   * determinado login o email
   * @param req: Objeto request
   * @param res: Objeto response
@@ -45,7 +45,7 @@ exports.exists = function(req,res,next){
 
   var email = req.body.email;
   var login = req.body.login;
-    
+
     console.log("email: " + email + ", login: " + login);
 
   var salida = {
@@ -56,7 +56,7 @@ exports.exists = function(req,res,next){
 
 
   if(email!=undefined && email!='' && login!=undefined && login!='') {
-    
+
     var continuar = true;
     aux.existeLogin(login,function(err,user){
       console.log("Verificando login");
@@ -81,8 +81,8 @@ exports.exists = function(req,res,next){
 
       if(salida.status==0) {
         // Sino existe error al verificar al login del usuario, se procede
-        // a comprobar la existencia de un usuario con un email determinado 
-        aux.existeEmail(email,function(err,user) { 
+        // a comprobar la existencia de un usuario con un email determinado
+        aux.existeEmail(email,function(err,user) {
           console.log("Verificando email")
           if(err) {
             console.log("Verificando email. Error tecnico: " + err.message);
@@ -94,7 +94,7 @@ exports.exists = function(req,res,next){
               console.log("Verificando email. Existe usuario con el email")
               // Existe un usuario en la BD con el email
               salida.email = true;
-            } else { 
+            } else {
               console.log("Verificando email. No existe usuario con el email");
               salida.email  = false;
             }
@@ -106,7 +106,7 @@ exports.exists = function(req,res,next){
           res.end();
 
         });
-      } else { 
+      } else {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(salida));
         res.end();
@@ -135,10 +135,10 @@ exports.create = function(req,res,next) {
 
     console.log("login: " + login + ",password: " + password + ",nombre: " + nombre
     + ",apellido1: " + apellido1 +  ",apellido2 " + apellido2 + ", email: " + email);
-    
+
     var encriptar = require('../utilidades/encriptacion.js');
     var passMd5 = encriptar.encriptarPassword(password);
-    
+
     // Se crea el objeto User que todavía no se trata de un objeto persistente
     var user = model.User.build({
       login: login,
@@ -148,8 +148,8 @@ exports.create = function(req,res,next) {
       apellido2: apellido2,
       email: email
     });
-    
-    
+
+
     // Se procede a dar de alta
     user.save().then(function(){
         var respuesta = {
@@ -160,7 +160,7 @@ exports.create = function(req,res,next) {
         res.write(JSON.stringify(respuesta));
         res.end();
 
-    }).catch(function(error) { 
+    }).catch(function(error) {
         var respuesta = {
             status: 1
         };
@@ -168,7 +168,7 @@ exports.create = function(req,res,next) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(respuesta));
         res.end();
-    });    
+    });
 };
 
 
@@ -181,14 +181,14 @@ exports.create = function(req,res,next) {
   */
 exports.getUsers = function(req,res,next){
 
-  model.User.findAll({order:[['nombre', 'ASC'],['apellido1','ASC'],['apellido2', 'ASC']]}).then(function(users) { 
-    
+  model.User.findAll({order:[['nombre', 'ASC'],['apellido1','ASC'],['apellido2', 'ASC']]}).then(function(users) {
+
       res.writeHead(200, {"Content-Type": "application/json"});
       res.write(JSON.stringify(users));
-      res.end();  
-    
-  }).catch(function(error) { 
-      console.log("Error al recuperar el listado de usuarios: " + error.message);  
+      res.end();
+
+  }).catch(function(error) {
+      console.log("Error al recuperar el listado de usuarios: " + error.message);
       res.status(500).send("Error al recuperar los usuarios de la BBDD: " + error.message);
   });
 };
@@ -208,20 +208,20 @@ exports.delete = function(req,res,next){
   var user = req.User;
   console.log("Se va a eliminar el usuario con nombre: " + user.nombre);
 
-  req.User.destroy().then(function(users) { 
+  req.User.destroy().then(function(users) {
       console.log("Usuario eliminado");
       var respuesta = {
           status: 0
       };
-      
+
       res.writeHead(200, {"Content-Type": "application/json"});
       res.write(JSON.stringify(respuesta));
-      res.end();  
+      res.end();
 
-  }).catch(function(error) { 
+  }).catch(function(error) {
       console.log("Error al eliminar el usuario de id " + req.User.id + ": " + error.message);
       res.status(500).send("Error al eliminar el usuario de id " + req.User.id + ": " + error.message);
-    
+
   });
 };
 
@@ -236,11 +236,11 @@ exports.delete = function(req,res,next){
   */
 exports.getUser = function(req,res,next){
   var user = req.User;
-    
+
   res.writeHead(200, {"Content-Type": "application/json"});
   res.write(JSON.stringify(user));
-  res.end();  
-  
+  res.end();
+
 };
 
 
@@ -255,7 +255,7 @@ exports.getUser = function(req,res,next){
 exports.update = function(req,res,next) {
     // Se recupera el usuario cargado previamente en la función load de autoload
     var user = req.User;
-    
+
     var id        = req.body.id;
     var login     = req.body.login;
     var password  = req.body.password;
@@ -263,14 +263,14 @@ exports.update = function(req,res,next) {
     var apellido1 = req.body.apellido1;
     var apellido2 = req.body.apellido2;
     var email     = req.body.email;
-    
-    
+
+
     console.log("id: " + id + ",login: " + login + ",pasword: " + password + ",nombre: " + nombre + ",apellido1: " + apellido1 + ",apellido2: " + apellido2 + ",email: " + email);
-    
+
     // Se obtiene el hash SHA1 de la password, de modo que se almacenará en base de datos
     var encriptar = require('../utilidades/encriptacion.js');
     var passMd5 = encriptar.encriptarPassword(password);
-    
+
     console.log("********* El usuario de la sesión : " + user.id);
     user.login = login;
     user.password = passMd5;
@@ -278,28 +278,24 @@ exports.update = function(req,res,next) {
     user.apellido1 = apellido1;
     user.apellido2 = apellido2;
     user.email = email;
-    
-    
+
+
     user.save().then(function(){
-        
+
         var respuesta = {
             status: 0
         };
-        
+
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(respuesta));
-        res.end();  
-        
+        res.end();
+
     }).catch(function(err){
         console.log("Error al actualizar los datos del usuario en la base de datos: " + req.User.id + ": " + error.message);
         res.status(500).send("Error al actualizar los datos del usuario de id " + req.User.id + ": " + error.message);
     });
-    
+
 };
-
-
-
-/*****************************************************/
 
 
 
@@ -318,7 +314,7 @@ exports.existeLoginEmailOtroUsuario = function(req,res,next){
   var email = req.body.email;
   var login = req.body.login;
   var idUsuario = req.body.id;
-    
+
   var salida = {
       status: -2
   };
@@ -332,67 +328,16 @@ exports.existeLoginEmailOtroUsuario = function(req,res,next){
             console.log("salida.status: " + salida.status);
             res.writeHead(200, {"Content-Type": "application/json"});
             res.write(JSON.stringify(salida));
-            res.end();  
-            
+            res.end();
+
         }
-        else  
-        if(err) { 
-          console.log("Se ha producido un error al realizar la consulta: " + err.message);   
+        else
+        if(err) {
+          console.log("Se ha producido un error al realizar la consulta: " + err.message);
         }
-        
-          
-          
-          
-        
-          
+
      });
-  
+
   }//if
-  else console.log("Parámetros incorrectos"); 
+  else console.log("Parámetros incorrectos");
 };
-
-
-/**
-  * POST /users/edit . Función que atiende la petición de edición de un determimado usuario del sistema
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  *
-exports.update = function(req,res,next) {
-    // Se recupera el usuario cargado previamente en la función load de autoload
-    var user = req.User;
-    
-    var id = req.body.id;
-    var login = req.body.login;
-    var password = req.body.password;
-    var nombre = req.body.nombre;
-    var apellido1 = req.body.apellido1;
-    var apellido2 = req.body.apellido2;
-    var email = req.body.email;
-    
-    
-    console.log("id: " + id + ",login: " + login + ",pasword: " + password + ",nombre: " + nombre + ",apellido1: " + apellido1 + ",apellido2: " + apellido2 + ",email: " + email);
-    
-    // Se obtiene el hash SHA1 de la password, de modo que se almacenará en base de datos
-    var encriptar = require('../utilidades/encriptacion.js');
-    var passMd5 = encriptar.encriptarPassword(password);
-    
-    console.log("********* El usuario de la sesión : " + user.id);
-    user.login = login;
-    user.password = passMd5;
-    user.nombre = nombre;
-    user.apellido1 = apellido1;
-    user.apellido2 = apellido2;
-    user.email = email;
-    
-    
-    user.save().then(function(){
-        console.log("Usuario con id "  + id + " actualizado");
-        res.redirect("/users");
-        
-    }).catch(function(err){
-        console.log("========> ERROR AL ACTUALIZAR UN USUARIO: " + err.message); 
-        next(err);
-    });
-    
-}; */

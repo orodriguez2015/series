@@ -8,7 +8,7 @@ var loginController         = require('../controllers/loginController.js');
 var capituloSerieController = require('../controllers/capituloSerie_controller.js');
 var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSerie_controller.js');
 var videoController          = require('../controllers/videoController.js');
-var categoriaVideoController = require('../controllers/categoriaVideo_controller.js');
+var categoriaVideoController = require('../controllers/categoriaVideoController.js');
 var postController           = require('../controllers/postController.js');
 
 
@@ -104,9 +104,7 @@ router.get("/videos/usuario",loginController.loginRequired,videoController.getVi
 router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
 
 
-// GET /videos/categorias . Carga la pantalla que muestra las categorias de vídeos de youtube
-// de un determinado usuario
-router.get("/videos/categorias",loginController.loginRequired,categoriaVideoController.getCategorias);
+
 
 // GET /videos/categorias/alta. Carga la pantalla de alta de una nueva categoria para poder asignar
 // a los vídeos de youtube
@@ -115,8 +113,6 @@ router.get("/videos/categorias/alta",loginController.loginRequired,categoriaVide
 // POST /videos/categoria. Permite dar de alta una nueva categoría de vídeos de un usuario
 router.post("/videos/categoria",loginController.loginRequired,categoriaVideoController.saveCategoria);
 
-// DELETE /videos/categoria/:categoriaVideoId. Permite eliminar una determinada categoría de vídeos
-router.delete("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.destroyCategoria);
 
 // GET /videos/categorias/:categoriaVideoId. Petición de la vista de edición de una categoría de vídeo
 router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.edit);
@@ -145,6 +141,13 @@ router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequ
 // POST /videos. Graba un vídeo como favorito de un usuario
 router.post("/videos",loginController.loginRequired,videoController.saveVideo);
 
+// GET /videos/categorias . Carga la pantalla que muestra las categorias de vídeos de youtube
+// de un determinado usuario
+router.get("/videos/categorias",loginController.loginRequired,categoriaVideoController.getCategorias);
+
+
+// DELETE /videos/categoria/:categoriaVideoId. Permite eliminar una determinada categoría de vídeos
+router.delete("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.destroyCategoria);
 
 /********************************************************************************/
 /*************** END: API RESTFULL PARA LA GESTIÓN DE VIDEOS     ****************/
