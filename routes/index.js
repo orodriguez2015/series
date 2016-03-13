@@ -110,9 +110,6 @@ router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoContro
 // a los vídeos de youtube
 router.get("/videos/categorias/alta",loginController.loginRequired,categoriaVideoController.newCategoria);
 
-// POST /videos/categoria. Permite dar de alta una nueva categoría de vídeos de un usuario
-router.post("/videos/categoria",loginController.loginRequired,categoriaVideoController.saveCategoria);
-
 
 // GET /videos/categorias/:categoriaVideoId. Petición de la vista de edición de una categoría de vídeo
 router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.edit);
@@ -145,6 +142,9 @@ router.post("/videos",loginController.loginRequired,videoController.saveVideo);
 // de un determinado usuario
 router.get("/videos/categorias",loginController.loginRequired,categoriaVideoController.getCategorias);
 
+
+// POST /videos/categoria. Permite dar de alta una nueva categoría de vídeos de un usuario
+router.post("/videos/categorias",loginController.loginRequired,categoriaVideoController.saveCategoria);
 
 // DELETE /videos/categoria/:categoriaVideoId. Permite eliminar una determinada categoría de vídeos
 router.delete("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.destroyCategoria);

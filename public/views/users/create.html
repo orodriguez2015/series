@@ -16,81 +16,81 @@
   <!-- Main content -->
   <section class="content">
 
- 
- <form name="altaUsuarioForm" role="form" novalidate ng-submit="altaUsuario()">   
+
+ <form name="altaUsuarioForm" role="form" novalidate ng-submit="altaUsuario()">
  <div class="box box-primary">
     <div class="box-header with-border">
       <div class="alert alert-warning" role="alert" id="alert" style="display:none"></div>
       <h3 class="box-title">Datos generales del usuario</h3>
     </div><!-- /.box-header -->
-    
+
       <div class="box-body">
 
-          
+
           <!-- Nombre -->
          <div class="form-group" ng-class="{'has-error':altaUsuarioForm.nombre.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.nombre.$touched)}">
           <label for="Nombre">Nombre</label>
           <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introduzca el nombre" required ng-model="usuario.nombre">
-            
+
          <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.nombre.$touched">
-             
+
              <span ng-show="altaUsuarioForm.nombre.$error.required">
                 El nombre es un campo obligatorio
-             </span>     
-         </span>     
-             
-             
+             </span>
+         </span>
+
+
         </div>
-          
-         
-        
+
+
+
         <!-- 1º apellido -->
         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.apellido1.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.apellido1.$touched)}">
           <label for="Nombre">Primer apellido</label>
           <input type="text" class="form-control" id="apellido1" name="apellido1" placeholder="Introduzca el primer apellido" required ng-model="usuario.apellido1">
-            
+
           <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.apellido1.$touched">
-              
+
             <span ng-show="altaUsuarioForm.apellido1.$error.required">
                 El primer apellido es un campo obligatorio
-            </span>      
-          </span>    
-                 
+            </span>
+          </span>
+
         </div>
-        
-          
-          
+
+
+
         <!-- 2º apellido -->
         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.apellido2.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.apellido2.$touched)}">
-          
+
           <label for="Nombre">Segundo apellido</label>
           <input type="text" class="form-control" id="apellido2" name="apellido2" placeholder="Introduzca el segundo apellido" required ng-model="usuario.apellido2">
-             
+
          <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.apellido2.$touched">
              <span ng-show="altaUsuarioForm.apellido2.$error.required">El segundo apellido es un campo obligatorio.</span>
-                
-          </span>           
+
+          </span>
         </div>
-          
-        
+
+
         <div class="form-group" ng-class="{'has-error':(altaUsuarioForm.email.$error.email && altaUsuarioForm.email.$touched) ||  (altaUsuarioForm.email.$error.required &&  ( altaUsuarioForm.$submitted || altaUsuarioForm.email.$touched))}">
           <label for="exampleInputEmail1">Email</label>
           <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca el mail" required ng-model="usuario.email">
-            
-            
-        <span class="help-block" ng-show="altaUsuarioForm.email.$error.email || altaUsuarioForm.$submitted || altaUsuarioForm.email.$touched">    
+
+
+        <span class="help-block" ng-show="altaUsuarioForm.email.$error.email || altaUsuarioForm.$submitted || altaUsuarioForm.email.$touched">
             <span ng-show="altaUsuarioForm.email.$error.required">El campo es obligatorio.</span>
-         </span> 
-            
-        <span class="help-block" ng-show="altaUsuarioForm.email.$error.email">    
-        
+         </span>
+
+        <span class="help-block" ng-show="altaUsuarioForm.email.$error.email">
+
             <span ng-show="altaUsuarioForm.email.$error.email">Formato de email incorrecto.</span>
-         </span>     
-            
+         </span>
+
         </div>
-       
+
       </div><!-- /.box-body -->
-    
+
    </div>
 
 
@@ -99,37 +99,37 @@
     <div class="box-header with-border">
       <h3 class="box-title">Cuenta del usuario</h3>
     </div><!-- /.box-header -->
-    
+
       <div class="box-body">
-          
+
           <!-- Login -->
           <div class="form-group" ng-class="{'has-error':altaUsuarioForm.login.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.login.$touched)}">
-          
+
           <label for="Nombre">Login</label>
           <input type="text" class="form-control" id="login" name="login" placeholder="Introduzca el login" required ng-model="usuario.login">
-             
-          <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.login.$touched">      
-              
+
+          <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.login.$touched">
+
             <span ng-show="altaUsuarioForm.login.$error.required">El login es un campo obligatorio.     </span>
-            
-          </span>            
-                 
+
+          </span>
+
         </div>
 
-        
+
         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.password.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.password.$touched)}">
           <label for="exampleInputPassword1">Password</label>
           <input type="password" class="form-control" id="password" name="password" placeholder="Introduzca el password" required ng-model="usuario.password">
-            
+
            <span class="help-block" ng-show="altaUsuarioForm.$submitted || altaUsuarioForm.password.$touched">
-               
+
                <span ng-show="altaUsuarioForm.password.$error.required">
                     La password es un campo obligatorio
                 </span>
-          </span>       
-            
+          </span>
+
         </div>
-        
+
       </div><!-- /.box-body -->
 
       <div class="box-footer">
@@ -138,15 +138,15 @@
             <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar"/>
          </a>
       </div>
-    
+
    </div>
-   </form>
+
 
 
   <div id="msgError" class="callout callout-danger lead" style="display:none;">
-   
+
   </div>
 
-  
+
   </section><!-- /.content -->
 </div><!-- /.content-wrapper -->

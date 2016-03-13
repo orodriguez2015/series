@@ -122,6 +122,18 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
             })
 
 
+            .state('app.createcategoriavideo', {
+                module: 'private',
+                url:'createCategoria',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/videos/create.html',
+                        controller  : 'NewCategoriaVideoController'
+                    }
+                }
+            })
+
+
 
             .state('app.login', {
                 module: 'public',

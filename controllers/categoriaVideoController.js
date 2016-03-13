@@ -93,6 +93,40 @@ function devolverSalida(res,respuesta) {
 
 
 
+
+/**
+  * Alta de una categoría de vídeo de youtube de un determinado usuario
+  * @param req: Objeto request
+  * @param res: Objeto response
+  * @param next: Objeto next
+  */
+exports.saveCategoria = function(req,res,next){
+
+    var idUsuario = req.session.user.id;
+    var parametros = {
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        UserId: idUsuario
+    };
+
+    console.log("nombre: " + req.body.nombre + ", descripcion: " + req.body.descripcion);
+
+    var categoria = model.CategoriaVideoYoutube.build(parametros);
+    categoria.save().then(function(){
+
+        console.log("Categoría de vídeo dada de alta");
+        var resultado = {
+          status: 0
+        };
+
+        devolverSalida(res,resultado)
+
+    }).catch(function(err){
+        console.log("Error al dar de alta una categoría de vídeo en BD: " + err.message);
+        res.status(500).send("Error al dar de alta una categoría en BD: " + err.message);
+    });
+};
+
 /****************************************************/
 
 
@@ -159,39 +193,6 @@ exports.update = function(req,res,next){
 exports.newCategoria = function(req,res,next){
     res.render("videos/altaCategoria",{errors:[]});
 };
-
-
-
-/**
-  * Alta de una categoría de vídeo de youtube de un determinado usuario
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
-  */
-exports.saveCategoria = function(req,res,next){
-
-    var idUsuario = req.session.user.id;
-    var parametros = {
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        UserId: idUsuario
-    };
-
-    var categoria = model.CategoriaVideoYoutube.build(parametros);
-    categoria.save().then(function(){
-
-        console.log("Categoría de vídeo dada de alta");
-        res.redirect("/videos/categorias");
-
-    }).catch(function(err){
-        console.log("Error al dar de alta una categoría de vídeo en BD: " + err.message);
-        next(err);
-    });
-};
-
-
-
-
 
 
 /**

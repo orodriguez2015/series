@@ -656,13 +656,11 @@ angular.module('gestor')
   // Variable que contiene las categorías
   $scope.categorias;
 
-
   // Se recupera las categorías de vídeo del servidor
   categoriaVideoYoutubeService.categorias().query().$promise.then(
       // Success action
       function(categorias) {
           $scope.categorias = categorias;
-          console.log("num categorias: " + $scope.categorias.length);
       },
 
       // Error action
@@ -698,6 +696,45 @@ angular.module('gestor')
       }
 
     });
+  }
+
+}])
+
+
+/**********************************************************************************/
+/**********************   NewCategoriaVideoController   ***************************/
+/**********************************************************************************/
+.controller('NewCategoriaVideoController', ['$scope','categoriaVideoYoutubeService','$state', function($scope,categoriaVideoYoutubeService,$state) {
+
+  // Variable que contiene el nombre de una categoria (Alta de categoría)
+  $scope.nombre;
+  // Variable que contiene la descripción de una categoria (Alta de categoría)
+  $scope.descripcion;
+
+
+  /**
+    * Función que se invoca cuando un usuario desea almacenar una
+    * categoría
+    */
+  $scope.saveCategoria = function() {
+
+    categoriaVideoYoutubeService.categorias().save({nombre:$scope.nombre,descripcion:$scope.descripcion}).$promise.then(
+      // Success action
+      function(data) {
+          MessagesArea.showMessageSuccess("Categoría grabada correctamente");
+      },
+
+      // Error action
+      function(error) {
+        MessagesArea.showMessageError("Error al grabar la categoría: " + error.message);
+      }
+
+    );
+  }
+
+
+  $scope.volver = function() {
+    $state.go('app.categoriasyoutube');
   }
 
 }]);
