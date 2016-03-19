@@ -670,6 +670,21 @@ angular.module('gestor')
       }
   );
 
+  /**
+    * Función privada que devuelve el número de vídeos que están asociados
+    * a una determinada categoría
+    * @param id (Integer): Id de la categoría
+    */
+  $scope.buscarNumVideosCategoria = function(id) {
+    var num = 0;
+    for(var i=0;i<$scope.categorias.length;i++) {
+      if($scope.categorias[i].id==id) {
+        num = $scope.categorias[i].videoYoutubes.length;
+      }
+    }// for
+
+    return num;
+  },
 
   /**
     * Función que es invocada cuando se desea eliminar una categoría
@@ -677,26 +692,43 @@ angular.module('gestor')
     */
   $scope.destroyCategoria = function(id) {
 
-    bootbox.confirm('¿Desea eliminar la categoría?', function(result) {
-      if(result) {
-        categoriaVideoYoutubeService.categorias().delete({id:id}).$promise.then(
-            // Success action
-            function(data) {
-                if(data.status==0) {
-                  // Se recarga el state actual
-                  $state.go($state.current, {}, {reload: true});
+    MessagesArea.clearMessagesArea();
+    if($scope.buscarNumVideosCategoria(id)>=1){
+      MessagesArea.showMessageError("No se permite eliminar la categoría puesto que tiene vídeos asociados");
+    } else {
 
-                }
-            },
-            // Error action
-            function (error) {
-                MessagesArea.showMessageError("Error al eliminar la categoría seleccionada");
-            }
-        );
-      }
+      bootbox.confirm('¿Desea eliminar la categoría?', function(result) {
+        if(result) {
+          categoriaVideoYoutubeService.categorias().delete({id:id}).$promise.then(
+              // Success action
+              function(data) {
+                  if(data.status==0) {
+                    // Se recarga el state actual
+                    $state.go($state.current, {}, {reload: true});
 
-    });
-  }
+                  }
+              },
+              // Error action
+              function (error) {
+                  MessagesArea.showMessageError("Error al eliminar la categoría seleccionada");
+              }
+          );
+        }
+      });
+   }
+
+  };
+
+
+  /**
+    * Función que es invocada cuando un usuario desea editar
+    * una determinada categoría
+    * @param idCategoria: Id de la categoria
+    */
+  $scope.loadEditCategoria = function(idCategoria) {
+    // Se hace una redirección al estado de edición de vídeo
+    $state.go("app.editCategoriaVideo",{id:idCategoria});
+  };
 
 }])
 
@@ -733,6 +765,63 @@ angular.module('gestor')
   }
 
 
+  $scope.volver = function() {
+    $state.go('app.categoriasyoutube');
+  }
+
+}])
+
+
+/**********************************************************************************/
+/**********************   EditCategoriaVideoController   ***************************/
+/**********************************************************************************/
+.controller('EditCategoriaVideoController', ['$scope','categoriaVideoYoutubeService','$stateParams','$state', function($scope,categoriaVideoYoutubeService,$stateParams,$state) {
+
+  // Variable que contiene el nombre de una categoria (Alta de categoría)
+  $scope.nombre;
+  // Variable que contiene la descripción de una categoria (Alta de categoría)
+  $scope.descripcion;
+  // Id de la categoría que se está editando
+  $scope.id = $stateParams.id;
+
+  // Se recupera la categoría del servidor
+  categoriaVideoYoutubeService.categorias().get({id:$stateParams.id}).$promise.then(
+      // Success action
+      function(data) {
+        $scope.nombre      = data.nombre;
+        $scope.descripcion = data.descripcion;
+      },
+
+      // Error action
+      function(error) {
+          MessagesArea.showMessageError("Se ha producido un error al recuperar la categoría: " + error.message);
+      }
+  );
+
+  /**
+    * Función que se invoca cuando un usuario desea almacenar una
+    * categoría
+    */
+  $scope.editCategoria = function() {
+
+    categoriaVideoYoutubeService.categorias().update({id:$scope.id},{nombre:$scope.nombre,descripcion:$scope.descripcion}).$promise.then(
+      // Success action
+      function(data) {
+          MessagesArea.showMessageSuccess("Categoría actualizada correctamente");
+      },
+
+      // Error action
+      function(error) {
+        MessagesArea.showMessageError("Se ha producido un error al actualizar la categoría: " + error.message);
+      }
+    );
+
+  }
+
+  /**
+    * Función invocada cuando el usuario desea volver
+    * hacia el listado de categorías
+    */
   $scope.volver = function() {
     $state.go('app.categoriasyoutube');
   }

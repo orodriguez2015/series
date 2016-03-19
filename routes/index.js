@@ -111,13 +111,6 @@ router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoContro
 router.get("/videos/categorias/alta",loginController.loginRequired,categoriaVideoController.newCategoria);
 
 
-// GET /videos/categorias/:categoriaVideoId. Petición de la vista de edición de una categoría de vídeo
-router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.edit);
-
-// PUT /videos/categorias/:categoriaVideoId. Petición de modificación de una determinada
-// categoría de vídeo
-router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.update);
-
 // POST /videos/categorias/comprobarExistenciaVideos/:categoriaVideoId. Petición para comprobar si
 // existen vídeos asignados a una determinada categoría.
 // @return: Se devuelve un JSON respuesta.status = 0 => La categoría no tiene vídeos
@@ -148,6 +141,14 @@ router.post("/videos/categorias",loginController.loginRequired,categoriaVideoCon
 
 // DELETE /videos/categoria/:categoriaVideoId. Permite eliminar una determinada categoría de vídeos
 router.delete("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.destroyCategoria);
+
+// GET /videos/categorias/:categoriaVideoId. Petición de la vista de edición de una categoría de vídeo
+router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.getCategoria);
+
+
+// PUT /videos/categorias/:categoriaVideoId. Petición de modificación de una determinada
+// categoría de vídeo
+router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.update);
 
 /********************************************************************************/
 /*************** END: API RESTFULL PARA LA GESTIÓN DE VIDEOS     ****************/

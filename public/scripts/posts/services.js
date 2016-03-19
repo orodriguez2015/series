@@ -185,7 +185,7 @@ angular.module('gestor')
       * categorías de vídeos
       */
     this.categorias = function() {
-        return $resource(baseUrl + "videos/categorias/:id",null,{'save':{method:'POST'},'get':{method:'GET'},'delete':{method:'DELETE'}});
+        return $resource(baseUrl + "videos/categorias/:id",null,{'save':{method:'POST'},'get':{method:'GET'},'delete':{method:'DELETE'},'update':{method:'PUT'}});
     };
 
 }]);

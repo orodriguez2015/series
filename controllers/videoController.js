@@ -92,7 +92,7 @@ exports.getVideosAlmacenados = function(req,res,next) {
 
 
     // Se recuperan todas las categorías de vídeos creadas por el usuario actual
-    var categoriaVideoController = require('./categoriaVideo_controller.js');
+    var categoriaVideoController = require('./categoriaVideoController.js');
     var categorias;
     var categoriasConVideos;
 

@@ -10,7 +10,8 @@ var model = require('../models/models.js');
 exports.load = function(req,res,next,categoriaVideoId){
 
     var busqueda = {
-        id: categoriaVideoId
+        id: categoriaVideoId,
+        UserId: req.session.user.id
     };
 
     model.CategoriaVideoYoutube.find({where:busqueda}).then(function(categoria){
@@ -127,8 +128,6 @@ exports.saveCategoria = function(req,res,next){
     });
 };
 
-/****************************************************/
-
 
 /**
   * Función que recupera una determinada categoría, y procede a renderizar la vista
@@ -138,11 +137,11 @@ exports.saveCategoria = function(req,res,next){
   * @param res: Objeto response
   * @param next: Objeto next
   */
-exports.edit = function(req,res,next){
+exports.getCategoria = function(req,res,next){
     var categoria = req.CategoriaVideo;
-    console.log('Edit categoria ' + categoria.id + ", nombre: " + categoria.nombre);
 
-    res.render("videos/editCategoria",{errors:[],categoria:categoria});
+    devolverSalida(res,categoria);
+    //res.render("videos/editCategoria",{errors:[],categoria:categoria});
 };
 
 
@@ -161,7 +160,6 @@ exports.update = function(req,res,next){
     var idUsuario   = req.session.user.id;
     var categoria   = req.CategoriaVideo;
 
-    console.log("request nombre: " + nombre + ", descripcion: " + descripcion);
     console.log('Se procede a editar la categoria de id' + categoria.id + " , nombre " + categoria.nombre + " y descripcion: " + categoria.descripcion);
 
     categoria.nombre      = req.body.nombre;
@@ -170,17 +168,28 @@ exports.update = function(req,res,next){
 
     categoria.save().then(function(){
 
-        console.log("Categoria de vídeo con id " + categoria.id + " editada");
-        res.redirect("/videos/categorias");
+        var respuesta = {
+          status:0
+        };
+
+        devolverSalida(res,respuesta);
 
     }).catch(function(err){
         console.log("Error al actualizar la categoria de id " + categoria.id + " en BD: " + err.message);
-        next(err);
+        res.status(500).send("Error al actualizar la categoria de id " + categoria.id + ": " +  err.message);
     });
 
-
-
 };
+
+
+
+/****************************************************/
+
+
+
+
+
+
 
 
 
