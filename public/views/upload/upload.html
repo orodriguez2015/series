@@ -1,0 +1,65 @@
+<!--
+<form method="POST" action="/upload" enctype="multipart/form-data">
+-->
+
+<form action="">
+ <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Upload
+      <small>Alta</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+      <li class="active">Upload de archivos</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+
+ <form name="altaUsuarioForm" role="form" novalidate ng-submit="altaUsuario()">
+ <div class="box box-primary">
+    <div class="box-header with-border">
+      <div class="alert alert-warning" role="alert" id="alert" style="display:none"></div>
+      <h3 class="box-title">Selección de archivos</h3>
+    </div><!-- /.box-header -->
+
+      <div class="box-body">
+
+
+          <!-- Nombre -->
+         <div class="form-group" ng-class="{'has-error':altaUsuarioForm.nombre.$error.required &&  (altaUsuarioForm.$submitted || altaUsuarioForm.nombre.$touched)}">
+          <label for="Nombre">Archivo</label>
+
+            <input type="file" file-model="archivo">
+
+        </div>
+
+      </div><!-- /.box-body -->
+
+      <div class="box-footer">
+        <button type="button" ng-click="enviar()" class="btn btn-primary">Enviar</button>
+
+        <input type="button" name="btnCancelar" id="btnCancelar" class="btn btn-primary" value="Cancelar"/>
+
+      </div>
+
+
+   </div>
+
+
+
+
+
+  <div id="msgError" class="callout callout-danger lead" style="display:none;">
+
+  </div>
+
+
+  </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+</form>

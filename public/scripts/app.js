@@ -134,6 +134,29 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
             })
 
 
+            .state('app.editCategoriaVideo', {
+                module: 'private',
+                url:'editCategoria/:id',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/videos/editCategoria.html',
+                        controller  : 'EditCategoriaVideoController'
+                    }
+                }
+            })
+
+
+            .state('app.upload', {
+                module: 'private',
+                url:'upload',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/upload/upload.html',
+                        controller  : 'UploadFileController'
+                    }
+                }
+            })
+
 
             .state('app.login', {
                 module: 'public',
@@ -156,11 +179,17 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
 // Esta función se ejecutará siempre, y se usará para comprobar si
 // un usuario está autenticado, sino lo está se hace una redirección a la pantalla
 // de login.
-.run(function($rootScope,$state,$cookieStore){
+.run(function($rootScope,$state,$cookieStore,$location){
+
+  $rootScope.$on('$locationChangeSuccess', function() {
+      $rootScope.actualLocation = $location.path();
+  });
+
 
     // Cuando se detecte el cambio de estado, entonces se comprueba si el usuario se ha
     // autenticado en la aplicación
     $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+
     if (toState.module === 'private' && ($cookieStore.get('conectado')==null || $cookieStore.get('conectado')==false)) {
         // Usuario no logueado, se hace una redirección hacia la pantalla de login
         e.preventDefault();

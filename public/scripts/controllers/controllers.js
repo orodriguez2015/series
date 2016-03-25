@@ -772,13 +772,6 @@ angular.module('gestor')
 }])
 
 
-
-.controller('UploadFileController', ['$scope','categoriaVideoYoutubeService', function($scope,categoriaVideoYoutubeService) {
-
-}])
-
-
-
 /**********************************************************************************/
 /**********************   EditCategoriaVideoController   ***************************/
 /**********************************************************************************/
@@ -832,5 +825,50 @@ angular.module('gestor')
   $scope.volver = function() {
     $state.go('app.categoriasyoutube');
   }
+
+}])
+
+
+/**********************************************************************************/
+/*************************   UploadFileController         *************************/
+/**********************************************************************************/
+
+.controller('UploadFileController', ['$scope','$http' ,function($scope,$http) {
+
+  $scope.enviar=function() {
+        var file = $scope.archivo;
+
+        console.log("file " + JSON.stringify(file));
+
+        if(file!=null && file!=undefined) {
+          var fd = new FormData();
+          fd.append('file', file);
+          $http.post('/upload', fd, {
+              transformRequest: angular.identity,
+              headers: {'Content-Type': undefined}
+              })
+              .success(function(response){
+                  //Guardamos la url de la imagen y hacemos que la muestre.
+
+                  MessagesArea.clearMessagesArea();
+                  if(response.status==0) {
+                    MessagesArea.showMessageSuccess("Archivo enviado al servidor");
+                  } else
+                  if(response.status==1){
+                    MessagesArea.showMessageError("No se ha podido copiar el archivo desde el directorio temporal al directorio de destino");
+                  } else {
+                    MessagesArea.showMessageError("No sido seleccionado ningún archivo");
+                  }
+                  //$scope.archivo=false;
+                  //$scope.img=true;
+                  console.log("Archivo enviado al servidor");
+              })
+              .error(function(response){
+                  console.log("Error al enviar el archivo: " + response.message);
+          });
+        } else {
+            MessagesArea.showMessageError("Es necesario que seleccione un archivo");
+        }
+  };
 
 }]);

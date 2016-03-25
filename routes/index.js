@@ -10,6 +10,7 @@ var usuarioVisualizaSerieController = require('../controllers/usuarioVisualizaSe
 var videoController          = require('../controllers/videoController.js');
 var categoriaVideoController = require('../controllers/categoriaVideoController.js');
 var postController           = require('../controllers/postController.js');
+var uploadController         = require('../controllers/uploadFileController.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -213,6 +214,21 @@ router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.u
 /********************************************************************************/
 /***************** END: API RESTFULL PARA EL MANEJO DE POSTS ********************/
 /********************************************************************************/
+
+
+
+/********************************************************************************/
+/********** BEGIN: API RESTFULL PARA EL UPLOAD DE FICHEROS    *******************/
+/********************************************************************************/
+
+// POST /upload. Petición de upload de un archivo al servidor
+router.post("/upload",loginController.loginRequired,uploadController.uploadFile);
+
+
+/********************************************************************************/
+/**********   END: API RESTFULL PARA EL UPLOAD DE FICHEROS    *******************/
+/********************************************************************************/
+
 
 
 /********************************************************************************/
