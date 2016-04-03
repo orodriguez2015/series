@@ -190,11 +190,24 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
     // autenticado en la aplicación
     $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
 
-    if (toState.module === 'private' && ($cookieStore.get('conectado')==null || $cookieStore.get('conectado')==false)) {
-        // Usuario no logueado, se hace una redirección hacia la pantalla de login
-        e.preventDefault();
-        $state.go('app.login');
-    }
-});
+      // Variable que contiene el nombre del estado del que el usuario ha hecho click
+      var toStateName = toState.name;
+      
+      if (toState.module === 'private' && ($cookieStore.get('conectado')==null || $cookieStore.get('conectado')==false)) {
+          // Usuario no logueado, se hace una redirección hacia la pantalla de login
+          e.preventDefault();
+
+          // Se almacena en el sessionStorage un variable que contiene el nombre
+          // del estado desde el que se hace la petición, y para la que es necesario
+          // que el usuario se autentique
+          recordingSessionStorage.saveElement("toStateName",toState.name);
+          $state.go('app.login');
+      };
+    });
+
+
+    $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+        // TODO
+    });
 
 })

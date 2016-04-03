@@ -271,8 +271,15 @@ angular.module('gestor')
 
                     case 0:
                         authenticationFactory.authenticate(response);
-                        $state.go('app');
+                        // Se recupera la variable del sessionStorage que contiene el
+                        // estado desde el que se ha hecho la petición, para redirigir
+                        // el control a dicha pantalla
+                        var redireccion = recordingSessionStorage.getElement("toStateName");
+
+                        console.log("redirigiendo a : " + redireccion);
+                        $state.go(redireccion);
                         MessagesArea.showMessageSuccess("Autenticación correcta");
+
                        break;
 
                     case 1: MessagesArea.showMessageError("Datos del usuario incorrecto");
@@ -843,6 +850,9 @@ angular.module('gestor')
         if(file!=null && file!=undefined) {
           var fd = new FormData();
           fd.append('file', file);
+          fd.append('tipoArchivo','imagen');
+          fd.append('destino','cualquiera');
+
           $http.post('/upload', fd, {
               transformRequest: angular.identity,
               headers: {'Content-Type': undefined}

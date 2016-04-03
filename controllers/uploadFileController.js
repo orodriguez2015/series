@@ -35,7 +35,8 @@ exports.uploadFile = function(req,res,next) {
   // Función que procesa el archivo
   form.on('end', function(fields, files) {
 
-
+    console.log("form.on fields: " + JSON.stringify(fields));
+    console.log("form.on files: " + JSON.stringify(files));
 
      if(!(this.openedFiles.length==1)) {
         // Sino se ha enviado un archivo, se devuelve Error
@@ -43,7 +44,7 @@ exports.uploadFile = function(req,res,next) {
           status: 2
         };
         salida.devolverJSON(res,resultado);
-        
+
      } else {
 
         /* Temporary location of our uploaded file */
