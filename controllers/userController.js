@@ -1,7 +1,7 @@
 
 var model = require('../models/models.js');
 var aux = require('./userAuxiliar_controller.js');
-
+var salidaUtil = require('./userController.js');
 
 
 /********************* NUEVO *************************/

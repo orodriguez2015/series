@@ -242,8 +242,6 @@ router.post("/login",loginController.autenticate);
 /********** END: API RESTFUL PARA LA AUTENTICACIÓN DE USUARIOS ******************/
 /********************************************************************************/
 
-// GET /login. Petición de login
-router.get("/login",loginController.login);
 
 // POST /login. Petición de autenticación de un usuario
 //router.post("/login",loginController.autenticate);

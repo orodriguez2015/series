@@ -275,8 +275,6 @@ angular.module('gestor')
                         // estado desde el que se ha hecho la petición, para redirigir
                         // el control a dicha pantalla
                         var redireccion = recordingSessionStorage.getElement("toStateName");
-
-                        console.log("redirigiendo a : " + redireccion);
                         $state.go(redireccion);
                         MessagesArea.showMessageSuccess("Autenticación correcta");
 
