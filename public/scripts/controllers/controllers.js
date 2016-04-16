@@ -9,7 +9,7 @@ angular.module('gestor')
         @param postService: Inyección del servicio PostService a través del cual
                 se recuperan los posts del servidor
       */
-    .controller('PostController', ['$scope','postService','$state',   function($scope,postService,$state) {
+    .controller('PostController', ['$scope','postService','$state', function($scope,postService,$state) {
         // Posts recuperados
         $scope.posts        = [];
         // Registro de inicio
@@ -832,6 +832,78 @@ angular.module('gestor')
   }
 
 }])
+
+
+
+
+/**********************************************************************************/
+/*************************   NewPeliculaController        *************************/
+/**********************************************************************************/
+
+.controller('NewPeliculaController', ['$scope','peliculasService',function($scope,peliculasService) {
+
+  $scope.pelicula = {
+    titulo:'',
+    descripcion:'',
+    visto:false,
+    puntuacion: ''
+  }
+
+  $scope.newPelicula = function() {
+
+      peliculasService.peliculas().save($scope.pelicula).$promise.then(
+          // Success action
+          function(data) {
+            MessagesArea.showMessageSuccess('La pelicula ha sido grabada correctamente');
+
+            $scope.pelicula.titulo      = '';
+            $scope.pelicula.descripcion = '';
+            $scope.pelicula.visto       = false;
+            $scope.pelicula.puntuacion  = '';
+
+            // Se indica que el formulario no ha sido modificado
+            $scope.altaPeliculaForm.$setPristine();
+            // Se indica que ningún campo de formulario ha sido tocado
+            $scope.altaPeliculaForm.$setUntouched();
+
+          },
+
+          // Error action
+          function(error) {
+            console.log("Se ha producido un error al grabar la película: " + error.message);
+            MessagesArea.showMessageError('Se ha producido un error al grabar la película');
+          }
+      );
+  };
+}])
+
+
+/**********************************************************************************/
+/*************************   PeliculasController         *************************/
+/**********************************************************************************/
+
+.controller('PeliculasController', ['$scope','peliculasService',function($scope,peliculasService) {
+
+  console.log("PeliculasController");
+  $scope.pelis =null;
+
+  peliculasService.peliculas().get().$promise.then(
+    // Success action
+    function(data) {
+      $scope.pelis = data;
+      //MessagesArea.showMessageSuccess("Se han recuperado las películas");
+      console.log("peliculas: " + JSON.stringify($scope.pelis));
+    },
+
+    // Error action
+    function(data){
+      MessagesArea.showMessageError("Se ha producido un error al recuperar las películas");
+    }
+
+  );
+
+}])
+
 
 
 /**********************************************************************************/

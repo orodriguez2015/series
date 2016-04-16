@@ -119,8 +119,14 @@ angular.module('gestor')
       */
     salida.authenticate = function (usuario) {
 
-       $cookieStore.put('conectado',true);
-       $cookieStore.put('usuario',usuario);
+      recordingSessionStorage.saveObject('usuario',usuario);
+      recordingSessionStorage.saveElement('conectado',true);
+
+
+      // Se prescinde de la cookie para realizar la autenticación
+
+      //$cookieStore.put('conectado',true);
+      //$cookieStore.put('usuario',usuario);
 
     }; // autenticar
 
@@ -186,6 +192,24 @@ angular.module('gestor')
       */
     this.categorias = function() {
         return $resource(baseUrl + "videos/categorias/:id",null,{'save':{method:'POST'},'get':{method:'GET'},'delete':{method:'DELETE'},'update':{method:'PUT'}});
+    };
+
+}])
+
+
+
+/****************************************************************************/
+/****************************** PeliculasService  ****************************/
+/****************************************************************************/
+.service('peliculasService',['$resource','baseUrl', function($resource,baseUrl) {
+
+    /**
+      * Función que devuelve el $resource con la conexion al API REST de
+      * películas
+      */
+    this.peliculas = function() {
+        //return $resource(baseUrl + "peliculas/:id",null,{'get':{method:'GET'}});
+        return $resource(baseUrl + "peliculas/:id",null,{'save':{method:'POST'}});
     };
 
 }]);

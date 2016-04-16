@@ -11,6 +11,7 @@ var videoController          = require('../controllers/videoController.js');
 var categoriaVideoController = require('../controllers/categoriaVideoController.js');
 var postController           = require('../controllers/postController.js');
 var uploadController         = require('../controllers/uploadFileController.js');
+var peliculasController      = require('../controllers/peliculasController.js');
 
 
 // Autoload para la carga de un usuario en la request
@@ -33,6 +34,9 @@ router.param('postId',postController.load);
 
 // Autoload para la carga de un vídeo de youtube en la request
 router.param('categoriaVideoId',categoriaVideoController.load);
+
+// Autoload para la carga de una películaen la request
+router.param('peliculaId',peliculasController.load);
 
 
 // GET /categorias/new. Petición del formulario de renderizado de la pantalla de alta de una nueva categoría
@@ -213,6 +217,22 @@ router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.u
 
 /********************************************************************************/
 /***************** END: API RESTFULL PARA EL MANEJO DE POSTS ********************/
+/********************************************************************************/
+
+
+/********************************************************************************/
+/********** BEGIN: API RESTFULL PARA LAS PELICULAS            *******************/
+/********************************************************************************/
+
+// GET /peliculas. Petición de recuperación de peliculas de un determinado usuario
+router.get("/peliculas",loginController.loginRequired,peliculasController.getPeliculas);
+
+
+// POST /peliculas. Petición de grabación de una película
+router.post("/peliculas",loginController.loginRequired,peliculasController.save);
+
+/********************************************************************************/
+/***************   END: API RESTFULL PARA LAS PELICULAS    **********************/
 /********************************************************************************/
 
 

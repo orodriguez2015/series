@@ -5,7 +5,8 @@
 angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
 
 
-.config(function($stateProvider, $urlRouterProvider,$locationProvider) {
+.config(function($stateProvider, $urlRouterProvider,$locationProvider,$httpProvider) {
+
         $stateProvider
             // ruta para la página principal
             .state('app', {
@@ -157,6 +158,30 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
                 }
             })
 
+            .state('app.peliculas', {
+                module: 'private',
+                url:'peliculas',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/peliculas/index.html',
+                        controller  : 'PeliculasController'
+                    }
+                }
+            })
+
+
+            .state('app.newPelicula', {
+                module: 'private',
+                url:'newPelicula',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/peliculas/create.html',
+                        controller  : 'NewPeliculaController'
+                    }
+                }
+            })
+
+
 
             .state('app.login', {
                 module: 'public',
@@ -181,10 +206,11 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
 // de login.
 .run(function($rootScope,$state,$cookieStore,$location){
 
+  /*
   $rootScope.$on('$locationChangeSuccess', function() {
       $rootScope.actualLocation = $location.path();
   });
-
+*/
 
     // Cuando se detecte el cambio de estado, entonces se comprueba si el usuario se ha
     // autenticado en la aplicación
@@ -192,8 +218,8 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
 
       // Variable que contiene el nombre del estado del que el usuario ha hecho click
       var toStateName = toState.name;
-      
-      if (toState.module === 'private' && ($cookieStore.get('conectado')==null || $cookieStore.get('conectado')==false)) {
+
+      if (toState.module === 'private' && (recordingSessionStorage.getElement('conectado')==null || recordingSessionStorage.getElement('conectado')==false)) {
           // Usuario no logueado, se hace una redirección hacia la pantalla de login
           e.preventDefault();
 
