@@ -42,9 +42,9 @@ exports.getPeliculas = function(req,res,next) {
       UserId: idUsuario
     };
 
-    model.Pelicula.find({where:busqueda}).then(function(pelis){
-        // Se devuelve las películas en formato JSON
-        salida.devolverJSON(res,pelis);
+    model.Pelicula.findAll({where:busqueda}).then(function(peliculas) {
+      // Se devuelve las películas en formato JSON
+      salida.devolverJSON(res,peliculas);
 
     }).catch(function(err) {
         console.log("Error al recuperar las películas del usuario con id " + idUsuario + ": " + err.message);

@@ -854,7 +854,10 @@ angular.module('gestor')
       peliculasService.peliculas().save($scope.pelicula).$promise.then(
           // Success action
           function(data) {
-            MessagesArea.showMessageSuccess('La pelicula ha sido grabada correctamente');
+
+            if(data.status==0) {
+              MessagesArea.showMessageSuccess('La pelicula ha sido grabada correctamente');
+            }
 
             $scope.pelicula.titulo      = '';
             $scope.pelicula.descripcion = '';
@@ -883,27 +886,57 @@ angular.module('gestor')
 /**********************************************************************************/
 
 .controller('PeliculasController', ['$scope','peliculasService',function($scope,peliculasService) {
+  $scope.peliculas;
 
-  console.log("PeliculasController");
-  $scope.pelis =null;
-
+  // Ha sido necesario en el servicio indicar que la operación get devuelve un array
   peliculasService.peliculas().get().$promise.then(
     // Success action
     function(data) {
-      $scope.pelis = data;
-      //MessagesArea.showMessageSuccess("Se han recuperado las películas");
-      console.log("peliculas: " + JSON.stringify($scope.pelis));
+      $scope.peliculas = data;
     },
 
     // Error action
     function(data){
       MessagesArea.showMessageError("Se ha producido un error al recuperar las películas");
     }
-
   );
 
-}])
 
+
+  $scope.eliminarPelicula = function(id) {
+      console.log("delete: " + id);
+
+      /*************/
+      MessagesArea.clearMessagesArea();
+
+      // Se pregunta al usuario si desea eliminar la entrada.
+      // Se hace de bootbox.js (require de jquery y bootstrap)
+      bootbox.confirm('¿Desea eliminar la película?', function(result) {
+
+           if(result) {
+
+              postService.peliculas().delete({id:id}).$promise.then(
+              // success action
+              function(response) {
+                  // Se muestra un mensaje de éxito
+                  MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Post eliminado");
+                  // Se recarga la página actual para recargar la vista
+                  $scope.goToPage($scope.currentPage);
+              },
+              // error function
+              function(response) {
+                  MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido eliminar el post");
+              }
+              );
+           }
+
+       });
+
+
+      /*************/
+  }
+
+}])
 
 
 /**********************************************************************************/

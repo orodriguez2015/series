@@ -40,14 +40,14 @@
           </td>
           <td width="40px">
 
-            <img src="/images/23_full_trash.png" height="18" width="18" alt="Eliminar" title="Eliminar">
+            <img src="/images/23_full_trash.png" height="18" width="18" alt="Eliminar" title="Eliminar" ng-click="eliminarPelicula(pelicula.id)">
 
 
           </td>
           <td>{{pelicula.titulo}}</td>
           <td>{{pelicula.descripcion}}</td>
-          <td></td>
-          <td></td>
+          <td>{{pelicula.visto | visualizado}}</td>
+          <td>{{pelicula.puntuacion}}</td>
 
         </tr>
 
