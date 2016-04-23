@@ -885,7 +885,7 @@ angular.module('gestor')
 /*************************   PeliculasController         *************************/
 /**********************************************************************************/
 
-.controller('PeliculasController', ['$scope','peliculasService',function($scope,peliculasService) {
+.controller('PeliculasController', ['$scope','peliculasService','$state',function($scope,peliculasService,$state) {
   $scope.peliculas;
 
   // Ha sido necesario en el servicio indicar que la operación get devuelve un array
@@ -915,13 +915,14 @@ angular.module('gestor')
 
            if(result) {
 
-              postService.peliculas().delete({id:id}).$promise.then(
+              peliculasService.peliculas().delete({id:id}).$promise.then(
               // success action
               function(response) {
+                console.log("película eliminada")
                   // Se muestra un mensaje de éxito
-                  MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Post eliminado");
+                  //MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Película eliminada");
                   // Se recarga la página actual para recargar la vista
-                  $scope.goToPage($scope.currentPage);
+                  $state.go($state.current, {}, {reload: true});
               },
               // error function
               function(response) {

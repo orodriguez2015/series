@@ -95,3 +95,34 @@ exports.save = function(req,res,next) {
     });
 
 };
+
+
+
+
+/**
+  * Elimina una determinada un película de la base de datos
+  * @param res: Objeto de tipo response
+  * @param req: Objeto de tipo request
+  * @param next: Objeto de tipo next
+  */
+exports.delete = function(req,res,next) {
+    // Se recupera la película de la request, ya que ha sido
+    // cargada en el método load
+    var modelo = req.Pelicula;
+
+    // Se procede a eliminar la película en BBDD
+    modelo.destroy().then(function(){
+
+      var resultado = {
+        status :0
+      };
+
+      // Se devuelve las películas en formato JSON
+      salida.devolverJSON(res,resultado);
+
+    }).catch(function(err){
+      console.log("Se ha producido un error al eliminar la película en BD: " + err.message);
+      res.status(500).send("Se ha producido un error al eliminar la película en BD: " + err.message);
+    });
+
+};

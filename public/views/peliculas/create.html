@@ -73,8 +73,14 @@
 
         <button type="submit" class="btn btn-primary"
             ng-disabled="altaPeliculaForm.$invalid">Alta</button>
-  </form>
-        <input type="button" value="Cancelar" class="btn btn-primary" ng-click="back()"/>
+
+        <a ui-sref="app.peliculas">
+          <button  class="btn btn-primary">
+            Cancelar
+          </button>  
+        </a>
+        </form>
+
 
       </div>
    </div>

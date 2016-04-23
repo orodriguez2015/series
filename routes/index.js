@@ -231,6 +231,10 @@ router.get("/peliculas",loginController.loginRequired,peliculasController.getPel
 // POST /peliculas. Petición de grabación de una película
 router.post("/peliculas",loginController.loginRequired,peliculasController.save);
 
+
+// DELETE /peliculas. Petición de eliminación de una película
+router.delete("/peliculas/:peliculaId(\\d+)",loginController.loginRequired,peliculasController.delete);
+
 /********************************************************************************/
 /***************   END: API RESTFULL PARA LAS PELICULAS    **********************/
 /********************************************************************************/
