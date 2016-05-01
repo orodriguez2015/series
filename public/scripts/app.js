@@ -182,6 +182,16 @@ angular.module('gestor', ['ui.router','ngResource','ngCookies','ngSanitize'])
             })
 
 
+            .state('app.editPelicula', {
+                module: 'private',
+                url:'editPelicula/:id',
+                views: {
+                    'content@': {
+                        templateUrl : 'views/peliculas/edit.html',
+                        controller  : 'EditPeliculasController'
+                    }
+                }
+            })
 
             .state('app.login', {
                 module: 'public',

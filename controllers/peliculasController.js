@@ -126,3 +126,58 @@ exports.delete = function(req,res,next) {
     });
 
 };
+
+
+
+
+/**
+  * Elimina una determinada un película de la base de datos
+  * @param res: Objeto de tipo response
+  * @param req: Objeto de tipo request
+  * @param next: Objeto de tipo next
+  */
+exports.get = function(req,res,next) {
+    // Se recupera la película de la request, ya que ha sido
+    // cargada en el método load
+    var modelo = req.Pelicula;
+
+    // Se devuelve la película en formato JSON
+    salida.devolverJSON(res,modelo);
+};
+
+
+
+/**
+  * Actualiza una película en base de datos
+  * @param res: Objeto de tipo response
+  * @param req: Objeto de tipo request
+  * @param next: Objeto de tipo next
+  */
+exports.update = function(req,res,next) {
+    var pelicula    = req.Pelicula;
+    var titulo      = req.body.titulo;
+    var descripcion = req.body.descripcion;
+    var visto       = req.body.visto;
+    var puntuacion  = req.body.puntuacion;
+
+    pelicula.titulo = titulo;
+    pelicula.descripcion = descripcion;
+    pelicula.visto = visto;
+    pelicula.puntuacion = puntuacion;
+
+    // Se procede a almacenar la película en BBDD
+    pelicula.save().then(function(){
+
+      var resultado = {
+        status :0
+      };
+
+      // Se devuelve las películas en formato JSON
+      salida.devolverJSON(res,resultado);
+
+    }).catch(function(err){
+      console.log("Se ha producido un error al editar la película en BD: " + err.message);
+      res.status(500).send("Se ha producido un error al editar la película en BD: " + err.message);
+    });
+
+};

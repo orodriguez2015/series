@@ -904,9 +904,7 @@ angular.module('gestor')
 
 
   $scope.eliminarPelicula = function(id) {
-      console.log("delete: " + id);
 
-      /*************/
       MessagesArea.clearMessagesArea();
 
       // Se pregunta al usuario si desea eliminar la entrada.
@@ -918,9 +916,6 @@ angular.module('gestor')
               peliculasService.peliculas().delete({id:id}).$promise.then(
               // success action
               function(response) {
-                console.log("película eliminada")
-                  // Se muestra un mensaje de éxito
-                  //MessagesArea.showMessageSuccess("<b>Operación correcta:</b> Película eliminada");
                   // Se recarga la página actual para recargar la vista
                   $state.go($state.current, {}, {reload: true});
               },
@@ -932,10 +927,80 @@ angular.module('gestor')
            }
 
        });
+   }// eliminarPelicula
 
 
-      /*************/
-  }
+   /**
+     * Función invocada a la hora de editar una película
+     * @param id: Id de la película
+     */
+   $scope.editPelicula = function(id) {
+        $state.go("app.editPelicula",{id:id});
+   };
+
+}])
+
+
+
+/**********************************************************************************/
+/*************************   PeliculasController         *************************/
+/**********************************************************************************/
+
+.controller('EditPeliculasController', ['$scope','peliculasService','$stateParams',function($scope,peliculasService,$stateParams) {
+
+    var id = $stateParams.id;
+
+    $scope.pelicula = {
+      id:'',
+      titulo:'',
+      descripcion:'',
+      visto:false,
+      puntuacion: ''
+    }
+
+    // Se recupera la película del servidor
+    peliculasService.peliculas().getPelicula({id:id},$scope.pelicula).$promise.then(
+      // success action
+      function(pelicula) {
+          $scope.pelicula.id = pelicula.id;
+          $scope.pelicula.titulo      = pelicula.titulo;
+          $scope.pelicula.descripcion = pelicula.descripcion;
+          if(pelicula.visto!=undefined && pelicula.visto==1) {
+            $scope.pelicula.visto = true;
+          }
+
+          $scope.pelicula.puntuacion = String(pelicula.puntuacion);
+
+      },
+      // error function
+      function(response) {
+          MessagesArea.showMessageError("<b>Operación incorrecta:</b> No se ha podido recuperar la película");
+      }
+    );
+
+
+   /**
+     * Función invocada a la hora de editar una película
+     * @param id: Id de la película
+     */
+   $scope.editPelicula = function(id) {
+
+        console.log("pelicula: " + JSON.stringify($scope.pelicula));
+        console.log("pelicula id: " + $scope.pelicula.id);
+
+        peliculasService.peliculas().update({id:$scope.pelicula.id},$scope.pelicula).$promise.then(
+            // Success action
+            function(response) {
+              console.log("película actualizada");
+              MessagesArea.showMessageSuccess("<b>Operación correcta:</b> La película ha sido actualizada");
+            },
+
+            // Error action
+            function(response) {
+                MessagesArea.showMessageError("<b>Operación incorrecta:</b> Se ha producido un error al actualizar la película");
+            }
+        );
+   };
 
 }])
 

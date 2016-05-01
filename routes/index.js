@@ -227,13 +227,17 @@ router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.u
 // GET /peliculas. Petición de recuperación de peliculas de un determinado usuario
 router.get("/peliculas",loginController.loginRequired,peliculasController.getPeliculas);
 
-
 // POST /peliculas. Petición de grabación de una película
 router.post("/peliculas",loginController.loginRequired,peliculasController.save);
 
+// PUT /peliculas. Petición de actualización de una película
+router.put("/peliculas/:peliculaId(\\d+)",loginController.loginRequired,peliculasController.update);
 
 // DELETE /peliculas. Petición de eliminación de una película
 router.delete("/peliculas/:peliculaId(\\d+)",loginController.loginRequired,peliculasController.delete);
+
+// GET /peliculas/:peliculaId. Petición de recuperación de una película
+router.get("/peliculas/:peliculaId(\\d+)",loginController.loginRequired,peliculasController.get);
 
 /********************************************************************************/
 /***************   END: API RESTFULL PARA LAS PELICULAS    **********************/

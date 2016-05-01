@@ -208,7 +208,8 @@ angular.module('gestor')
       * películas
       */
     this.peliculas = function() {
-        return $resource(baseUrl + "peliculas/:id",null,{'get':{method:'GET',isArray:true},'save':{method:'POST'},'delete':{method:'DELETE'}});
+        //console.log("peliculasService id: " + id + ",pelicula: " + JSON.stringify(pelicula));
+        return $resource(baseUrl + "peliculas/:id",null,{'getPelicula':{method:'GET'} , 'get':{method:'GET',isArray:true},'save':{method:'POST'},'delete':{method:'DELETE'},'update':{method:'PUT'}});
     };
 
 }]);
