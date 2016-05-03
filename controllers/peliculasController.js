@@ -73,7 +73,7 @@ exports.save = function(req,res,next) {
       titulo: titulo,
       descripcion: descripcion,
       visto: visto,
-      puntuacion: puntuacion,
+      puntuacion: (puntuacion!='')?puntuacion:0,
       UserId: idUsuario
     };
 
@@ -93,7 +93,6 @@ exports.save = function(req,res,next) {
       console.log("Se ha producido un error al grabar la película en BD: " + err.message);
       res.status(500).send("Se ha producido un error al grabar la película en BD: " + err.message);
     });
-
 };
 
 

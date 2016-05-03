@@ -5,32 +5,35 @@ var model = require('../models/models.js');
   * Alta de un post en la base de datos
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next 
+  * @param req: Objeto next
   */
 exports.create = function(req,res,next){
 
     var titulo      = req.body.titulo;
     var descripcion = req.body.descripcion;
     var userId      = req.session.user.id;
-    
+
     var post = {
         titulo: titulo,
         descripcion: descripcion,
         UserId: userId
     };
-    
+
     var modelo = model.Post.build(post);
     modelo.save().then(function() {
-     
+
         var salida = {
             status:0
         };
-        
+
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(salida));
         res.end();
 
     }).catch(function(err) {
+
+        console.log("Error al crear el post en BD <> message: " + err.message);
+        console.log("Error al crear el post en BD <> descripcion: " + err.description);
         res.status(500).send("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
     });
 };
@@ -40,7 +43,7 @@ exports.create = function(req,res,next){
   * Actualiza un determinado post/entrada en la base de datos
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next 
+  * @param req: Objeto next
   */
 exports.update = function(req,res,next){
     // Se recupera el post que viene de la base y que se ha cargado
@@ -49,21 +52,24 @@ exports.update = function(req,res,next){
     var titulo      = req.body.titulo;
     var descripcion = req.body.descripcion;
     var userId      = req.session.user.id;
-    
+
     post.titulo = titulo;
     post.descripcion = descripcion;
-    
+
     post.save().then(function() {
-     
+
         var salida = {
             status:0
         };
-        
+
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(salida));
         res.end();
 
     }).catch(function(err) {
+
+        console.log("Error al actualizar el post de id " + post.id + ": " + err.message);
+        console.log("Error al actualizar el post de id " + post.id + ": " + err.description);
         res.status(500).send("Error al actualizar el post de id " + post.id + ": " + err.message);
     });
 };
@@ -75,13 +81,13 @@ exports.update = function(req,res,next){
   * en un JSON
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next 
+  * @param req: Objeto next
   */
 exports.getPosts = function(req,res,next){
     var userId = req.session.user.id;
     var inicio = req.params.inicio;
     var fin    = req.params.fin;
-    
+
     var consulta = {
         where: {UserId:userId},
         offset: inicio,
@@ -90,11 +96,11 @@ exports.getPosts = function(req,res,next){
     }
 
     model.Post.findAll(consulta).then(function(posts) {
-        
+
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(posts));
         res.end();
-        
+
     }).catch(function(err) {
          res.status(500).send("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
     });
@@ -103,35 +109,35 @@ exports.getPosts = function(req,res,next){
 
 
 /**
-  * Recupera el número total de posts existentes en la base de datos, y 
+  * Recupera el número total de posts existentes en la base de datos, y
   * que hayan sido dados de alta por un determinado usuario
   * @param req: Objeto Request
   * @param res: Objeto Response
-  * @param req: Objeto next 
+  * @param req: Objeto next
   */
 exports.getNumTotalPosts = function(req,res,next){
     var userId = req.session.user.id;
     console.log("getNumTotalPosts userId: " + userId);
-    
+
     var parteWhere = {
         UserId: userId
     };
-    
+
     var consulta = {
         where: parteWhere
     }
-    
-    model.Post.count(consulta).then(function(num) {    
-        
+
+    model.Post.count(consulta).then(function(num) {
+
         res.writeHead(200, {"Content-Type": "text/plain"});
         res.write(JSON.stringify(num));
         res.end();
-        
+
     }).catch(function(err) {
        console.err("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
         res.status(500).send("Error al recuperar el número total de posts del usuario " + userId + ": " + err.message);
     });
-  
+
 };
 
 
@@ -143,21 +149,21 @@ exports.getNumTotalPosts = function(req,res,next){
 exports.deletePost = function(req,res,next){
     var userId = req.session.user.id;
     var post = req.Post;
-    
+
     post.destroy().then(function() {
         var salida = {
             status: 0
         }
-        
+
         res.writeHead(200, {"Content-Type": "application/json"});
         res.write(JSON.stringify(salida));
         res.end();
-        
+
     }).catch(function(err) {
-        console.log("Error al eliminar el post de la BD: " + err.message); 
+        console.log("Error al eliminar el post de la BD: " + err.message);
         res.status(500).send("Error al eliminar el post de la BD: " + err.message);
     });
-  
+
 };
 
 
@@ -168,7 +174,7 @@ exports.deletePost = function(req,res,next){
   * @param next: Objeto next
   */
 exports.getPost = function(req,res,next) {
-    
+
     res.writeHead(200, {"Content-Type": "application/json"});
     res.write(JSON.stringify(req.Post));
     res.end();
@@ -183,17 +189,17 @@ exports.getPost = function(req,res,next) {
   * @param postId: Id del post a recuperar
   */
 exports.load = function(req,res,next,postId){
-    
+
     var busqueda = {
         id: postId
     };
-    
+
     model.Post.find({where:busqueda}).then(function(post){
         req.Post = post;
         next();
-        
+
     }).catch(function(err){
-        console.log("Error en autoload de post " + err.message); 
+        console.log("Error en autoload de post " + err.message);
         res.status(500).send(err.message);
         //next(err);
     });

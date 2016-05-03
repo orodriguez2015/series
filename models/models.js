@@ -13,6 +13,7 @@ var path = require('path');
 
 console.log("process.env.DATABASE_URL: " + process.env.DATABASE_URL);
 var url = process.env.DATABASE_URL.match(/(.*)\:\/\/(.*?)\:(.*)@(.*)\:(.*)\/(.*)/);
+/*
 var DB_name = (url[6] || null);
 var user    = (url[2] || null);
 var pwd     = (url[3] || null);
@@ -20,6 +21,16 @@ var protocol= (url[1] || null);
 var dialect = (url[1] || null);
 var port    = (url[5] || null);
 var host    = (url[4] || null);
+var storage = process.env.DATABASE_STORAGE;
+*/
+
+var DB_name = "personal";
+var user    = "personal";
+var pwd     = "personal";
+var protocol= null;
+var dialect = "mysql";
+var port    = 3306;
+var host    = "localhost";
 var storage = process.env.DATABASE_STORAGE;
 
 
