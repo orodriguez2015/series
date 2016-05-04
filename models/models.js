@@ -60,7 +60,6 @@ var sequelize  = new Sequelize(DB_name, user, pwd,
  );
 
 
-
 // Se importa la definición de la tabla User del archivo user.js
 var User = sequelize.import(path.join(__dirname, 'user'));
 // Se importa la definición de la tabla Serie del archivo serie.js
@@ -74,13 +73,13 @@ var Categoria = sequelize.import(path.join(__dirname, 'categoria'));
 // Se importa la definición de la tabla UsuarioVisualizaSerie
 //var UsuarioVisualizaSerie = sequelize.import(path.join(__dirname, 'usuarioVisualizaSerie'));
 // Se importa la definición de la tabla de BBDD VideoYoutube
-var VideoYoutube = sequelize.import(path.join(__dirname, 'VideoYoutube'));
+var VideoYoutube = sequelize.import(path.join(__dirname, 'videoYoutube'));
 // Se importa la definición de la tabla de BBDD CategoriaVideoYoutube
-var CategoriaVideoYoutube = sequelize.import(path.join(__dirname, 'CategoriaVideoYoutube'));
+var CategoriaVideoYoutube = sequelize.import(path.join(__dirname, 'categoriaVideoYoutube'));
 // Se importa la definición de la tabla de BBDD Post
 var Post = sequelize.import(path.join(__dirname, 'post'));
-// Se importa la definición de la tabla de BBDD Peliculaº
-var Pelicula = sequelize.import(path.join(__dirname, 'Pelicula'));
+// Se importa la definición de la tabla de BBDD Pelicula
+var Pelicula = sequelize.import(path.join(__dirname, 'pelicula'));
 
 /*
 // Se define la relación 1:N entre la tabla serie y user. Un usuario
