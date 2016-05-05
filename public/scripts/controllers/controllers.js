@@ -188,6 +188,7 @@ angular.module('gestor')
 
  .controller('EditPostController', ['$scope','postService','$state','$stateParams', function($scope,postService,$state,$stateParams) {
 
+    // Se recupera el parámetro que contiene el id del post a editar
     var id = $stateParams.id;
 
     // Objeto que contendra los datos del post a dar de alta
@@ -198,25 +199,25 @@ angular.module('gestor')
     };
 
     if(id==undefined || id=='') {
+        // Se crea el editor sobre el campo 'descripcion' con jQuery
+        $("#descripcion").wysihtml5();
         MessagesArea.showMessageError("Entrada desconocida");
-
     } else {
 
          postService.getPost().get({id:id}).$promise.then(
-
             // success action
-            function(response) {
-                $scope.post.id = response.id;
-                $scope.post.titulo = response.titulo;
-                $scope.post.descripcion = response.descripcion;
-                console.log("antes");
-                console.log("descripcion : " + JSON.stringify($('#descripcion')));
-                $('#descripcion').val(response.descripcion);
-
+            function(post) {
+                $scope.post.id          = post.id;
+                $scope.post.titulo      = post.titulo;
+                $scope.post.descripcion = post.descripcion;
+                // Se crea el editor sobre el campo 'descripcion' con jQuery
+                $("#descripcion").wysihtml5();
             },
 
             // error action
             function(response) {
+                // Se crea el editor sobre el campo 'descripcion' con jQuery
+                $("#descripcion").wysihtml5();
                 MessagesArea.showMessageError("Error al recuperar la entrada de la base de datos: " + response.statusText);
             }
         );
