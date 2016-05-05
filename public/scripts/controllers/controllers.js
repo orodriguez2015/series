@@ -209,7 +209,10 @@ angular.module('gestor')
                 $scope.post.id = response.id;
                 $scope.post.titulo = response.titulo;
                 $scope.post.descripcion = response.descripcion;
+                console.log("antes");
+                console.log("descripcion : " + JSON.stringify($('#descripcion')));
                 $('#descripcion').val(response.descripcion);
+
             },
 
             // error action

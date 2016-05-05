@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+  * Definición de diferentes filtros
+  */
 angular.module('gestor')
 
 /**
