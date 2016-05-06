@@ -224,6 +224,8 @@ router.put("/posts/:postId(\\d+)",loginController.loginRequired,postController.u
 /********** BEGIN: API RESTFULL PARA LAS PELICULAS            *******************/
 /********************************************************************************/
 
+router.get("/peliculas/:inicio(\\d+)/:fin(\\d+)",loginController.loginRequired,peliculasController.getPeliculas);
+
 // GET /peliculas. Petición de recuperación de peliculas de un determinado usuario
 router.get("/peliculas",loginController.loginRequired,peliculasController.getPeliculas);
 

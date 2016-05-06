@@ -37,18 +37,54 @@ exports.load = function(req,res,next,peliculaId){
   * @param next: Objeto de tipo next
   */
 exports.getPeliculas = function(req,res,next) {
-    var idUsuario   = req.session.user.id;
-    var busqueda = {
-      UserId: idUsuario
-    };
 
-    model.Pelicula.findAll({where:busqueda}).then(function(peliculas) {
-      // Se devuelve las películas en formato JSON
-      salida.devolverJSON(res,peliculas);
+    var idUsuario = req.session.user.id;
+    var inicio    = req.params.inicio;
+    var fin       = req.params.fin;
+
+    var consulta;
+
+    // Si se envían los datos de paginación, los criterios de búsqueda son distintos
+    // al caso de que no se envíen
+    if(inicio!=undefined && fin!=undefined && inicio!='' && fin!='') {
+      consulta = {
+        where: {UserId: idUsuario},
+        offset: inicio,
+        limit: fin,
+        order: [['titulo','ASC']]
+      };
+
+    } else {
+        consulta = {
+          where: {UserId: idUsuario},
+          order: [['titulo','ASC']]
+        };
+    }
+
+
+
+    model.Pelicula.findAll(consulta).then(function(peliculas) {
+      // Ahora que se han recuperado las películas, se procede
+      // a obtener el número total de películas
+          model.Pelicula.count({where:{UserId:idUsuario}}).then(function(total) {
+
+                // Se devuelve las películas en formato JSON
+                var resultado = {
+                  total : total,
+                  peliculas: peliculas
+                }
+                salida.devolverJSON(res,resultado);
+
+          }).catch(function(err) {
+
+              console.log("Error al recuperar el número de películas del usuario con id " + idUsuario + ": " + err.description);
+              res.status(500).send("Error al recuperar el número de películas del usuario con id " + idUsuario + ": " + err.message);
+
+          });
+
 
     }).catch(function(err) {
         console.log("Error al recuperar las películas del usuario con id " + idUsuario + ": " + err.message);
-        console.log("Error al recuperar las películas del usuario con id " + idUsuario + ": " + err.description);
         res.status(500).send("Error al recuperar las películas del usuario con id " + idUsuario + ": " + err.message);
 
     });

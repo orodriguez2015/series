@@ -161,6 +161,9 @@ angular.module('gestor')
                         // Se vacía los campos de formulario
                         $scope.post.titulo      = '';
                         $scope.post.descripcion = '';
+                        $('#descripcion').val('');
+
+                        console.log("valor descripcion: " + $('#descripcion').val());
                         // Se indica que el formulario no ha sido modificado
                         $scope.altaPostForm.$setPristine();
 
@@ -264,6 +267,7 @@ angular.module('gestor')
         password: ''
     };
 
+    $('#login').focus();
 
     $scope.login = function () {
 
@@ -892,11 +896,33 @@ angular.module('gestor')
 .controller('PeliculasController', ['$scope','peliculasService','$state',function($scope,peliculasService,$state) {
   $scope.peliculas;
 
+  /*****/
+  // Registro de inicio
+  $scope.begin       = 0;
+  // Registro de fin
+  $scope.end          = 10;
+  // Número de registros por página
+  $scope.numPerPage   = 10;
+  // Número total de registros
+  $scope.numRegistros = 0;
+  // Contiene la página actual. Por defecto será la 1
+  $scope.currentPage = 1;
+  // Mostrar botón de avanzar a los siguientes posts
+  $scope.mostrarBotonSiguiente = false;
+  // Mostrar botón anterior para hacer un recorrido por los posts hacia atrás
+  $scope.mostrarBotonAnterior  = false;
+  // Número de página anterior
+  $scope.paginaAnterior;
+  // Número de página siguiente
+  $scope.paginaSiguiente;
+
+  /*****/
+
   // Ha sido necesario en el servicio indicar que la operación get devuelve un array
-  peliculasService.peliculas().get().$promise.then(
+  peliculasService.peliculas().getPeliculas({inicio:$scope.begin,fin:$scope.end}).$promise.then(
     // Success action
     function(data) {
-      $scope.peliculas = data;
+      $scope.peliculas = data.peliculas;
     },
 
     // Error action

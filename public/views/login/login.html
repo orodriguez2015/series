@@ -6,10 +6,10 @@
     <h1>
       Autenticación
     </h1>
-    
+
     <div class="alert alert-warning" role="alert" id="alert" style="display:none"></div>
-    
-    <ol class="breadcrumb"> 
+
+    <ol class="breadcrumb">
       <li><a href="/"><i class="fa fa-dashboard"></i> Inicio</a></li>
       <li class="active">Autenticación</li>
     </ol>
@@ -18,31 +18,31 @@
   <!-- Main content -->
   <section class="content">
 
-     
- 
+
+
 <div class="login-box" ng-controller="LoginController">
-      
+
       <div class="login-box-body">
         <p class="login-box-msg">Inicie sesión</p>
-          
+
         <form name="formLogin" role="form" novalidate ng-submit="login()">
           <div class="form-group has-feedback" ng-class="{'has-error':formLogin.login.$error.required && !formLogin.login.$pristine}">
-            <input type="text" name="login" id="login" class="form-control" placeholder="Login" autofocus ng-model="authenticate.login" required/>
+            <input type="text" name="login" id="login" class="form-control" placeholder="Login" autofocus ng-model="authenticate.login" required focus="true"/>
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-              
+
             <span class="help-block" ng-show="formLogin.login.$error.required && !formLogin.login.$pristine">
                 El login es un campo obligatorio
-            </span>  
-              
+            </span>
+
           </div>
           <div class="form-group has-feedback" ng-class="{'has-error':formLogin.password.$error.required && !formLogin.password.$pristine}">
             <input type="password" name="password" id="password" class="form-control" placeholder="Password" ng-model="authenticate.password" required/>
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-              
+
             <span class="help-block" ng-show="formLogin.password.$error.required && !formLogin.password.$pristine">
                 El password es un campo obligatorio
-            </span>    
-              
+            </span>
+
           </div>
           <div class="row">
             <div class="col-xs-8">
