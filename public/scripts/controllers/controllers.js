@@ -267,7 +267,7 @@ angular.module('gestor')
         password: ''
     };
 
-    $('#login').focus();
+    $('#')
 
     $scope.login = function () {
 
@@ -916,13 +916,21 @@ angular.module('gestor')
   // Número de página siguiente
   $scope.paginaSiguiente;
 
-  /*****/
 
   // Ha sido necesario en el servicio indicar que la operación get devuelve un array
   peliculasService.peliculas().getPeliculas({inicio:$scope.begin,fin:$scope.end}).$promise.then(
     // Success action
     function(data) {
+      $scope.numRegistros = data.total;
       $scope.peliculas = data.peliculas;
+
+      if($scope.numTotalPaginas()>$scope.currentPage)
+          // Se muestra el botón Siguiente
+          $scope.mostrarBotonSiguiente = true;
+
+      if($scope.currentPage>1)
+          $scope.mostrarBotonAnterior = true;
+
     },
 
     // Error action
@@ -932,7 +940,22 @@ angular.module('gestor')
   );
 
 
+  /**
+    * Función que devuelve el número total de páginas que habría con noticias,
+    * en base al número de registros total existentes en base de datos
+    */
+  $scope.numTotalPaginas = function () {
+      var totalPaginas = Math.ceil($scope.numRegistros/$scope.numPerPage);
+      return totalPaginas;
+  };
 
+
+
+
+  /**
+    * Función que se encarga de eliminarPelicula
+    * @param id: Id de la película a eliminar
+    */
   $scope.eliminarPelicula = function(id) {
 
       MessagesArea.clearMessagesArea();
@@ -960,6 +983,45 @@ angular.module('gestor')
    }// eliminarPelicula
 
 
+
+   /**
+     * Muestra los posts de la página indicada en el parámetro
+     * @param page: Número de la página
+     */
+   $scope.goToPage = function(page) {
+       $scope.begin = ((page - 1) * $scope.numPerPage);
+       $scope.end   = $scope.begin + $scope.numPerPage;
+       $scope.currentPage = page;
+       $scope.mostrarBotonSiguiente = false;
+       $scope.mostrarBotonAnterior  = false;
+
+
+
+       // Ha sido necesario en el servicio indicar que la operación get devuelve un array
+       peliculasService.peliculas().getPeliculas({inicio:$scope.begin,fin:$scope.end}).$promise.then(
+         // Success action
+         function(data) {
+           $scope.numRegistros = data.total;
+           $scope.peliculas = data.peliculas;
+
+           if($scope.numTotalPaginas()>$scope.currentPage)
+               // Se muestra el botón Siguiente
+               $scope.mostrarBotonSiguiente = true;
+
+           if($scope.currentPage>1)
+               $scope.mostrarBotonAnterior = true;
+
+         },
+
+         // Error action
+         function(data){
+           MessagesArea.showMessageError("Se ha producido un error al recuperar las películas");
+         }
+       );
+
+   }// goToPage
+
+
    /**
      * Función invocada a la hora de editar una película
      * @param id: Id de la película
@@ -973,7 +1035,7 @@ angular.module('gestor')
 
 
 /**********************************************************************************/
-/*************************   PeliculasController         *************************/
+/*************************   EditPeliculasController         **********************/
 /**********************************************************************************/
 
 .controller('EditPeliculasController', ['$scope','peliculasService','$stateParams',function($scope,peliculasService,$stateParams) {
