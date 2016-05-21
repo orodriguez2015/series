@@ -100,12 +100,24 @@ angular.module('gestor')
       */
     this.video = function(id) {
         return $resource(baseUrl + "videos",null,{'save':{method:'POST'}});
-
     };
 
 }])
 
 
+
+/**
+  * Servicio para el tratamiento de los vídeos de usuario
+  */
+.service('videoService',['$resource','baseUrl', function($resource,baseUrl) {
+
+    this.getVideosUsuario = function() {
+        return $resource(baseUrl + "videos/usuario/:id",null,{'get':{method:'GET'},'delete':{method:'DELETE'}});
+    };
+
+
+
+}])
 
 /***********************************************************************/
 /*********************** AuthenticationService *************************/

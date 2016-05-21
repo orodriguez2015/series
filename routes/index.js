@@ -97,18 +97,10 @@ router.post("/capitulos/visualizacion/:idSerie(\\d+)/:idCapitulo(\\d+)",usuarioV
 
 
 // GET /videos. Carga la lista de vídeos. Es necesario estar logueado en la aplicación
-router.get("/videos",loginController.loginRequired,videoController.show);
+//router.get("/videos",loginController.loginRequired,videoController.show);
 
 // POST /videos. Permite dar de alta la información de un vídeo determinado en base de datos
-router.post("/videos/create",loginController.loginRequired,videoController.saveVideo);
-
-// GET /videos/usuario. Recupera los vídeos almacenados por el usuario
-router.get("/videos/usuario",loginController.loginRequired,videoController.getVideosAlmacenados);
-
-// DELETE /videos/:videoId . Permite eliminar un determinado video
-router.delete("/videos/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
-
-
+//router.post("/videos/create",loginController.loginRequired,videoController.saveVideo);
 
 
 // GET /videos/categorias/alta. Carga la pantalla de alta de una nueva categoria para poder asignar
@@ -154,6 +146,15 @@ router.get("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginReq
 // PUT /videos/categorias/:categoriaVideoId. Petición de modificación de una determinada
 // categoría de vídeo
 router.put("/videos/categorias/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.update);
+
+
+// GET /videos/usuario. Recupera los vídeos almacenados por el usuario
+router.get("/videos/usuario",loginController.loginRequired,videoController.getVideosAlmacenados);
+
+
+// DELETE /videos/usuario/:videoId . Permite eliminar un determinado video
+router.delete("/videos/usuario/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
+
 
 /********************************************************************************/
 /*************** END: API RESTFULL PARA LA GESTIÓN DE VIDEOS     ****************/

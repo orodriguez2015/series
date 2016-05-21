@@ -661,6 +661,79 @@ angular.module('gestor')
 }])
 
 
+/******************************************************************/
+/********************** VideosUsuarioController ***************************/
+/******************************************************************/
+.controller('VideosUsuarioController', ['$scope','videoService','$state', function($scope,videoService,$state) {
+  // Contiene las categorías con vídeos
+  $scope.categoriasConVideos;
+  $scope.videosSinCategoria;
+  $scope.categorias;
+
+
+    videoService.getVideosUsuario().get().$promise.then(
+
+      // Success action
+      function(response) {
+        $scope.categoriasConVideos = response.categoriasConVideos;
+        $scope.videosSinCategoria  = response.videosSinCategoria;
+        $scope.categorias          = response.categorias;
+        console.log("categorias " + JSON.stringify($scope.categorias));
+      },
+
+      // Error action
+      function(data) {
+        console.log("Error: " + JSON.stringify("Error al recuperar videos: " + data.message));
+      }
+    );
+
+
+
+  /**
+    * Función que se invoca cuando se pretende
+    * visualizar el vídeo
+    * @param id:  id del vídeo
+    */
+  $scope.showVideo = function(id) {
+    mostrarVideo(id);
+  };
+
+
+  /**
+    * Función que se invoca cuando se pretende eliminar un vídeo de
+    * entre los favoritosº
+    * @param id:  id del vídeo
+    */
+  $scope.eliminarVideo = function(id) {
+
+
+
+    //bootbox.confirm('¿Desea eliminar la categoría?', function(result) {
+
+      //if(result) {
+        videoService.getVideosUsuario().delete({id:id}).$promise.then(
+            // Success action
+            function success(response) {
+                $state.go($state.current, {}, {reload: true});
+            },
+            // Error action
+            function error(response) {
+              MessagesArea.showMessageError('Se ha producido un error al eliminar el vídeo: ' + response.message);
+            }
+        );
+      //}
+
+    //});
+
+
+
+  };
+
+
+
+}])
+
+
 /**********************************************************************************/
 /********************** CategoriaVideoYoutubeController ***************************/
 /**********************************************************************************/
@@ -1083,7 +1156,6 @@ angular.module('gestor')
         peliculasService.peliculas().update({id:$scope.pelicula.id},$scope.pelicula).$promise.then(
             // Success action
             function(response) {
-              console.log("película actualizada");
               MessagesArea.showMessageSuccess("<b>Operación correcta:</b> La película ha sido actualizada");
             },
 

@@ -183,6 +183,29 @@ exports.update = function(req,res,next){
 
 
 
+/**
+  * Recupera las categorías creadas por un determinado usuario
+  * @param idUsuario: Id del usuario
+  * @param success: Función callback a la que se invoca una vez recuperadas
+                    las categorías
+  */
+exports.getCategoriasUsuario = function(idUsuario,success){
+
+    var busqueda = {
+        UserId: idUsuario
+    };
+
+    model.CategoriaVideoYoutube.findAll({where:busqueda}).then(function(categorias){
+
+       success(categorias,null);
+
+    }).catch(function(err){
+        console.log("getCategoriasUsuario(): Error al recuperar las categorias de vídeos: " + err.message);
+        success(null,err);
+    });
+};
+
+
 /****************************************************/
 
 

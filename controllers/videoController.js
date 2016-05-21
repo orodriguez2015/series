@@ -1,14 +1,78 @@
 var model = require('../models/models.js');
 
+
+
+
 /**
-  * Función que renderiza la página de búsqueda de vídeos en youtube
-  * @param req: Objeto request
-  * @param res: Objeto response
-  * @param next: Objeto next
+  * Recupera los vídeos almacenados por un determinado usuario y renderiza la vista
+  * @param res: Objeto de tipo response
+  * @param req: Objeto de tipo request
+  * @param next: Objeto de tipo next
   */
-exports.show = function(req,res,next) {
-    console.log('mostrando videos');
-    res.render("videos/search",{errors:[]});
+exports.getVideosAlmacenados = function(req,res,next) {
+    console.log("getVideosAlmacenados =====>");
+    var idUsuario   = req.session.user.id;
+
+    // Condición de búsqueda de vídeos sin categoría
+    var busquedaVideosSinCategoria = {
+        where: {
+            UserId: { eq: idUsuario},
+            CategoriaVideoYoutubeId: { eq: 0 }
+        }
+    };
+
+
+    // Se recuperan todas las categorías de vídeos creadas por el usuario actual
+    var categoriaVideoController = require('./categoriaVideoController.js');
+    var categorias;
+    var categoriasConVideos;
+
+
+console.log("categoriaVideoController: " + JSON.stringify(categoriaVideoController));
+    categoriaVideoController.getCategoriasUsuario(idUsuario,function(resultado,error){
+
+        if(resultado) {
+            categorias = resultado;
+            console.log("VideoController categorias recuperadas: " + categorias.length);
+
+            // Se recuperan las categorías de vídeos, junto con los vídeos asociados
+            categoriaVideoController.getCategoriasUsuarioConVideos(idUsuario,function(resultado,error){
+
+            if(resultado) {
+                categoriasConVideos = resultado;
+                console.log("VideoController categorias con vídeos recuperadas: " + categorias.length);
+
+
+                // Se recuperan los vídeos del usuario que no tiene categoría asignada
+                model.VideoYoutube.findAll(busquedaVideosSinCategoria).then(function(videosSinCategoria) {
+                    console.log("render")
+
+                    var resultado = {
+                      categoriasConVideos: categoriasConVideos,
+                      videosSinCategoria:videosSinCategoria
+                    };
+
+
+                    res.writeHead(200, {"Content-Type": "application/json"});
+                    res.write(JSON.stringify(resultado));
+                    res.end();
+
+                }).catch(function(err) {
+                    console.log("Error al recuperar videos almacenados del usuario " + req.session.user.id + ": " + err.message);
+                    res.status(500).send("Error al recuperar videos almacenados del usuario " + req.session.user.id + ": " + err.message);
+                });
+
+
+
+            }else
+                res.status(500).send("Error al recuperar videos almacenados del usuario " + req.session.user.id + " y asociados a una categoría: " + err.message);
+
+            });
+
+        }else
+            res.status(500).send("Error al recuperar las categorías de vídeos del usuario " + req.session.user.id + ": " + err.message);
+
+    });
 };
 
 
@@ -27,7 +91,6 @@ exports.load = function(req,res,next,videoId){
     };
 
     model.VideoYoutube.find({where:busqueda}).then(function(video){
-        console.log("autoload video encontrado");
         console.log("id video recuperado: " + video.id + ",nombre: " + video.nombre);
         req.Video = video;
         next();
@@ -72,69 +135,6 @@ exports.eliminarCategoriaVideo = function(req,res,next){
 };
 
 
-/**
-  * Recupera los vídeos almacenados por un determinado usuario y renderiza la vista
-  * @param res: Objeto de tipo response
-  * @param req: Objeto de tipo request
-  * @param next: Objeto de tipo next
-  */
-exports.getVideosAlmacenados = function(req,res,next) {
-    console.log("getVideosAlmacenados =====>");
-    var idUsuario   = req.session.user.id;
-
-    // Condición de búsqueda de vídeos sin categoría
-    var busquedaVideosSinCategoria = {
-        where: {
-            UserId: { eq: idUsuario},
-            CategoriaVideoYoutubeId: { eq: 0 }
-        }
-    };
-
-
-    // Se recuperan todas las categorías de vídeos creadas por el usuario actual
-    var categoriaVideoController = require('./categoriaVideoController.js');
-    var categorias;
-    var categoriasConVideos;
-
-    categoriaVideoController.getCategoriasUsuario(idUsuario,function(resultado,error){
-
-        if(resultado) {
-            categorias = resultado;
-            console.log("VideoController categorias recuperadas: " + categorias.length);
-
-            // Se recuperan las categorías de vídeos, junto con los vídeos asociados
-            categoriaVideoController.getCategoriasUsuarioConVideos(idUsuario,function(resultado,error){
-
-            if(resultado) {
-                categoriasConVideos = resultado;
-                console.log("VideoController categorias con vídeos recuperadas: " + categorias.length);
-
-
-                // Se recuperan los vídeos del usuario que no tiene categoría asignada
-                model.VideoYoutube.findAll(busquedaVideosSinCategoria).then(function(videosSinCategoria) {
-                    console.log("render")
-                    res.render("videos/videosFavoritosUsuario",{errors:[],categorias:categorias, categoriasConVideos:categoriasConVideos,                                                videosSinCategoria:videosSinCategoria});
-
-                }).catch(function(err) {
-                    console.log("Error al recuperar videos almacenados del usuario " + req.session.user.id + ": " + err.message);
-                    next(err);
-                });
-
-
-
-            }else
-                next(error);
-
-            });
-
-        }else
-            next(error);
-
-    });
-};
-
-
-
 
 /**
   * Elimina un determinado vídeo de youtube almacenado en la tabla VideoYoutube
@@ -143,9 +143,6 @@ exports.getVideosAlmacenados = function(req,res,next) {
   * @param next: Objeto de tipo next
   */
 exports.destroyVideo = function(req,res,next) {
-
-    console.log("destroyVideo =====>");
-
     var video = req.Video; // Se recupera el vídeo cargado en el autoload
 
     video.destroy().then(function() {
@@ -160,12 +157,7 @@ exports.destroyVideo = function(req,res,next) {
 
     }).catch(function(err) {
         console.log("Error al eliminar el vídeo " + video.idVideo + ": " + err.message);
-        var respuesta = {
-            status:1,
-            descStatus:'ERROR'
-        }
-
-        devolverSalida(res,respuesta);
+        res.status(500).send("Error al eliminar el vídeo " + video.idVideo + ": " + err.message);
     });
 
 };
@@ -299,12 +291,6 @@ exports.saveVideo = function(req,res,next) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
 
     // Se comprueba primero si el vídeo ya está insertado en base de datos
-    /*
-    var busqueda = {
-        idVideo: idVideo,
-        idCanal: idCanal
-    };
-    */
     var busqueda = {
         idVideo: idVideo
     };
