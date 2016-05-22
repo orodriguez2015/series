@@ -111,8 +111,30 @@ angular.module('gestor')
   */
 .service('videoService',['$resource','baseUrl', function($resource,baseUrl) {
 
+    /**
+      * Función a partir de la cual obtener un $resource a través del cual recuperar
+      * los vídeos y eliminar uno determinado
+      */
     this.getVideosUsuario = function() {
         return $resource(baseUrl + "videos/usuario/:id",null,{'get':{method:'GET'},'delete':{method:'DELETE'}});
+    };
+
+    /**
+      * Función que devuelve el recurso a través del cual se puede asignar
+      * una categoría a uno o más vídeos
+      */
+    this.asignarCategoria = function() {
+        return $resource(baseUrl + "videos/categorias/asignacion",null,{'asignar':{method:'POST'},'delete':{method:'DELETE'}});
+    };
+
+
+    /**
+      * Función que devuelve el recurso a través del cual se puede eliminar
+      * la asociación entre un vídeo y una categoría
+      */
+    this.anularCategoria = function() {
+        //console.log("anularCategoria id: " + JSON.stringify(id));
+        return $resource(baseUrl + "videos/categorias/anular/:id",null,{'desasignar':{method:'POST'}});
     };
 
 

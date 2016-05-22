@@ -671,6 +671,10 @@ angular.module('gestor')
   $scope.categorias;
 
 
+    /**
+      * Recupera los vídeos del usuario, tanto los que están
+      * asignados a una categoría como los que no
+      */
     videoService.getVideosUsuario().get().$promise.then(
 
       // Success action
@@ -678,7 +682,6 @@ angular.module('gestor')
         $scope.categoriasConVideos = response.categoriasConVideos;
         $scope.videosSinCategoria  = response.videosSinCategoria;
         $scope.categorias          = response.categorias;
-        console.log("categorias " + JSON.stringify($scope.categorias));
       },
 
       // Error action
@@ -699,14 +702,52 @@ angular.module('gestor')
   };
 
 
+
+  /**
+    * Función que se invoca cuando se pretende asignar uno o varios vídeos
+    * a una determinada categoría
+    */
+  $scope.asignarCategoria = function() {
+    var checkboxValues = new Array();
+
+    //recorremos todos los checkbox seleccionados con .each
+    $('input[name="videoSinCategoria[]"]:checked').each(function() {
+        checkboxValues.push($(this).val());
+    });
+
+    if(checkboxValues.length==0) {
+        MessagesArea.showMessageError("Es necesario seleccionar algún vídeo para poder asignarle la categoría");
+    } else {
+
+      var idCategoria = $('#categoria').val();
+
+      var videos = {
+        categoria: idCategoria,
+        videos: checkboxValues
+      };
+
+
+      videoService.asignarCategoria().asignar(videos).$promise.then(
+          function success(response){
+            $state.go($state.current, {}, {reload: true});
+          },
+
+          function error(response){
+            MessagesArea.showMessageError("Se ha producido un error al asignar la categoría a los vídeos seleccionados");
+          }
+
+      );
+    }
+
+
+  };
+
   /**
     * Función que se invoca cuando se pretende eliminar un vídeo de
     * entre los favoritosº
     * @param id:  id del vídeo
     */
   $scope.eliminarVideo = function(id) {
-
-
 
     //bootbox.confirm('¿Desea eliminar la categoría?', function(result) {
 
@@ -722,13 +763,29 @@ angular.module('gestor')
             }
         );
       //}
-
     //});
-
-
-
   };
 
+
+  /**
+    * Función invocada cuando se desea desvincular un vídeo de la
+    * categoría que tiene asignada
+    * @param id: Id del vídeo
+    */
+  $scope.anularCategoria = function(id) {
+
+      videoService.anularCategoria().desasignar({id:id}).$promise.then(
+          // Success
+          function success(response) {
+            $state.go($state.current,{},{reload:true});
+          },
+
+          // Error
+          function error(response) {
+            MessagesArea.showMessageError("Se ha producido un error al anular la categoría del vídeo");
+          }
+      );
+  };
 
 
 }])

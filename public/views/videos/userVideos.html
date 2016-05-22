@@ -82,19 +82,44 @@
 													<br>
 
 													<img src="/images/23_full_trash.png" height=15 width=15 name="btnEliminar" id="btnEliminar"  title="Eliminar vídeo" alt="Eliminar vídeo"/>
-
-
-													<img src="/images/house.png" height=15 width=15 name="btnAnular" id="btnAnular"  title="Anular categoría" alt="Anular categoría" onclick="confirmarAnulacionCategoria(video.id);"/>
+													<img src="/images/house.png" height=15 width=15 name="btnAnular" id="btnAnular"  title="Anular categoría" alt="Anular categoría" ng-click="anularCategoria(video.id)"/>
 
 
 											</div>
 								  </div>
 								</div>	<!-- ng-if -->
-							</div>
-							
+
 								<div style="clear:both">
 										<!-- Separador  -->
 								</div>
+
+							</div>
+
+
+
+
+
+
+								<!-- CATEGORIAS --->
+								<div class="form-group"><a name="asignarCategorias" id="asignarCategorias">
+								Asignar vídeos a categorías
+								</a>
+
+								<div style="clear:both"></div>
+
+								<div id="divCategoria" style="display:none;margin-top:5px;">
+										<select name="categoria" id="categoria">
+
+												<option value="{{categoria.id}}" ng-repeat="categoria in categorias">{{categoria.descripcion}}</option>
+
+										</select>&nbsp;&nbsp;
+										<button type="button" id="btnAsignarCategoria"  class="btn btn-success btn-xs" ng-click="asignarCategoria()">Asignar</button>
+
+								</div>
+								<a href="javascript:marcarVideosSinCategoria();">Marcar/Desmarcar todos</a>
+
+								<!-- CATEGORIAS --->
+
 
 
 
@@ -114,7 +139,7 @@
 		                    <br>
 
 
-		                     <input type="checkbox" name="videoSinCategoria[]" id="videoSinCategoria[]" value="video.id" style="display:none" class="ck">
+		                     <input type="checkbox" name="videoSinCategoria[]" id="videoSinCategoria[]" value="{{video.id}}" style="display:none" class="ck">
 
 												 <a href="" ng-click="eliminarVideo(video.id)">
 		                     		<input height=15 width=15 type="image" src="/images/23_full_trash.png" title="Eliminar" alt="Eliminar"/>
@@ -123,10 +148,6 @@
 		                </div>
 		                </div>
 								</div>
-
-
-
-
 
 
 						    </div>
@@ -168,6 +189,70 @@
 <!-- Se incluye el API JS de youtube para poder buscar vídeos -->
 <script src="https://apis.google.com/js/client.js?onload=init"></script>
 
-<!--
-<script type="text/javascript" src="/javascripts/altaVideo.js"></script>
--->
+<script type="text/javascript">
+
+
+	/*
+    function confirmarAnulacionCategoria(videoId) {
+
+        var url = "/videos/categorias/anular/" + videoId;
+
+        if(confirm('¿Desea que el vídeo quede sin categoría?')) {
+
+            // Se envía la petición por post
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    if(data.status==0) {
+                        // Se recarga la página
+                        window.location.href="/videos/usuario";
+
+                    }
+                }
+            });
+        }// if
+    };
+*/
+
+    function marcarVideosSinCategoria() {
+
+        try{
+            $(".ck:checkbox:not(:checked)").attr("checked", "checked");
+        }catch(Err) {
+            console.log("Error: " + Err.message);
+        }
+    }
+
+
+    // Manejador evento click sobre el elemento 'asignarCategorias'
+    $("#asignarCategorias").on('click',function() {
+        if(!$('#divCategoria').is(":visible")) {
+            $("#divCategoria").show();
+            showCheckbox(true);
+        } else {
+            $("#divCategoria").hide();
+            showCheckbox(false);
+        }
+    });
+
+
+    // Muestra y oculta los checkblx 'videosSinCategoria'
+    function showCheckbox(flag) {
+
+        $('input[name="videoSinCategoria[]"]').each(function() {
+
+            if(flag){
+                $(this).show();
+            }else{
+                // La propiedad checked del checkbox se pone a vacío para que no aparezca seleccionado,
+                // la próxima vez que se intente mostrar
+                $(this).prop("checked","");
+                $(this).hide();
+            }
+        });
+    }
+
+
+</script>

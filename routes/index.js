@@ -114,11 +114,6 @@ router.get("/videos/categorias/alta",loginController.loginRequired,categoriaVide
 //                              respuesta.status = 1 => La categoría tiene vídeos asignados
  router.post("/videos/categorias/comprobarExistenciaVideos/:categoriaVideoId(\\d+)",loginController.loginRequired,categoriaVideoController.videosConCategoria);
 
-// POST /videos/categorias/asignacionesVideos. Asignación de una misma categoría a varios vídeos
-router.post("/videos/categorias/asignacionesVideos",loginController.loginRequired,videoController.asignarVideosCategoria);
-
-// POST /videos/categorias/anular/:categoriaVideoId. Retira la categoría de un determinado vídeo
-router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequired,videoController.eliminarCategoriaVideo);
 
 
 /********************************************************************************/
@@ -154,6 +149,13 @@ router.get("/videos/usuario",loginController.loginRequired,videoController.getVi
 
 // DELETE /videos/usuario/:videoId . Permite eliminar un determinado video
 router.delete("/videos/usuario/:videoId(\\d+)",loginController.loginRequired,videoController.destroyVideo);
+
+
+// POST /videos/categorias/asignacionesVideos. Asignación de una misma categoría a varios vídeos
+router.post("/videos/categorias/asignacion",loginController.loginRequired,videoController.asignarVideosCategoria);
+
+// POST /videos/categorias/anular/:categoriaVideoId. Retira la categoría de un determinado vídeo
+router.post("/videos/categorias/anular/:videoId(\\d+)",loginController.loginRequired,videoController.eliminarCategoriaVideo);
 
 
 /********************************************************************************/

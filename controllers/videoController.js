@@ -45,13 +45,12 @@ console.log("categoriaVideoController: " + JSON.stringify(categoriaVideoControll
 
                 // Se recuperan los vídeos del usuario que no tiene categoría asignada
                 model.VideoYoutube.findAll(busquedaVideosSinCategoria).then(function(videosSinCategoria) {
-                    console.log("render")
 
                     var resultado = {
+                      categorias: categorias,
                       categoriasConVideos: categoriasConVideos,
                       videosSinCategoria:videosSinCategoria
                     };
-
 
                     res.writeHead(200, {"Content-Type": "application/json"});
                     res.write(JSON.stringify(resultado));
@@ -173,7 +172,8 @@ exports.destroyVideo = function(req,res,next) {
   * @param next: Objeto next
   */
 exports.asignarVideosCategoria = function(req,res,next) {
-    var videos = JSON.parse(req.body.videos);
+    //var videos = JSON.parse(req.body.videos);
+    var videos = req.body.videos;
     var categoria = req.body.categoria;
 
     console.log("videos: " + videos);
